@@ -38,9 +38,8 @@ export function DocsLayout() {
     }
   }, [theme])
 
-  // 라우트가 바뀌면 모바일 사이드바를 닫고 맨 위로
+  // 라우트가 바뀌면 맨 위로. 사이드바는 링크 클릭 시 닫는다.
   useEffect(() => {
-    setOpen(false)
     window.scrollTo({ top: 0 })
   }, [pathname])
 
@@ -55,6 +54,7 @@ export function DocsLayout() {
                 <NavLink
                   to={l.to}
                   end={l.to === '/'}
+                  onClick={() => setOpen(false)}
                   className={({ isActive }) =>
                     cn(
                       '-ml-px flex items-center justify-between gap-2 border-l py-1.5 pl-3 text-[13.5px] transition-colors',

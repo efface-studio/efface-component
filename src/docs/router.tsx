@@ -2,17 +2,21 @@ import { createBrowserRouter } from 'react-router-dom'
 import { DocsLayout } from '@/docs/layout/DocsLayout'
 import { OverviewPage } from '@/docs/pages/OverviewPage'
 import { PlaceholderPage } from '@/docs/pages/PlaceholderPage'
+import { ColorsPage } from '@/docs/pages/ColorsPage'
+import { TypographyPage } from '@/docs/pages/TypographyPage'
+import { LayoutPage } from '@/docs/pages/LayoutPage'
+import { BrandPage } from '@/docs/pages/BrandPage'
 
 export const router = createBrowserRouter([
   {
     element: <DocsLayout />,
     children: [
       { path: '/', element: <OverviewPage /> },
-      { path: '/foundations/colors', element: <PlaceholderPage title="Colors" /> },
-      { path: '/foundations/typography', element: <PlaceholderPage title="Typography" /> },
-      { path: '/foundations/layout', element: <PlaceholderPage title="Layout" /> },
+      { path: '/foundations/colors', element: <ColorsPage /> },
+      { path: '/foundations/typography', element: <TypographyPage /> },
+      { path: '/foundations/layout', element: <LayoutPage /> },
       { path: '/foundations/motion', element: <PlaceholderPage title="Motion tokens" /> },
-      { path: '/components/brand', element: <PlaceholderPage title="Brand" /> },
+      { path: '/components/brand', element: <BrandPage /> },
       { path: '/components/buttons', element: <PlaceholderPage title="Buttons" /> },
       { path: '/components/chips', element: <PlaceholderPage title="Chips & Badges" /> },
       { path: '/components/cards', element: <PlaceholderPage title="Cards" /> },

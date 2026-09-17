@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/wrangler@4/config-schema.json",
+  "name": "efface-component",
+  "compatibility_date": "2026-09-01",
+  // 서버 없는 정적 SPA: dist를 그대로 서빙하고 없는 경로는 index.html로
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  // 커스텀 도메인: efface.dev 존이 같은 계정에 있어 배포 시 DNS까지 자동 연결된다
+  "routes": [{ "pattern": "component.efface.dev", "custom_domain": true }]
+}
