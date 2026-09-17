@@ -2,6 +2,7 @@ import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/cn'
 import { EASE_OUT_EXPO } from '@/lib/motion'
+import { CAPABILITY_ACCENTS, DOT_COLORS } from './card.constants'
 
 /* ── CardGrid — 1px 선으로 나뉜 셀 그리드 (v1 Services / Process / Manifesto) ── */
 
@@ -298,13 +299,6 @@ export function TestimonialCard({ quote, author, role, company, metric, initials
 
 /* ── CapabilityCard (v2, 정적 버전) ─────────────────────────────── */
 
-export const CAPABILITY_ACCENTS = [
-  { hex: '#3B82F6', rgb: '59,130,246' },
-  { hex: '#8B5CF6', rgb: '139,92,246' },
-  { hex: '#14B8B0', rgb: '20,184,176' },
-  { hex: '#F59E0B', rgb: '245,158,11' },
-] as const
-
 export interface CapabilityCardProps {
   no: string
   title: string
@@ -321,7 +315,6 @@ export interface CapabilityCardProps {
  */
 export function CapabilityCard({ no, title, items, tools, column = 0, className }: CapabilityCardProps) {
   const accent = CAPABILITY_ACCENTS[column]
-  const dots = ['#6366F1', '#22D3EE', '#FBBF24', '#34D399']
   return (
     <div className={cn('relative border-t border-line pt-8', className)} style={{ '--acc': accent.hex } as CSSProperties}>
       <div className="flex items-baseline gap-4">
@@ -340,7 +333,7 @@ export function CapabilityCard({ no, title, items, tools, column = 0, className 
       </ul>
       <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
         {tools.map((tool, ti) => (
-          <li key={tool} className="cap-chip" style={{ '--dot': dots[ti % dots.length] } as CSSProperties}>
+          <li key={tool} className="cap-chip" style={{ '--dot': DOT_COLORS[ti % DOT_COLORS.length] } as CSSProperties}>
             {tool}
           </li>
         ))}
@@ -350,13 +343,6 @@ export function CapabilityCard({ no, title, items, tools, column = 0, className 
 }
 
 /* ── AppCard (v2, 표면만) ──────────────────────────────────────── */
-
-export const APP_CARDS = [
-  { key: 'hinest', gradient: 'linear-gradient(160deg, #4E8CFF 0%, #2563EB 55%, #1D46C8 100%)', sheen: 0.16, icon: '#F6F7FA' },
-  { key: 'muru', gradient: 'linear-gradient(160deg, #34E0D8 0%, #14B8B0 60%, #0C9A93 100%)', sheen: 0.16, icon: '#FFFDF8' },
-  { key: 'qto', gradient: 'linear-gradient(160deg, #34343C 0%, #1D1D23 60%, #141418 100%)', sheen: 0.1, icon: '#EF6553' },
-  { key: 'goms', gradient: 'linear-gradient(160deg, #9D6BFF 0%, #7C3AED 55%, #6425D0 100%)', sheen: 0.16, icon: '#FFA600' },
-] as const
 
 export interface AppCardProps {
   title: string

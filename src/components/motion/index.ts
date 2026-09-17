@@ -1,5 +1,6 @@
 export { CursorGlow, type CursorGlowProps } from './CursorGlow'
-export { EffaceSentence, parseSentence, SENTENCE_TIMELINE, type EffaceSentenceProps, type SentenceToken } from './EffaceSentence'
+export { EffaceSentence, type EffaceSentenceProps } from './EffaceSentence'
+export { parseSentence, SENTENCE_TIMELINE, type SentenceToken } from './parseSentence'
 export { LetterReveal, SplitHeadline, type LetterRevealProps, type SplitHeadlineProps } from './LetterReveal'
 export { MagneticButton, type MagneticButtonProps } from './MagneticButton'
 export { Marquee, type MarqueeProps } from './Marquee'

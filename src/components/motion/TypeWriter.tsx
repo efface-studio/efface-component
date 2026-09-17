@@ -19,14 +19,11 @@ export interface TypeWriterProps {
 export function TypeWriter({ text, speed = 28, delay = 0, caret = true, className }: TypeWriterProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true })
-  const [n, setN] = useState(0)
+  // reduced-motion이면 처음부터 전문을 보여준다
+  const [n, setN] = useState(() => (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? text.length : 0))
 
   useEffect(() => {
-    if (!inView) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setN(text.length)
-      return
-    }
+    if (!inView || n >= text.length) return
     let i = 0
     let timer = 0
     const start = window.setTimeout(() => {
@@ -40,6 +37,8 @@ export function TypeWriter({ text, speed = 28, delay = 0, caret = true, classNam
       window.clearTimeout(start)
       window.clearInterval(timer)
     }
+    // n은 시작 조건으로만 읽는다 — 타이핑 중 재시작을 막기 위해 의존성에서 뺀다
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView, text, speed, delay])
 
   return (

@@ -69,9 +69,6 @@ export function DotChip({ children, dot, className }: DotChipProps) {
   )
 }
 
-/** v2 도구 점 색 순환. */
-export const DOT_COLORS = ['#6366F1', '#22D3EE', '#FBBF24', '#34D399'] as const
-
 /* ── FilterChip (선택형) ───────────────────────────────────────── */
 
 export interface FilterChipProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'> {
