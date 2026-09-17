@@ -87,6 +87,8 @@ export default {
     }
 
     const script = await inspectScript(env, `https://${url.host.replace(/^live-[^.]+\./, 'component.')}`)
+    // 주입 스크립트가 바뀌면 바로 반영되도록 프록시된 HTML 은 캐시하지 않는다
+    out.set('cache-control', 'no-store')
     const injected = new HTMLRewriter()
       .on('head', {
         element(el) {

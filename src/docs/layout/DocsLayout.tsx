@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { NavLink, useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { Crosshair, Menu, Moon, Sun, X } from 'lucide-react'
+import { Code2, Menu, Moon, Sun, X } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { DOC_NAV } from '@/docs/nav'
 import { LogoMark } from '@/components/brand/LogoMark'
@@ -37,7 +37,7 @@ export function DocsLayout() {
   const reduce = useReducedMotion()
   useBodyScrollLock(open)
 
-  // 페이지 안 검사 모드 — 문서의 모든 프리뷰를 Figma 처럼 잰다
+  // 페이지 안 Dev 모드 — 문서의 모든 프리뷰를 Figma 처럼 잰다
   const [inspect, setInspect] = useState(false)
   const [selected, setSelected] = useState<InspectInfo | null>(null)
   const [hovered, setHovered] = useState<InspectInfo | null>(null)
@@ -159,7 +159,7 @@ export function DocsLayout() {
                 className={cn('inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition-colors', inspect ? 'bg-accent text-white' : 'text-fg-dim hover:bg-line/40 hover:text-fg')}
                 title="요소에 마우스를 올리면 크기·여백, 누르면 고정, 다른 요소에 올리면 거리"
               >
-                <Crosshair size={14} /> 검사
+                <Code2 size={14} /> Dev
               </button>
             )}
             <button
@@ -211,8 +211,8 @@ export function DocsLayout() {
           {inspect && (
             <div data-ef-ignore className="fixed right-4 bottom-4 z-[60] w-[300px] max-h-[70vh] overflow-y-auto rounded-xl border border-line bg-surface/95 p-4 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.4)] backdrop-blur-md">
               <div className="mb-3 flex items-center justify-between">
-                <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">inspect</span>
-                <button type="button" onClick={() => window.__efInspect?.disable()} className="flex h-6 w-6 items-center justify-center rounded text-fg-dim hover:bg-line/40 hover:text-fg" aria-label="검사 끄기">
+                <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">dev mode</span>
+                <button type="button" onClick={() => window.__efInspect?.disable()} className="flex h-6 w-6 items-center justify-center rounded text-fg-dim hover:bg-line/40 hover:text-fg" aria-label="Dev 모드 끄기">
                   <X size={13} />
                 </button>
               </div>

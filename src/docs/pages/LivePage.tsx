@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
-import { ArrowUpRight, Crosshair, Grid3x3, Maximize2, Minimize2, PanelRight, RotateCw, ZoomIn } from 'lucide-react'
+import { ArrowUpRight, Code2, Grid3x3, Maximize2, Minimize2, PanelLeft, PanelRight, RotateCw, ZoomIn } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { DocPage, Note } from '@/docs/components/Doc'
 import { InspectPanel } from '@/docs/components/InspectPanel'
@@ -19,6 +19,7 @@ export function LivePage() {
   const [inspect, setInspect] = useState(false)
   const [grid, setGrid] = useState(false)
   const [panel, setPanel] = useState(false)
+  const [panelSide, setPanelSide] = useState<'right' | 'left'>('right')
   const [fullscreen, setFullscreen] = useState(false)
   const [selected, setSelected] = useState<InspectInfo | null>(null)
   const [hovered, setHovered] = useState<InspectInfo | null>(null)
@@ -81,7 +82,8 @@ export function LivePage() {
       } else if (m.type === 'route') setRoute(m.path)
       else if (m.type === 'hover') {
         setHovered(m.info)
-        setDistances(m.distances)
+        // 캐시된 옛 스크립트가 숫자만 보내는 경우도 받아준다
+        setDistances(m.distances ? m.distances.map((d) => (typeof d === 'number' ? { d, dir: 'v' as const } : d)) : null)
       } else if (m.type === 'select') {
         setSelected(m.info)
         if (m.info) setPanel(true)
@@ -158,7 +160,7 @@ export function LivePage() {
         aria-pressed={inspect}
         className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-medium transition-colors', inspect ? 'border-accent bg-accent text-white' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
       >
-        <Crosshair size={13} /> 검사
+        <Code2 size={13} /> Dev
       </button>
       <button
         type="button"
@@ -174,8 +176,18 @@ export function LivePage() {
         aria-pressed={panel}
         className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] transition-colors', panel ? 'border-fg bg-fg text-bg' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
       >
-        <PanelRight size={13} /> 패널
+        {panelSide === 'right' ? <PanelRight size={13} /> : <PanelLeft size={13} />} 패널
       </button>
+      {panel && (
+        <button
+          type="button"
+          onClick={() => setPanelSide((v) => (v === 'right' ? 'left' : 'right'))}
+          className="inline-flex h-8 items-center rounded-md border border-line px-2 font-mono text-[11px] text-fg-dim hover:border-line-strong hover:text-fg"
+          title="패널을 반대쪽에 붙이기"
+        >
+          {panelSide === 'right' ? '◨ → ◧' : '◧ → ◨'}
+        </button>
+      )}
       <button type="button" onClick={() => setReloadKey((k) => k + 1)} className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-line text-fg-dim hover:border-line-strong hover:text-fg" aria-label="다시 불러오기">
         <RotateCw size={13} />
       </button>
@@ -196,33 +208,26 @@ export function LivePage() {
     </div>
   )
 
-  const drawer = (
-    <div
-      data-ef-ignore
-      className={cn(
-        'absolute inset-y-0 right-0 z-20 w-[320px] max-w-[85%] overflow-y-auto border-l border-line bg-surface/95 p-4 shadow-[-20px_0_50px_-30px_rgba(0,0,0,0.5)] backdrop-blur-md transition-transform duration-300 ease-out-quart',
-        panel ? 'translate-x-0' : 'translate-x-full',
-      )}
-      aria-hidden={!panel}
-    >
+  const dock = (
+    <aside data-ef-ignore className={cn('flex w-[320px] shrink-0 flex-col overflow-y-auto bg-surface p-4', panelSide === 'right' ? 'border-l border-line' : 'border-r border-line')}>
       <div className="mb-3 flex items-center justify-between">
-        <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">inspect</span>
+        <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">dev mode</span>
         <button type="button" onClick={() => setPanel(false)} className="rounded px-1.5 py-0.5 font-mono text-[10.5px] text-fg-dim hover:bg-line/40 hover:text-fg">
           닫기
         </button>
       </div>
       {!inspect ? (
         <div className="rounded-lg border border-line bg-bg-soft p-4">
-          <p className="text-[13px] font-medium">검사 모드가 꺼져 있어요</p>
+          <p className="text-[13px] font-medium">Dev 모드가 꺼져 있어요</p>
           <p className="mt-1.5 text-[12.5px] leading-relaxed text-fg-dim">켜면 프레임 안의 요소에 마우스를 올려 크기·여백을 보고, 눌러서 고정한 뒤 다른 요소까지의 거리를 잴 수 있어요.</p>
-          <Button size="sm" className="mt-3" onClick={toggleInspect} leading={<Crosshair size={13} />}>
-            검사 켜기
+          <Button size="sm" className="mt-3" onClick={toggleInspect} leading={<Code2 size={13} />}>
+            Dev 켜기
           </Button>
         </div>
       ) : (
         <InspectPanel selected={selected} hovered={hovered} distances={distances} />
       )}
-    </div>
+    </aside>
   )
 
   return (
@@ -293,22 +298,25 @@ export function LivePage() {
               <div className="w-8 shrink-0" />
             </div>
           )}
-          <div ref={stageRef} className={cn('relative', !responsive && zoom === '100' && 'overflow-auto', !responsive && zoom === 'fit' && vp.id === 'mobile' && 'flex justify-center bg-bg-soft')} style={{ height: stageH }}>
-            <iframe
-              key={`${src}-${reloadKey}`}
-              ref={frameRef}
-              src={src}
-              title={`${proj.name} — ${page?.title ?? ''}`}
-              className="block origin-top-left border-0 bg-white"
-              style={{ width: frameW, height: frameH, transform: scale !== 1 ? `scale(${scale})` : undefined }}
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-            />
-            {drawer}
+          {/* 프레임과 패널을 나란히 — 패널이 프레임을 덮지 않아 오른쪽 요소도 가리킬 수 있다 */}
+          <div className={cn('flex', panelSide === 'left' && 'flex-row-reverse')} style={{ height: stageH }}>
+            <div ref={stageRef} className={cn('relative min-w-0 flex-1', !responsive && zoom === '100' && 'overflow-auto', !responsive && zoom === 'fit' && vp.id === 'mobile' && 'flex justify-center bg-bg-soft')}>
+              <iframe
+                key={`${src}-${reloadKey}`}
+                ref={frameRef}
+                src={src}
+                title={`${proj.name} — ${page?.title ?? ''}`}
+                className="block origin-top-left border-0 bg-white"
+                style={{ width: frameW, height: frameH, transform: scale !== 1 ? `scale(${scale})` : undefined }}
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+              />
+            </div>
+            {panel && dock}
           </div>
         </div>
       </div>
       <p className="-mt-2 text-[12px] text-fg-faint">
-        맞춤은 현재 화면 폭에 100%로 띄워요. 고정 뷰포트는 폭에 맞춰 축소되고, 배율 버튼으로 100%(가로 스크롤)로 볼 수 있어요. 검사가 켜져 있으면 프레임 안 클릭은 선택으로 쓰여요 — 페이지 이동은 위 목록에서. 실제 서비스를 그대로 프록시한 사본이라 폼 전송은 하지 마세요.
+        맞춤은 현재 화면 폭에 100%로 띄워요. 고정 뷰포트는 폭에 맞춰 축소되고, 배율 버튼으로 100%(가로 스크롤)로 볼 수 있어요. Dev 모드가 켜져 있으면 프레임 안 클릭은 선택으로 쓰여요 — 페이지 이동은 위 목록에서. 실제 서비스를 그대로 프록시한 사본이라 폼 전송은 하지 마세요.
       </p>
     </DocPage>
   )

@@ -129,7 +129,7 @@ export function InspectPanel({ selected, hovered, distances, className }: Inspec
             </li>
           </ol>
           <p className="mt-2 text-[11.5px] text-fg-faint">
-            <kbd className="rounded border border-line px-1 font-mono text-[10px]">Esc</kbd> 고정 해제 · 한 번 더 누르면 검사 끄기
+            <kbd className="rounded border border-line px-1 font-mono text-[10px]">Esc</kbd> 고정 해제 · 한 번 더 누르면 Dev 모드 끄기
           </p>
         </div>
       ) : (
