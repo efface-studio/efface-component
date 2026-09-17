@@ -1,11 +1,12 @@
 import { DocPage, Note, Section } from '@/docs/components/Doc'
 import { CodeBlock } from '@/docs/components/CodeBlock'
+import { SpecTable } from '@/docs/components/SpecTable'
 import { APP_GRADIENTS, BRAND_COLORS, NAVY, SEMANTIC_COLORS, SPECTRUM } from '@/tokens/colors'
 
 function Swatch({ value, label, sub, ring }: { value: string; label: string; sub?: string; ring?: boolean }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="h-9 w-9 shrink-0 rounded-md" style={{ background: value, boxShadow: ring ? 'inset 0 0 0 1px var(--line-strong)' : undefined }} />
+      <span className="h-8 w-8 shrink-0 rounded-md" style={{ background: value, boxShadow: ring ? 'inset 0 0 0 1px var(--line-strong)' : undefined }} />
       <div className="min-w-0">
         <div className="truncate font-mono text-[12px] text-fg">{label}</div>
         {sub && <div className="truncate font-mono text-[11px] text-fg-faint">{sub}</div>}
@@ -23,32 +24,20 @@ export function ColorsPage() {
       sources={['v1', 'v2', 'mom']}
     >
       <Section title="시맨틱 토큰" desc="[data-theme] 범위 안에서 값이 바뀐다. 프리뷰 박스처럼 문서 안에 다른 테마를 중첩할 수 있다.">
-        <div className="overflow-x-auto rounded-lg border border-line">
-          <table className="w-full min-w-[640px] border-collapse text-left text-[13px]">
-            <thead>
-              <tr className="border-b border-line bg-bg-soft font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">
-                <th className="px-4 py-2.5 font-medium">token</th>
-                <th className="px-4 py-2.5 font-medium">light</th>
-                <th className="px-4 py-2.5 font-medium">dark</th>
-                <th className="px-4 py-2.5 font-medium">역할</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SEMANTIC_COLORS.map((c) => (
-                <tr key={c.name} className="border-b border-line last:border-0">
-                  <td className="px-4 py-2.5 font-mono text-accent">{c.utility}</td>
-                  <td className="px-4 py-2.5" data-theme="light">
-                    <Swatch value={c.light} label={c.light} ring />
-                  </td>
-                  <td className="px-4 py-2.5" data-theme="dark">
-                    <Swatch value={c.dark} label={c.dark} ring />
-                  </td>
-                  <td className="px-4 py-2.5 text-fg-dim">{c.role}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <SpecTable
+          columns={[
+            { key: 'token', label: 'token', width: '140px', mono: true },
+            { key: 'light', label: 'light', width: 'minmax(0,1fr)' },
+            { key: 'dark', label: 'dark', width: 'minmax(0,1fr)' },
+            { key: 'role', label: '역할', width: 'minmax(0,1.6fr)' },
+          ]}
+          rows={SEMANTIC_COLORS.map((c) => ({
+            token: c.utility,
+            light: <Swatch value={c.light} label={c.light} ring />,
+            dark: <Swatch value={c.dark} label={c.dark} ring />,
+            role: c.role,
+          }))}
+        />
         <Note>
           accent 는 테마마다 다르다 — v1은 Tailwind blue-600 (#2563EB), v2는 로고에서 샘플한 #3B62E5. 로고 블루가 항상 필요하면 테마와 무관한 <code className="font-mono">brand</code> 를 쓴다.
         </Note>

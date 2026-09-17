@@ -1,5 +1,6 @@
 import { DocPage, Note, Section } from '@/docs/components/Doc'
 import { CodeBlock } from '@/docs/components/CodeBlock'
+import { SpecTable } from '@/docs/components/SpecTable'
 import { Preview } from '@/docs/components/Preview'
 
 const CONTAINERS = [
@@ -28,28 +29,15 @@ export function LayoutPage() {
       sources={['v1', 'v2']}
     >
       <Section title="컨테이너">
-        <div className="overflow-x-auto rounded-lg border border-line">
-          <table className="w-full min-w-[560px] border-collapse text-left text-[13px]">
-            <thead>
-              <tr className="border-b border-line bg-bg-soft font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">
-                <th className="px-4 py-2.5 font-medium">class</th>
-                <th className="px-4 py-2.5 font-medium">width</th>
-                <th className="px-4 py-2.5 font-medium">padding</th>
-                <th className="px-4 py-2.5 font-medium">쓰는 곳</th>
-              </tr>
-            </thead>
-            <tbody>
-              {CONTAINERS.map((c) => (
-                <tr key={c.name} className="border-b border-line last:border-0">
-                  <td className="px-4 py-2.5 font-mono text-accent">{c.name}</td>
-                  <td className="px-4 py-2.5 font-mono text-fg-dim">{c.value}</td>
-                  <td className="px-4 py-2.5 font-mono text-fg-dim">{c.pad}</td>
-                  <td className="px-4 py-2.5 text-fg-dim">{c.where}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <SpecTable
+          columns={[
+            { key: 'name', label: 'class', width: '170px', mono: true },
+            { key: 'value', label: 'width', width: '90px', mono: true },
+            { key: 'pad', label: 'padding', width: '150px', mono: true },
+            { key: 'where', label: '쓰는 곳', width: 'minmax(0,1fr)' },
+          ]}
+          rows={CONTAINERS.map((c) => ({ name: c.name, value: c.value, pad: c.pad, where: c.where }))}
+        />
         <CodeBlock code={`<div className="mx-auto max-w-page px-6 md:px-10">…</div>   {/* v2 */}
 <div className="mx-auto max-w-page-v1 px-5 md:px-8">…</div> {/* v1 */}`} />
       </Section>

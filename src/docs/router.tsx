@@ -11,6 +11,10 @@ import { ButtonsPage } from '@/docs/pages/ButtonsPage'
 import { ChipsPage } from '@/docs/pages/ChipsPage'
 import { CardsPage } from '@/docs/pages/CardsPage'
 import { ListsPage } from '@/docs/pages/ListsPage'
+import { MotionRevealPage } from '@/docs/pages/MotionRevealPage'
+import { MotionScrollPage } from '@/docs/pages/MotionScrollPage'
+import { MotionCursorPage } from '@/docs/pages/MotionCursorPage'
+import { MotionTextPage } from '@/docs/pages/MotionTextPage'
 
 export const router = createBrowserRouter([
   {
@@ -26,10 +30,10 @@ export const router = createBrowserRouter([
       { path: '/components/chips', element: <ChipsPage /> },
       { path: '/components/cards', element: <CardsPage /> },
       { path: '/components/lists', element: <ListsPage /> },
-      { path: '/motion/reveal', element: <PlaceholderPage title="Reveal" /> },
-      { path: '/motion/scroll', element: <PlaceholderPage title="Scroll" /> },
-      { path: '/motion/cursor', element: <PlaceholderPage title="Cursor" /> },
-      { path: '/motion/text', element: <PlaceholderPage title="Text" /> },
+      { path: '/motion/reveal', element: <MotionRevealPage /> },
+      { path: '/motion/scroll', element: <MotionScrollPage /> },
+      { path: '/motion/cursor', element: <MotionCursorPage /> },
+      { path: '/motion/text', element: <MotionTextPage /> },
       { path: '/layout/navigation', element: <PlaceholderPage title="Navigation" /> },
       { path: '/layout/footer', element: <PlaceholderPage title="Footer" /> },
       { path: '/layout/overlay', element: <PlaceholderPage title="Overlay" /> },

@@ -13,7 +13,7 @@ export interface DocPageProps {
 /** 문서 페이지 프레임 — eyebrow, 제목, 리드, 출처 배지. */
 export function DocPage({ eyebrow, title, lead, sources, children }: DocPageProps) {
   return (
-    <article className="mx-auto w-full max-w-prose">
+    <article className="mx-auto w-full max-w-[1280px]">
       <header className="mb-12 border-b border-line pb-8">
         <p className="label">
           <span className="text-accent">//</span> {eyebrow}

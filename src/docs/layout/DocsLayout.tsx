@@ -113,7 +113,7 @@ export function DocsLayout() {
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1500px]">
+      <div className="mx-auto flex w-full max-w-[1720px]">
         <aside className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] w-60 shrink-0 overflow-y-auto border-r border-line px-5 py-8 lg:block">{sidebar}</aside>
 
         {open && (
@@ -133,7 +133,7 @@ export function DocsLayout() {
 
         <main className="min-w-0 flex-1 px-5 py-10 md:px-10 md:py-14">
           <Outlet />
-          <footer className="mx-auto mt-24 max-w-prose border-t border-line pt-6 text-xs text-fg-faint">
+          <footer className="mx-auto mt-24 max-w-[1280px] border-t border-line pt-6 text-xs text-fg-faint">
             <p>
               efface design system · efface.dev · v2.efface.dev · mom.efface.dev 에서 추출.{' '}
               <a className="link-underline text-fg-dim" href="https://github.com/efface-studio/efface-component" target="_blank" rel="noreferrer">
