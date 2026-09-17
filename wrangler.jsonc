@@ -7,7 +7,9 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    // 정적 자산보다 Worker 를 먼저 태운다 — live-* 호스트를 프록시로 돌리기 위해
+    "run_worker_first": true
   },
   // 커스텀 도메인: efface.dev 존이 같은 계정에 있어 배포 시 DNS 까지 자동 연결된다.
   // live-* 는 실제 서비스를 프록시하며 검사 스크립트를 주입하는 호스트.
