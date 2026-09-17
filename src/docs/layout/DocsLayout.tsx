@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { NavLink, useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { Menu, Moon, Sun, X } from 'lucide-react'
+import { Crosshair, Menu, Moon, Sun, X } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { DOC_NAV } from '@/docs/nav'
 import { LogoMark } from '@/components/brand/LogoMark'
@@ -9,6 +9,8 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import { DocsThemeContext, type DocsTheme } from '@/docs/theme'
 import { NextPageBar } from '@/docs/components/NextPageBar'
 import { EASE_OUT_EXPO } from '@/lib/motion'
+import { InspectPanel } from '@/docs/components/InspectPanel'
+import { isInspectMessage, loadInspectScript, type InspectInfo } from '@/lib/inspectBridge'
 
 type Theme = DocsTheme
 const STORAGE_KEY = 'efface-ds-theme'
@@ -34,6 +36,38 @@ export function DocsLayout() {
   const outlet = useOutlet()
   const reduce = useReducedMotion()
   useBodyScrollLock(open)
+
+  // 페이지 안 검사 모드 — 문서의 모든 프리뷰를 Figma 처럼 잰다
+  const [inspect, setInspect] = useState(false)
+  const [selected, setSelected] = useState<InspectInfo | null>(null)
+  const [hovered, setHovered] = useState<InspectInfo | null>(null)
+  const [distances, setDistances] = useState<number[] | null>(null)
+  useEffect(() => {
+    const onEv = (e: Event) => {
+      const m = (e as CustomEvent).detail
+      if (!isInspectMessage(m)) return
+      if (m.type === 'state') {
+        setInspect(m.on)
+        if (!m.on) {
+          setSelected(null)
+          setHovered(null)
+        }
+      } else if (m.type === 'hover') {
+        setHovered(m.info)
+        setDistances(m.distances)
+      } else if (m.type === 'select') setSelected(m.info)
+    }
+    window.addEventListener('ef-inspect', onEv)
+    return () => window.removeEventListener('ef-inspect', onEv)
+  }, [])
+  const toggleInspect = async () => {
+    await loadInspectScript()
+    window.__efInspect?.toggle()
+  }
+  // 라이브 페이지는 자체 검사 UI 가 있으니 문서 검사는 끈다
+  useEffect(() => {
+    if (pathname.startsWith('/live') && window.__efInspect?.isOn()) window.__efInspect.disable()
+  }, [pathname])
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -100,7 +134,7 @@ export function DocsLayout() {
   return (
     <DocsThemeContext.Provider value={{ theme, setTheme }}>
     <div className="min-h-dvh bg-bg text-fg">
-      <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
+      <header data-ef-ignore className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
         {/* 본문과 같은 컨테이너·여백 — 로고는 사이드바 글자와, 컨트롤은 본문 오른쪽 여백과 나란히 */}
         <div className="mx-auto flex h-14 w-full max-w-[1720px] items-center justify-between px-5 md:px-10">
           <div className="flex items-center gap-3">
@@ -117,6 +151,17 @@ export function DocsLayout() {
             <a href="https://github.com/efface-studio/efface-component" target="_blank" rel="noreferrer" className="hidden h-9 items-center px-3 font-mono text-xs text-fg-dim transition-colors hover:text-fg md:inline-flex">
               github ↗
             </a>
+            {!pathname.startsWith('/live') && (
+              <button
+                type="button"
+                onClick={toggleInspect}
+                aria-pressed={inspect}
+                className={cn('inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition-colors', inspect ? 'bg-accent text-white' : 'text-fg-dim hover:bg-line/40 hover:text-fg')}
+                title="요소에 마우스를 올리면 크기·여백, 누르면 고정, 다른 요소에 올리면 거리"
+              >
+                <Crosshair size={14} /> 검사
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -163,6 +208,17 @@ export function DocsLayout() {
               <NextPageBar />
             </motion.div>
           </AnimatePresence>
+          {inspect && (
+            <div data-ef-ignore className="fixed right-4 bottom-4 z-[60] w-[300px] max-h-[70vh] overflow-y-auto rounded-xl border border-line bg-surface/95 p-4 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.4)] backdrop-blur-md">
+              <div className="mb-3 flex items-center justify-between">
+                <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">inspect</span>
+                <button type="button" onClick={() => window.__efInspect?.disable()} className="flex h-6 w-6 items-center justify-center rounded text-fg-dim hover:bg-line/40 hover:text-fg" aria-label="검사 끄기">
+                  <X size={13} />
+                </button>
+              </div>
+              <InspectPanel selected={selected} hovered={hovered} distances={distances} />
+            </div>
+          )}
           <footer className="mx-auto mt-24 max-w-[1280px] border-t border-line pt-6 text-xs text-fg-faint">
             <p>
               efface design system · efface.dev · v2.efface.dev · mom.efface.dev{' '}

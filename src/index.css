@@ -37,6 +37,10 @@
   --selection-bg: #0a0a0a;
   --selection-fg: #ffffff;
 
+  /* 스켈레톤 — 바탕과 지나가는 하이라이트 */
+  --skeleton-base: #ececef;
+  --skeleton-shine: #f8f8fa;
+
   /* 문서 코드 블록 */
   --code-bg: #fafafa;
   --code-fg: #171717;
@@ -72,6 +76,10 @@
   --success: #22c55e;
   --selection-bg: #3b62e5;
   --selection-fg: #ffffff;
+
+  /* 스켈레톤 */
+  --skeleton-base: #1b1b21;
+  --skeleton-shine: #2a2a32;
 
   /* 문서 코드 블록 */
   --code-bg: #0e0e11;
@@ -323,6 +331,45 @@
 }
 .animate-bob {
   animation: bob 5.6s ease-in-out infinite;
+}
+
+/* ── 스켈레톤 ─────────────────────────────────────────────────────
+   shimmer 는 바탕 위로 하이라이트 띠가 1.6초에 한 번 지나간다. 여러 개가 나란히 있어도
+   같은 타이밍으로 흐르도록 background-position 만 움직인다(요소별 delay 없음). */
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.skeleton {
+  background: var(--skeleton-base);
+}
+.skeleton--shimmer {
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-base) 35%, var(--skeleton-shine) 50%, var(--skeleton-base) 65%, var(--skeleton-base) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+.skeleton--pulse {
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton--shimmer,
+  .skeleton--pulse {
+    animation: none;
+    background: var(--skeleton-base);
+  }
 }
 
 /* 텍스트 링크 밑줄 — 왼쪽에서 자라난다 */

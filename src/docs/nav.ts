@@ -32,6 +32,7 @@ export const DOC_NAV: DocGroup[] = [
       { label: 'Chips & Badges', to: '/components/chips', src: ['v1', 'v2'] },
       { label: 'Cards', to: '/components/cards', src: ['v1', 'v2'] },
       { label: 'Lists & Data', to: '/components/lists', src: ['v1', 'v2'] },
+      { label: 'Skeleton', to: '/components/skeleton' },
     ],
   },
   {
@@ -60,11 +61,11 @@ export const DOC_NAV: DocGroup[] = [
     links: [{ label: 'Sections', to: '/recipes', src: ['v1', 'v2'] }],
   },
   {
-    title: 'Showcase',
+    title: 'Live',
     links: [
-      { label: 'efface.dev', to: '/showcase/efface', src: ['v1'] },
-      { label: 'v2.efface.dev', to: '/showcase/v2', src: ['v2'] },
-      { label: 'HiNest', to: '/showcase/hinest' },
+      { label: 'efface.dev', to: '/live/efface', src: ['v1'] },
+      { label: 'v2.efface.dev', to: '/live/v2', src: ['v2'] },
+      { label: 'HiNest', to: '/live/hinest' },
     ],
   },
 ]

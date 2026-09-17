@@ -22,4 +22,5 @@ export const FooterPage = lazy(withChunkRecovery(() => import('@/docs/pages/Foot
 export const OverlayPage = lazy(withChunkRecovery(() => import('@/docs/pages/OverlayPage').then((m) => ({ default: m.OverlayPage }))))
 export const BannerPage = lazy(withChunkRecovery(() => import('@/docs/pages/BannerPage').then((m) => ({ default: m.BannerPage }))))
 export const RecipesPage = lazy(withChunkRecovery(() => import('@/docs/pages/RecipesPage').then((m) => ({ default: m.RecipesPage }))))
-export const ShowcasePage = lazy(withChunkRecovery(() => import('@/docs/pages/ShowcasePage').then((m) => ({ default: m.ShowcasePage }))))
+export const LivePage = lazy(withChunkRecovery(() => import('@/docs/pages/LivePage').then((m) => ({ default: m.LivePage }))))
+export const SkeletonPage = lazy(withChunkRecovery(() => import('@/docs/pages/SkeletonPage').then((m) => ({ default: m.SkeletonPage }))))

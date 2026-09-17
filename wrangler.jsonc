@@ -1,12 +1,20 @@
 {
   "$schema": "https://unpkg.com/wrangler@4/config-schema.json",
   "name": "efface-component",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-09-01",
-  // 서버 없는 정적 SPA: dist를 그대로 서빙하고 없는 경로는 index.html로
+  // 문서 사이트: dist 를 그대로 서빙하고 없는 경로는 index.html 로 (Worker 가 ASSETS 바인딩으로 넘긴다)
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
     "not_found_handling": "single-page-application"
   },
-  // 커스텀 도메인: efface.dev 존이 같은 계정에 있어 배포 시 DNS까지 자동 연결된다
-  "routes": [{ "pattern": "component.efface.dev", "custom_domain": true }]
+  // 커스텀 도메인: efface.dev 존이 같은 계정에 있어 배포 시 DNS 까지 자동 연결된다.
+  // live-* 는 실제 서비스를 프록시하며 검사 스크립트를 주입하는 호스트.
+  "routes": [
+    { "pattern": "component.efface.dev", "custom_domain": true },
+    { "pattern": "live-efface.efface.dev", "custom_domain": true },
+    { "pattern": "live-v2.efface.dev", "custom_domain": true },
+    { "pattern": "live-hinest.efface.dev", "custom_domain": true }
+  ]
 }
