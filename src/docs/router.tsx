@@ -15,6 +15,9 @@ import { MotionRevealPage } from '@/docs/pages/MotionRevealPage'
 import { MotionScrollPage } from '@/docs/pages/MotionScrollPage'
 import { MotionCursorPage } from '@/docs/pages/MotionCursorPage'
 import { MotionTextPage } from '@/docs/pages/MotionTextPage'
+import { NavigationPage } from '@/docs/pages/NavigationPage'
+import { FooterPage } from '@/docs/pages/FooterPage'
+import { OverlayPage } from '@/docs/pages/OverlayPage'
 
 export const router = createBrowserRouter([
   {
@@ -34,9 +37,9 @@ export const router = createBrowserRouter([
       { path: '/motion/scroll', element: <MotionScrollPage /> },
       { path: '/motion/cursor', element: <MotionCursorPage /> },
       { path: '/motion/text', element: <MotionTextPage /> },
-      { path: '/layout/navigation', element: <PlaceholderPage title="Navigation" /> },
-      { path: '/layout/footer', element: <PlaceholderPage title="Footer" /> },
-      { path: '/layout/overlay', element: <PlaceholderPage title="Overlay" /> },
+      { path: '/layout/navigation', element: <NavigationPage /> },
+      { path: '/layout/footer', element: <FooterPage /> },
+      { path: '/layout/overlay', element: <OverlayPage /> },
       { path: '/banner', element: <PlaceholderPage title="efface Banner" /> },
       { path: '/recipes', element: <PlaceholderPage title="Sections" /> },
       { path: '*', element: <PlaceholderPage title="404" /> },

@@ -36,6 +36,17 @@
   --success: #16a34a;
   --selection-bg: #0a0a0a;
   --selection-fg: #ffffff;
+
+  /* 문서 코드 블록 */
+  --code-bg: #fafafa;
+  --code-fg: #171717;
+  --code-comment: #8a8a93;
+  --code-string: #047857;
+  --code-keyword: #7c3aed;
+  --code-tag: #1d4ed8;
+  --code-attr: #b45309;
+  --code-number: #0e7490;
+  --code-punct: #737373;
 }
 
 [data-theme='dark'] {
@@ -61,6 +72,17 @@
   --success: #22c55e;
   --selection-bg: #3b62e5;
   --selection-fg: #ffffff;
+
+  /* 문서 코드 블록 */
+  --code-bg: #0e0e11;
+  --code-fg: #e4e4e9;
+  --code-comment: #6a6a73;
+  --code-string: #86efac;
+  --code-keyword: #c4b5fd;
+  --code-tag: #93c5fd;
+  --code-attr: #fcd34d;
+  --code-number: #67e8f9;
+  --code-punct: #8a8a93;
 }
 
 @theme inline {

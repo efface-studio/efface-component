@@ -22,7 +22,7 @@ export function OverviewPage() {
     <DocPage
       eyebrow="overview"
       title="efface design system"
-      lead="efface.dev, v2.efface.dev, mom.efface.dev 세 사이트에 흩어져 있던 토큰 · 컴포넌트 · 모션을 한 벌로 정리했다. React 19 + TypeScript + Tailwind CSS v4 로 쓰여 있고, 각 항목은 라이브 프리뷰와 코드 스니펫, props 표로 문서화되어 있다."
+      lead="덜어낼수록 선명해진다. efface 가 만드는 모든 화면이 공유하는 색과 서체, 여백과 움직임을 한 벌의 토큰과 컴포넌트로 묶었다. 살아 있는 프리뷰로 보고, 코드 그대로 가져다 쓴다."
       sources={['v1', 'v2', 'mom']}
     >
       <Section title="한눈에">

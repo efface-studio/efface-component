@@ -1,27 +1,45 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { cn } from '@/lib/cn'
+import { tokenize, type TokenKind } from './highlight'
 
 export interface CodeBlockProps {
   code: string
-  lang?: string
+  lang?: 'tsx' | 'ts' | 'css' | 'html' | 'svg' | 'bash'
   className?: string
 }
 
-/** 복사 버튼이 달린 코드 블록. 하이라이트 없이 모노 그대로 — 스니펫은 짧다. */
+const KIND_CLASS: Record<TokenKind, string> = {
+  comment: 'text-(--code-comment) italic',
+  string: 'text-(--code-string)',
+  keyword: 'text-(--code-keyword)',
+  tag: 'text-(--code-tag)',
+  attr: 'text-(--code-attr)',
+  number: 'text-(--code-number)',
+  punct: 'text-(--code-punct)',
+  prop: 'text-(--code-attr)',
+  selector: 'text-(--code-tag)',
+  plain: '',
+}
+
+/** 복사 버튼이 달린 코드 블록. 경량 토크나이저로 하이라이트한다. */
 export function CodeBlock({ code, lang = 'tsx', className }: CodeBlockProps) {
   const [copied, setCopied] = useState(false)
+  const src = code.trim()
+  const tokens = useMemo(() => (lang === 'bash' ? [{ kind: 'plain' as const, text: src }] : tokenize(src, lang)), [src, lang])
+
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(code)
+      await navigator.clipboard.writeText(src)
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1400)
     } catch {
       /* clipboard 권한 없음 — 조용히 무시 */
     }
   }
+
   return (
-    <div className={cn('group relative overflow-hidden rounded-lg border border-line bg-bg-soft', className)}>
+    <div className={cn('group relative overflow-hidden rounded-lg border border-line bg-(--code-bg)', className)}>
       <div className="flex h-8 items-center justify-between border-b border-line px-3">
         <span className="font-mono text-[10px] tracking-wider text-fg-faint uppercase">{lang}</span>
         <button
@@ -34,8 +52,14 @@ export function CodeBlock({ code, lang = 'tsx', className }: CodeBlockProps) {
           {copied ? 'copied' : 'copy'}
         </button>
       </div>
-      <pre className="overflow-x-auto p-4 font-mono text-[12.5px] leading-[1.7] text-fg-2">
-        <code>{code.trim()}</code>
+      <pre className="overflow-x-auto p-4 font-mono text-[12.5px] leading-[1.7] text-(--code-fg)">
+        <code>
+          {tokens.map((t, i) => (
+            <span key={i} className={KIND_CLASS[t.kind]}>
+              {t.text}
+            </span>
+          ))}
+        </code>
       </pre>
     </div>
   )

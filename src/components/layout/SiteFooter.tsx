@@ -16,7 +16,7 @@ export interface SiteFooterColumn {
 }
 
 export interface SiteFooterProps {
-  columns: readonly SiteFooterColumn[]
+  columns?: readonly SiteFooterColumn[]
   /** 영문 태그라인의 취소선 단어 앞/뒤 */
   taglineEn?: { before: string; struck: string; after: string }
   taglineKo?: { before: string; struck: string; after: string }
