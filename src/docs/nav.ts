@@ -59,6 +59,14 @@ export const DOC_NAV: DocGroup[] = [
     title: 'Recipes',
     links: [{ label: 'Sections', to: '/recipes', src: ['v1', 'v2'] }],
   },
+  {
+    title: 'Showcase',
+    links: [
+      { label: 'efface.dev', to: '/showcase/efface', src: ['v1'] },
+      { label: 'v2.efface.dev', to: '/showcase/v2', src: ['v2'] },
+      { label: 'HiNest', to: '/showcase/hinest' },
+    ],
+  },
 ]
 
 export const SOURCE_META = {

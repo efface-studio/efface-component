@@ -22,6 +22,7 @@ import {
   OverlayPage,
   BannerPage,
   RecipesPage,
+  ShowcasePage,
 } from '@/docs/pages/lazy'
 
 export const router = createBrowserRouter([
@@ -48,6 +49,8 @@ export const router = createBrowserRouter([
       { path: '/layout/overlay', element: <OverlayPage /> },
       { path: '/banner', element: <BannerPage /> },
       { path: '/recipes', element: <RecipesPage /> },
+      { path: '/showcase/:project', element: <ShowcasePage /> },
+      { path: '/showcase', element: <ShowcasePage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
