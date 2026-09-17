@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode, type RefObject } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
 import { DURATION, menuItem, overlayFade } from '@/lib/motion'
@@ -23,6 +23,11 @@ export interface NavProps {
   hideAfter?: number
   /** `fixed` 대신 `absolute` — 문서 프리뷰처럼 컨테이너 안에 가둘 때 */
   contained?: boolean
+  /** 창 대신 이 스크롤 컨테이너의 스크롤을 본다 (contained 와 함께) */
+  scrollTarget?: RefObject<HTMLElement | null>
+  /** 제어 모드 — 오버레이 열림 상태를 바깥에서 쥔다 */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   labels?: { menu: string; close: string }
   className?: string
 }
@@ -39,20 +44,32 @@ export function Nav({
   overlayFooter,
   hideAfter = 8,
   contained = false,
+  scrollTarget,
+  open: openProp,
+  onOpenChange,
   labels = { menu: '메뉴', close: '닫기' },
   className,
 }: NavProps) {
-  const [open, setOpen] = useState(false)
-  const scrolled = useScrolledPast(hideAfter)
+  const [openState, setOpenState] = useState(false)
+  const open = openProp ?? openState
+  const setOpen = (v: boolean) => {
+    setOpenState(v)
+    onOpenChange?.(v)
+  }
+  const scrolled = useScrolledPast(hideAfter, scrollTarget)
   const reduce = useReducedMotion()
   useBodyScrollLock(open && !contained)
 
   useEffect(() => {
     if (!open) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setOpenState(false)
+      onOpenChange?.(false)
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open])
+  }, [open, onOpenChange])
 
   const pos = contained ? 'absolute' : 'fixed'
 
@@ -62,7 +79,7 @@ export function Nav({
         className={cn(
           pos,
           'inset-x-0 top-0 z-50 border-b border-transparent transition-[transform,opacity] duration-300 ease-out',
-          scrolled && !open && !contained ? 'pointer-events-none -translate-y-full opacity-0' : 'translate-y-0 opacity-100',
+          scrolled && !open ? 'pointer-events-none -translate-y-full opacity-0' : 'translate-y-0 opacity-100',
           className,
         )}
       >
@@ -72,7 +89,7 @@ export function Nav({
             {aside}
             <button
               type="button"
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => setOpen(!open)}
               className="relative z-50 flex h-9 w-9 flex-col items-center justify-center gap-[5px]"
               aria-label={open ? labels.close : labels.menu}
               aria-expanded={open}

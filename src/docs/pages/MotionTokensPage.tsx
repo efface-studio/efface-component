@@ -92,16 +92,26 @@ export const STAGGER = { tight: 0.06, base: 0.07, word: 0.05 } as const
               다시 재생
             </Button>
           </div>
-          <div key={key} className="grid grid-cols-5 gap-3">
-            {[0, 1, 2, 3, 4].map((i) => (
+          <div key={key} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              ['본질만 남기는 설계', '화려함보다 명료함.'],
+              ['검증된 기술만', '유행이 아니라 오래 살아남는 도구.'],
+              ['끝까지 책임지는 완성도', '배포로 끝이 아니라 잘 돌아갈 때까지.'],
+              ['빠른 판단, 정확한 일정', '기획·디자인·개발을 한 흐름으로.'],
+            ].map(([t, d], i) => (
               <motion.div
-                key={i}
+                key={t}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                className="flex h-16 items-center justify-center rounded-md border border-line bg-surface font-mono text-xs text-fg-dim"
+                className="rounded-lg border border-line bg-surface p-5"
               >
-                {(i * 0.06).toFixed(2)}s
+                <div className="flex items-baseline justify-between">
+                  <span className="font-mono text-xs text-accent">0{i + 1}</span>
+                  <span className="font-mono text-[10px] text-fg-faint">+{(i * 0.06).toFixed(2)}s</span>
+                </div>
+                <p className="mt-3 font-medium">{t}</p>
+                <p className="mt-1 text-[13px] text-fg-dim">{d}</p>
               </motion.div>
             ))}
           </div>

@@ -1,7 +1,6 @@
 import { DocPage, Note, Section } from '@/docs/components/Doc'
 import { CodeBlock } from '@/docs/components/CodeBlock'
 import { SpecTable } from '@/docs/components/SpecTable'
-import { Preview } from '@/docs/components/Preview'
 
 const CONTAINERS = [
   { name: 'max-w-page', value: '1400px', pad: 'px-6 md:px-10', where: 'v2 전 섹션 · Nav' },
@@ -55,9 +54,7 @@ export function LayoutPage() {
       </Section>
 
       <Section title="2단 섹션" desc="v2 About / Approach 의 뼈대. 왼쪽에 라벨·제목·리드, 오른쪽에 본문.">
-        <Preview
-          theme="dark"
-          bleed
+        <CodeBlock
           code={`<section className="border-t border-line bg-bg py-24 md:py-36">
   <div className="mx-auto max-w-page px-6 md:px-10">
     <div className="grid gap-12 md:grid-cols-12 md:gap-16">
@@ -66,45 +63,21 @@ export function LayoutPage() {
     </div>
   </div>
 </section>`}
-        >
-          <section className="border-t border-line py-16">
-            <div className="mx-auto max-w-page px-6 md:px-10">
-              <div className="grid gap-8 md:grid-cols-12 md:gap-16">
-                <div className="rounded-lg border border-dashed border-line-strong p-5 md:col-span-5">
-                  <p className="font-mono text-[11px] text-fg-faint">md:col-span-5</p>
-                  <p className="mt-3 text-2xl font-semibold tracking-tight">제목 블록</p>
-                  <p className="mt-2 text-sm text-fg-dim">라벨 · 제목 · 리드</p>
-                </div>
-                <div className="rounded-lg border border-dashed border-line-strong p-5 md:col-span-7">
-                  <p className="font-mono text-[11px] text-fg-faint">md:col-span-7</p>
-                  <p className="mt-3 text-sm text-fg-dim">본문 · 목록 · 메타 그리드</p>
-                </div>
-              </div>
-            </div>
-          </section>
-        </Preview>
+        />
         <Note>
           모바일(md 미만)에서는 열이 세로로 쌓이고 gap 이 12 로 줄어든다. 핀 고정 스크롤 씬(v2 EffaceIntro · AppCards · Capabilities)은 md 미만에서 정적 스택으로 대체된다 — 씬을 축소하면 타입이 읽히지 않기 때문이다.
         </Note>
       </Section>
 
       <Section title="1px 선 그리드" desc="카드 사이 간격을 gap-px 와 배경 line 색으로 만든다. 셀은 bg-surface 를 직접 칠한다.">
-        <Preview
-          theme="light"
+        <CodeBlock
           code={`<div className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
   <div className="bg-surface p-6">…</div>
   <div className="bg-surface p-6">…</div>
   <div className="bg-surface p-6">…</div>
 </div>`}
-        >
-          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
-            {['셀 1', '셀 2', '셀 3'].map((c) => (
-              <div key={c} className="bg-surface p-6 text-sm text-fg-dim">
-                {c}
-              </div>
-            ))}
-          </div>
-        </Preview>
+        />
+        <p className="text-[13px] text-fg-dim">실제 모습은 Cards 페이지의 CardGrid 와 Recipes 를 본다.</p>
       </Section>
     </DocPage>
   )

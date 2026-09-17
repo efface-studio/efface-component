@@ -5,8 +5,9 @@ import { cn } from '@/lib/cn'
 import { DOC_NAV } from '@/docs/nav'
 import { LogoMark } from '@/components/brand/LogoMark'
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
+import { DocsThemeContext, type DocsTheme } from '@/docs/theme'
 
-type Theme = 'light' | 'dark'
+type Theme = DocsTheme
 const STORAGE_KEY = 'efface-ds-theme'
 
 function readTheme(): Theme {
@@ -84,6 +85,7 @@ export function DocsLayout() {
   )
 
   return (
+    <DocsThemeContext.Provider value={{ theme, setTheme }}>
     <div className="min-h-dvh bg-bg text-fg">
       <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
         <div className="flex h-14 items-center justify-between px-4 md:px-6">
@@ -144,5 +146,6 @@ export function DocsLayout() {
         </main>
       </div>
     </div>
+    </DocsThemeContext.Provider>
   )
 }

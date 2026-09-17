@@ -2,12 +2,10 @@ import { ArrowRight } from 'lucide-react'
 import { DocPage, Note, Section } from '@/docs/components/Doc'
 import { Preview } from '@/docs/components/Preview'
 import { PropsTable } from '@/docs/components/PropsTable'
-import { CursorGlow } from '@/components/motion/CursorGlow'
 import { SpotlightText } from '@/components/motion/SpotlightText'
 import { MagneticButton } from '@/components/motion/MagneticButton'
 import { TiltCard } from '@/components/motion/TiltCard'
 import { ButtonLink } from '@/components/ui/Button'
-import { PilotBadge } from '@/components/ui/Badge'
 import { FooterWordmark } from '@/components/layout/FooterWordmark'
 
 export function MotionCursorPage() {
@@ -15,40 +13,9 @@ export function MotionCursorPage() {
     <DocPage
       eyebrow="motion"
       title="Cursor"
-      lead="커서를 따라가는 것들. 글로우와 점 격자(v1 Hero), 외곽선 텍스트 스포트라이트(v1 CTA), 자석 버튼(v1), 3D 기울기(v2 카드), 워드마크 스포트라이트(Mom-Work). 모두 마우스에만 반응하고 터치에서는 정지 상태가 곧 디자인이다."
+      lead="커서를 따라가는 것들. 외곽선 텍스트 스포트라이트(v1 CTA), 자석 버튼(v1), 3D 기울기(v2 카드), 워드마크 스포트라이트(Mom-Work). 모두 마우스에만 반응하고 터치에서는 정지 상태가 곧 디자인이다. 커서 글로우 + 점 격자는 Recipes 의 v1 히어로에서 볼 수 있다."
       sources={['v1', 'v2', 'mom']}
     >
-      <Section title="CursorGlow" desc="부드러운 블루 글로우가 스프링으로 커서를 따라오고, 점 격자는 커서 근처에서만 진하게 드러난다. 위치는 퍼센트로 두어 리사이즈에 안전하다." sources={['v1']}>
-        <Preview
-          theme="light"
-          bleed
-          code={`import { CursorGlow } from '@/components/motion'
-
-<CursorGlow dots radius={480} className="py-24">
-  <div className="mx-auto max-w-page-v1 px-5">…히어로 카피…</div>
-</CursorGlow>`}
-        >
-          <CursorGlow dots className="px-8 py-20">
-            <div className="max-w-lg">
-              <PilotBadge>2026 Q3 신규 프로젝트 모집 중</PilotBadge>
-              <h2 className="mt-6 text-3xl font-semibold leading-[1.1] tracking-tight md:text-5xl">
-                웹사이트 외주,
-                <br />
-                <span className="text-fg-dim">막막하셨다면.</span>
-              </h2>
-              <p className="mt-5 text-fg-dim">마우스를 움직여 보세요.</p>
-            </div>
-          </CursorGlow>
-        </Preview>
-        <PropsTable
-          rows={[
-            { name: 'rgb', type: 'string', default: "'37,99,235'", desc: '글로우 색 삼중항' },
-            { name: 'dots', type: 'boolean', default: 'true', desc: '점 격자 (라이트: 검정 7%, 다크: 흰 8%)' },
-            { name: 'radius', type: 'number', default: '480', desc: '글로우 반경 px' },
-          ]}
-        />
-      </Section>
-
       <Section title="SpotlightText" desc="외곽선만 있는 거대 텍스트 위에, 커서 주변 마스크 안에서만 그라데이션 채움이 드러난다. 세 레이어: 외곽선 · 마스크된 채움 · 글로우. 짝수 줄은 왼쪽, 홀수 줄은 오른쪽으로 3% 어긋난다." sources={['v1']}>
         <Preview
           theme="light"
