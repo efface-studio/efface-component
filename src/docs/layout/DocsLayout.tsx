@@ -101,7 +101,8 @@ export function DocsLayout() {
     <DocsThemeContext.Provider value={{ theme, setTheme }}>
     <div className="min-h-dvh bg-bg text-fg">
       <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
-        <div className="flex h-14 items-center justify-between px-4 md:px-6">
+        {/* 본문과 같은 컨테이너·여백 — 로고는 사이드바 글자와, 컨트롤은 본문 오른쪽 여백과 나란히 */}
+        <div className="mx-auto flex h-14 w-full max-w-[1720px] items-center justify-between px-5 md:px-10">
           <div className="flex items-center gap-3">
             <button type="button" onClick={() => setOpen(true)} className="-ml-1 flex h-9 w-9 items-center justify-center rounded-md text-fg-dim hover:bg-line/40 hover:text-fg lg:hidden" aria-label="메뉴 열기">
               <Menu size={18} />
@@ -129,7 +130,7 @@ export function DocsLayout() {
       </header>
 
       <div className="mx-auto flex w-full max-w-[1720px]">
-        <aside className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] w-60 shrink-0 overflow-y-auto border-r border-line px-5 py-8 lg:block">{sidebar}</aside>
+        <aside className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] w-64 shrink-0 overflow-y-auto border-r border-line py-8 pr-6 pl-5 md:pl-10 lg:block">{sidebar}</aside>
 
         {open && (
           <div className="fixed inset-0 z-50 lg:hidden">
@@ -147,15 +148,16 @@ export function DocsLayout() {
         )}
 
         <main className="min-w-0 flex-1 px-5 py-10 md:px-10 md:py-14">
-          {/* 나가는 페이지는 제자리에서 위로 빠지고(카메라가 아래로), 새 페이지는 아래에서 올라온다.
-              스크롤 리셋은 exit 가 끝난 뒤 — 먼저 되돌리면 옛 페이지가 위로 튀어 방향이 거꾸로 읽힌다. */}
+          {/* 나가는 페이지는 움직이지 않고 제자리에서 흐려지고, 새 페이지만 아래에서 올라온다 —
+              옛 페이지까지 움직이면 위로 튀었다 내려오는 것처럼 읽힌다.
+              스크롤 리셋은 exit 가 끝난 뒤(이미 안 보일 때). */}
           <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo({ top: 0 })}>
             <motion.div
               key={pathname}
-              initial={reduce ? false : { opacity: 0, y: 56 }}
+              initial={reduce ? false : { opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={reduce ? undefined : { opacity: 0, y: -40, transition: { duration: 0.28, ease: [0.4, 0, 1, 1] } }}
-              transition={{ duration: 0.55, ease: EASE_OUT_EXPO }}
+              exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.18, ease: 'easeOut' } }}
+              transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
             >
               <Suspense fallback={null}>{outlet}</Suspense>
               <NextPageBar />
