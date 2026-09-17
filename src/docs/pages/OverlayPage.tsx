@@ -13,10 +13,10 @@ export function OverlayPage() {
     <DocPage
       eyebrow="layout"
       title="Overlay"
-      lead="화면 위에 떠 있는 것들. 우하단 플로팅 CTA 와 그 패널, 그리고 exit-intent 모달. 둘 다 v1 에서 왔고 라이트 기준으로 설계됐다."
+      lead="화면 위에 떠 있는 것들이에요. 오른쪽 아래 플로팅 버튼과 거기서 펼쳐지는 패널, 그리고 모달. 둘 다 v1에서 가져왔고 밝은 테마 기준으로 만들어졌어요."
       sources={['v1']}
     >
-      <Section title="FloatingCTA" desc="알약 버튼(메시지 아이콘 + 텍스트 + 화살표 원)을 누르면 위로 280px 패널이 펼쳐진다. v1 은 300px 이상 스크롤했을 때만 보였다." sources={['v1']}>
+      <Section title="FloatingCTA" desc="알약 버튼을 누르면 위로 패널이 펼쳐져요. v1에서는 300px 이상 스크롤한 뒤에야 나타났어요." sources={['v1']}>
         <Preview
           theme="light"
           bleed
@@ -52,15 +52,15 @@ export function OverlayPage() {
         </Preview>
         <PropsTable
           rows={[
-            { name: 'bubble', type: 'string', desc: '버튼 텍스트. 열리면 × 로 바뀐다' },
+            { name: 'bubble', type: 'string', desc: '버튼 텍스트. 열리면 × 로 바뀌어요' },
             { name: 'actions', type: "{ label; href; variant?: 'primary' | 'kakao' | 'outline'; external? }[]", desc: '패널 항목' },
-            { name: 'visible', type: 'boolean', default: 'true', desc: 'false 면 아래로 사라진다' },
+            { name: 'visible', type: 'boolean', default: 'true', desc: 'false 면 아래로 사라져요' },
             { name: 'contained', type: 'boolean', default: 'false', desc: 'fixed 대신 absolute' },
           ]}
         />
       </Section>
 
-      <Section title="Modal" desc="반투명 잉크 배경 + 블러. 카드는 아래에서 24px 올라오며 0.97 → 1 로 커진다. 상단 그라데이션 선과 우상단 블루 글로우가 장식. ESC · 배경 클릭으로 닫힌다. v1 은 데스크톱에서 마우스가 창 위로 나갈 때 한 번 띄웠다(exit-intent)." sources={['v1']}>
+      <Section title="Modal" desc="반투명한 검정 배경에 블러가 깔리고, 카드는 아래에서 살짝 올라오며 커져요. 위쪽 그라데이션 선과 오른쪽 위 파란 글로우가 장식이에요. ESC나 배경 클릭으로 닫혀요. v1에서는 마우스가 창 밖으로 나갈 때 한 번 띄웠어요." sources={['v1']}>
         <Preview
           theme="light"
           bleed
@@ -86,7 +86,7 @@ export function OverlayPage() {
             </Modal>
           </div>
         </Preview>
-        <Note>모달과 오버레이 메뉴는 useBodyScrollLock 을 공유한다 — 중첩되어도 카운트로 관리되어 마지막 하나가 닫힐 때 배경 스크롤이 돌아온다.</Note>
+        <Note>모달과 오버레이 메뉴는 useBodyScrollLock을 같이 써요. 겹쳐 열려도 개수를 세고 있어서 마지막 하나가 닫힐 때 뒤 스크롤이 돌아와요.</Note>
       </Section>
     </DocPage>
   )

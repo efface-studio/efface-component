@@ -57,7 +57,7 @@ function HeroV2() {
     <div ref={scrollRef} className="h-[620px] overflow-y-auto">
       <section ref={heroRef} className="relative h-[620px] w-full overflow-hidden bg-[#0b0c10]">
         <div className="pointer-events-none absolute inset-0">
-          <LogoScene3D />
+          <LogoScene3D anchor={0.72} />
         </div>
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(10,10,11,0.92)_0%,rgba(10,10,11,0.68)_28%,rgba(10,10,11,0.18)_52%,transparent_74%)]" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-bg/45 via-transparent to-bg" />
@@ -92,16 +92,16 @@ export function RecipesPage() {
     <DocPage
       eyebrow="recipes"
       title="Sections"
-      lead="라이브러리의 조각을 실제 섹션으로 조립한 예. v2 는 다크, v1 은 라이트로 고정되어 있다 — 원본 사이트 그대로다."
+      lead="컴포넌트를 실제 섹션으로 조립해 본 예시예요. v2는 다크, v1은 라이트로 고정해 뒀어요. 원본 사이트 모습 그대로예요."
       sources={['v1', 'v2']}
     >
-      <Section title="Hero — v2" desc="WebGL 유리 로고를 배경으로, 왼쪽 스크림 위에 rise-in 카피. 스크롤하면 카피가 위로 밀리며 사라지고 스크롤 큐가 먼저 꺼진다. 프리뷰 안을 스크롤한다." sources={['v2']}>
+      <Section title="Hero — v2" desc="3D 유리 로고를 배경에 두고 왼쪽에 카피를 올렸어요. 스크롤하면 카피가 위로 밀리며 사라지고, 스크롤 안내가 먼저 꺼져요. 프리뷰 안을 스크롤해 보세요." sources={['v2']}>
         <Preview
           theme="dark"
           lockTheme
           bleed
           code={`<section ref={ref} className="relative min-h-[100svh] overflow-hidden bg-bg">
-  <div className="pointer-events-none absolute inset-0 bg-[#0b0c10]"><LogoScene3D still={!!reduce} /></div>
+  <div className="pointer-events-none absolute inset-0 bg-[#0b0c10]"><LogoScene3D anchor={0.72} still={!!reduce} /></div>
   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(10,10,11,0.92)_0%,rgba(10,10,11,0.68)_28%,rgba(10,10,11,0.18)_52%,transparent_74%)]" />
   <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-bg/45 via-transparent to-bg" />
   <motion.div style={{ y: contentY, opacity: contentOpacity }} className="relative z-10 mx-auto flex min-h-[100svh] max-w-page flex-col justify-end px-6 pb-[12vh] md:px-10">
@@ -116,7 +116,7 @@ export function RecipesPage() {
         </Preview>
       </Section>
 
-      <Section title="Hero — v1" desc="커서 글로우 + 점 격자 위에 배지 · 제목 · 불릿 · 자석 CTA, 오른쪽에 터미널 카드. 진입은 CSS rise-in." sources={['v1']}>
+      <Section title="Hero — v1" desc="커서를 따라오는 글로우와 점 격자 위에 배지, 제목, 불릿, 자석 버튼을 놓고 오른쪽에 터미널 카드를 세웠어요. 등장은 CSS rise-in이에요." sources={['v1']}>
         <Preview
           theme="light"
           lockTheme
@@ -192,7 +192,7 @@ export function RecipesPage() {
         </Preview>
       </Section>
 
-      <Section title="Approach — v2" desc="좌 5 / 우 7. 왼쪽 라벨·제목·리드, 오른쪽 번호 목록이 스태거로 뜨고, 아래에 스택 마퀴." sources={['v2']}>
+      <Section title="Approach — v2" desc="왼쪽 5칸에 라벨·제목·리드, 오른쪽 7칸에 번호 목록이 차례로 떠오르고, 아래에 기술 스택 마퀴가 흘러요." sources={['v2']}>
         <Preview
           theme="dark"
           lockTheme
@@ -240,7 +240,7 @@ export function RecipesPage() {
         </Preview>
       </Section>
 
-      <Section title="About + Contact — v2" desc="About 은 단락 스태거 + 메타 그리드. Contact 는 거대 이메일 링크 하나로 끝난다." sources={['v2']}>
+      <Section title="About + Contact — v2" desc="About은 문단이 차례로 뜨고 아래에 정보 표. Contact는 큼직한 이메일 링크 하나로 끝나요." sources={['v2']}>
         <Preview theme="dark" lockTheme bleed>
           <section className="px-6 py-16 md:px-10 md:py-24">
             <div className="grid gap-12 md:grid-cols-12 md:gap-16">
@@ -282,7 +282,7 @@ export function RecipesPage() {
         </Preview>
       </Section>
 
-      <Section title="Services + Process — v1" desc="WordReveal 제목, 1px 그리드 카드, 스크롤 선. 카드 아이콘은 호버 시 스프링으로 돈다." sources={['v1']}>
+      <Section title="Services + Process — v1" desc="단어별로 올라오는 제목, 1px 선 카드 그리드, 스크롤에 맞춰 그어지는 선. 카드 아이콘은 마우스를 올리면 스프링으로 튀어요." sources={['v1']}>
         <Preview theme="light" lockTheme bleed>
           <section className="border-b border-line px-5 py-16 md:px-8 md:py-24">
             <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
@@ -359,7 +359,7 @@ export function RecipesPage() {
         </Preview>
       </Section>
 
-      <Section title="Stats + FAQ — v1" desc="카운터 네 개가 얇은 띠로, FAQ 는 좌 4 / 우 8 아코디언." sources={['v1']}>
+      <Section title="Stats + FAQ — v1" desc="숫자 카운터 네 개가 얇은 띠로 지나가고, FAQ는 왼쪽 4칸 제목 / 오른쪽 8칸 아코디언이에요." sources={['v1']}>
         <Preview theme="light" lockTheme bleed>
           <section className="border-b border-line px-5 py-12 md:px-8 md:py-16">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-4">
@@ -402,7 +402,7 @@ export function RecipesPage() {
         </Preview>
       </Section>
 
-      <Section title="CTA — v1" desc="스포트라이트 텍스트 위에 WordReveal 제목과 자석 CTA, 오른쪽에 채널 카드." sources={['v1']}>
+      <Section title="CTA — v1" desc="스포트라이트 글자 위에 제목과 자석 버튼, 오른쪽에 연락 채널 카드를 올렸어요." sources={['v1']}>
         <Preview theme="light" lockTheme bleed>
           <SpotlightText lines={['EFFACE', 'BUILT IN SEOUL', 'EFFACE', 'READY TO SHIP', 'EFFACE']} className="px-5 py-20 md:px-8 md:py-28">
             <div className="grid grid-cols-1 items-end gap-10 md:grid-cols-12">
@@ -444,7 +444,7 @@ export function RecipesPage() {
             </div>
           </SpotlightText>
         </Preview>
-        <Note>포트폴리오(BrowserFrame + 스크린샷), 후기 마퀴(TestimonialCard), 가격(PricingCard)은 Cards 페이지에서 각 카드 단위로 볼 수 있다.</Note>
+        <Note>포트폴리오(BrowserFrame), 후기 마퀴(TestimonialCard), 가격표(PricingCard)는 Cards 페이지에서 카드 단위로 볼 수 있어요.</Note>
       </Section>
     </DocPage>
   )

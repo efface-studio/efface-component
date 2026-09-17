@@ -30,7 +30,7 @@ export function MotionTokensPage() {
     <DocPage
       eyebrow="foundations"
       title="Motion tokens"
-      lead="한 곡선이 앱의 모든 진입과 전환을 나른다 — ease-out-expo. 지속시간은 세 단계, 스태거는 0.06–0.07초. CSS 변수와 lib/motion.ts 상수로 같은 값을 쓴다."
+      lead="등장과 전환은 곡선 하나(ease-out-expo)로 통일해요. 길이는 세 단계, 스태거는 0.06~0.07초. CSS 변수와 lib/motion.ts 상수가 같은 값을 갖고 있어요."
       sources={['v1', 'v2', 'mom']}
     >
       <Section title="이징">
@@ -58,7 +58,7 @@ export const STAGGER = { tight: 0.06, base: 0.07, word: 0.05 } as const
         />
       </Section>
 
-      <Section title="지속시간 · 스태거">
+      <Section title="길이 · 스태거">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="overflow-hidden rounded-lg border border-line">
             <div className="border-b border-line bg-bg-soft px-4 py-2 font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">duration</div>
@@ -118,7 +118,7 @@ export const STAGGER = { tight: 0.06, base: 0.07, word: 0.05 } as const
         </Preview>
       </Section>
 
-      <Section title="스프링" desc="커서 추종·자석·프로그레스 바처럼 연속 입력을 따라가는 곳은 베지어 대신 스프링을 쓴다. 값은 motion 의 useSpring 설정.">
+      <Section title="스프링" desc="커서를 따라가거나 스크롤을 따라가는 것처럼 입력이 계속 들어오는 곳은 베지어 대신 스프링을 써요. motion의 useSpring에 그대로 넣는 값이에요.">
         <div className="overflow-hidden rounded-lg border border-line">
           {SPRINGS.map((s) => (
             <div key={s.name} className="grid gap-2 border-b border-line px-4 py-3 last:border-0 md:grid-cols-[100px_1fr_1fr]">
@@ -130,7 +130,7 @@ export const STAGGER = { tight: 0.06, base: 0.07, word: 0.05 } as const
         </div>
       </Section>
 
-      <Section title="CSS 키프레임" desc="index.css 에 있는 전역 애니메이션. hydration 전에 재생돼야 하는 above-the-fold 진입은 여기 것을 쓴다.">
+      <Section title="CSS 키프레임" desc="index.css에 들어 있는 전역 애니메이션이에요. 첫 화면에 바로 보여야 해서 JS를 기다릴 수 없는 곳에 써요.">
         <div className="overflow-hidden rounded-lg border border-line">
           {KEYFRAMES.map((k) => (
             <div key={k.name} className="grid gap-2 border-b border-line px-4 py-3 last:border-0 md:grid-cols-[120px_180px_1fr]">
@@ -169,7 +169,7 @@ export const STAGGER = { tight: 0.06, base: 0.07, word: 0.05 } as const
           </div>
         </Preview>
         <Note>
-          모든 키프레임은 <code className="font-mono">prefers-reduced-motion: reduce</code> 에서 꺼지고 최종 상태로 그려진다. motion 컴포넌트는 <code className="font-mono">useReducedMotion()</code> 으로 <code className="font-mono">initial</code> 을 건너뛴다.
+          시스템에서 애니메이션 줄이기를 켜면 키프레임은 전부 꺼지고 끝 상태로 바로 그려져요. motion 컴포넌트는 <code className="font-mono">useReducedMotion()</code>으로 <code className="font-mono">initial</code>을 건너뜁니다.
         </Note>
       </Section>
     </DocPage>

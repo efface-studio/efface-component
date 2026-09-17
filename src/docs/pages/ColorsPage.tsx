@@ -20,10 +20,10 @@ export function ColorsPage() {
     <DocPage
       eyebrow="foundations"
       title="Colors"
-      lead="두 테마를 한 벌의 시맨틱 토큰으로 다룬다. light 는 efface.dev(paper/ink), dark 는 v2.efface.dev(검정 캔버스). 유틸리티는 bg-bg · text-fg · border-line 처럼 토큰 이름을 그대로 쓴다."
+      lead="라이트와 다크, 두 테마를 토큰 한 벌로 씁니다. 라이트는 efface.dev의 종이 위 잉크, 다크는 v2의 검정 바탕이에요. 클래스는 bg-bg, text-fg, border-line처럼 토큰 이름을 그대로 붙이면 됩니다."
       sources={['v1', 'v2', 'mom']}
     >
-      <Section title="시맨틱 토큰" desc="[data-theme] 범위 안에서 값이 바뀐다. 프리뷰 박스처럼 문서 안에 다른 테마를 중첩할 수 있다.">
+      <Section title="시맨틱 토큰" desc="data-theme 속성이 걸린 범위 안에서만 값이 바뀌어요. 그래서 이 문서의 프리뷰처럼 페이지 안에 다른 테마를 섞어 넣을 수 있어요.">
         <SpecTable
           columns={[
             { key: 'token', label: 'token', width: '140px', mono: true },
@@ -39,7 +39,7 @@ export function ColorsPage() {
           }))}
         />
         <Note>
-          accent 는 테마마다 다르다 — v1은 Tailwind blue-600 (#2563EB), v2는 로고에서 샘플한 #3B62E5. 로고 블루가 항상 필요하면 테마와 무관한 <code className="font-mono">brand</code> 를 쓴다.
+          accent는 테마마다 달라요. 라이트는 Tailwind blue-600(#2563EB), 다크는 로고에서 따온 #3B62E5. 테마와 상관없이 로고 블루가 필요하면 <code className="font-mono">brand</code>를 쓰세요.
         </Note>
         <CodeBlock
           lang="css"
@@ -64,7 +64,7 @@ export function ColorsPage() {
         />
       </Section>
 
-      <Section title="브랜드 고정 컬러" desc="테마가 바뀌어도 그대로인 색.">
+      <Section title="브랜드 고정 컬러" desc="테마가 바뀌어도 그대로인 색이에요.">
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {BRAND_COLORS.map((c) => (
             <li key={c.name} className="rounded-lg border border-line p-4">
@@ -75,7 +75,7 @@ export function ColorsPage() {
         </ul>
       </Section>
 
-      <Section title="스펙트럼" desc="v2 Capabilities 네 열의 액센트이자 푸터 워드마크 그라데이션의 정지점. 카드마다 --acc 로 내려보내 칩·대시가 섞어 쓴다." sources={['v2']}>
+      <Section title="스펙트럼" desc="v2 역량 카드 네 열의 강조색이자, 푸터 워드마크 그라데이션의 정지점이기도 해요. 카드에 --acc로 내려보내면 칩과 대시가 알아서 섞어 써요." sources={['v2']}>
         <div className="h-3 rounded-full" style={{ background: `linear-gradient(90deg, ${SPECTRUM.map((s) => s.value).join(', ')})` }} />
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {SPECTRUM.map((c) => (
@@ -87,7 +87,7 @@ export function ColorsPage() {
         </ul>
       </Section>
 
-      <Section title="서비스 카드 그라데이션" desc="v2 AppCards. 160° 세 정지점, 카드마다 --sheen(하이라이트 세기)이 다르다." sources={['v2']}>
+      <Section title="서비스 카드 그라데이션" desc="v2 서비스 카드 네 장의 바탕이에요. 160° 방향에 정지점 세 개, 하이라이트 세기(--sheen)는 카드마다 조금씩 달라요." sources={['v2']}>
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {APP_GRADIENTS.map((g) => (
             <li key={g.name} className="overflow-hidden rounded-xl border border-line">
@@ -101,7 +101,7 @@ export function ColorsPage() {
         </ul>
       </Section>
 
-      <Section title="네이비 (SiteFooter)" desc="Mom-Work 푸터는 v2의 검정 대신 살짝 푸른 네이비를 쓴다. 라이트 페이지 아래에 놓여도 탁하지 않다." sources={['mom']}>
+      <Section title="네이비 (SiteFooter)" desc="Mom-Work 푸터는 순검정 대신 살짝 푸른 네이비예요. 밝은 페이지 아래 붙여도 무겁지 않아요." sources={['mom']}>
         <div className="rounded-xl p-5" style={{ background: '#0B1220' }}>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {NAVY.map((c) => (

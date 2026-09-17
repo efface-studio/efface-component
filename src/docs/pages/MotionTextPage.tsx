@@ -60,10 +60,10 @@ export function MotionTextPage() {
     <DocPage
       eyebrow="motion"
       title="Text"
-      lead="글자 위에서 벌어지는 일. 파란 취소선(v2 푸터 · Mom-Work 푸터), 타이핑(v2 EffaceIntro 라벨), 그리고 단어가 하나씩 켜지는 문장(v2 EffaceIntro)."
+      lead="글자 위에서 벌어지는 일들이에요. 파란 취소선, 타이핑 효과, 그리고 단어가 하나씩 켜지는 문장."
       sources={['v2', 'mom']}
     >
-      <Section title="Strike" desc="단어가 흐린 회색으로 물러나고 파란 선이 왼쪽에서 scaleX 로 그어진다. shown 을 true 로 바꾸는 순간 재생 — IntersectionObserver 나 상태에 묶는다." sources={['v2', 'mom']}>
+      <Section title="Strike" desc="단어가 회색으로 물러나면서 파란 선이 왼쪽부터 그어져요. shown이 true가 되는 순간 재생되니까 화면 진입이나 상태에 묶어서 쓰세요." sources={['v2', 'mom']}>
         <Preview
           theme="dark"
           code={`import { Strike } from '@/components/motion'
@@ -95,14 +95,14 @@ export function MotionTextPage() {
         </Preview>
         <PropsTable
           rows={[
-            { name: 'shown', type: 'boolean', desc: 'true 가 되면 선이 그어진다' },
+            { name: 'shown', type: 'boolean', desc: 'true 가 되면 선이 그어져요' },
             { name: 'delay', type: 'number', default: '0', desc: 'ms' },
             { name: 'color', type: 'string', default: "'#3B82F6'", desc: '선 색' },
           ]}
         />
       </Section>
 
-      <Section title="TypeWriter" desc="한 글자씩 타이핑. 전체 텍스트를 투명하게 깔아 높이가 흔들리지 않는다. reduced-motion 이면 전문을 바로 보여준다." sources={['v2']}>
+      <Section title="TypeWriter" desc="한 글자씩 타이핑돼요. 전체 문장을 투명하게 깔아둬서 높이가 흔들리지 않아요. 애니메이션 줄이기를 켜면 바로 다 보여줘요." sources={['v2']}>
         <Preview
           theme="dark"
           code={`import { TypeWriter } from '@/components/motion'
@@ -125,7 +125,7 @@ export function MotionTextPage() {
 
       <Section
         title="EffaceSentence"
-        desc="단어가 하나씩 켜지는 문장. ~단어~ 는 켜졌다 회색으로 물러나며 취소선이 그어지고, *단어* 는 액센트 색, {orb1} 은 회전하며 튀어나오는 구슬. 진행도(0→1)는 스크롤·슬라이더·타이머 무엇이든 밀어 넣는다. 페인트는 DOM 에 직접 쓰므로 리렌더가 없다."
+        desc="단어가 하나씩 켜지는 문장이에요. ~단어~는 켜졌다가 회색으로 물러나며 취소선이 그어지고, *단어*는 강조색으로, {orb1}은 돌면서 튀어나오는 구슬로 바뀌어요. 진행도(0→1)는 스크롤이든 슬라이더든 타이머든 아무거나 넣으면 돼요. DOM에 직접 그려서 리렌더가 없어요."
         sources={['v2']}
       >
         <Preview
@@ -143,7 +143,7 @@ usePinnedSceneMotion(rootRef, (p) => setProgress(p * timelineEnd), !isMobile)`}
           <SentenceDemo />
         </Preview>
         <Note>
-          v2 원본 씬에는 이 문장 앞에 잡동사니 이미지가 흩어져 있고, 가운데에서 커지는 원형 마스크가 지우개(EraserPuck)와 함께 그것을 지운다. 이미지 자산이 있는 씬이라 여기서는 문장 타임라인만 옮겼다.
+          v2 원본에서는 이 문장 앞에 잡동사니 이미지가 흩어져 있고, 가운데서 커지는 원이 지우개와 함께 그걸 지워요. 이미지 자산이 필요한 씬이라 여기서는 문장 부분만 옮겨왔어요.
         </Note>
       </Section>
     </DocPage>

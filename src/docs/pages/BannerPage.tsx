@@ -14,10 +14,10 @@ export function BannerPage() {
     <DocPage
       eyebrow="banner"
       title="efface Banner"
-      lead="mom.efface.dev 상단의 efface 홍보 배너. 1600×500 스테이지에 6종(브랜드 · 가격 · 속도 · AI 엔지니어링 · 인수인계 · 모집)이 캐러셀로 돌고, 각 배너 안에서 컷이 12초 주기로 순환한다. 폭이 좁으면 비율을 유지한 채 축소되고, 모바일은 세로형 변형을 쓴다."
+      lead="mom.efface.dev 맨 위에 있는 efface 홍보 배너예요. 1600×500 크기에 여섯 가지 배너가 돌아가고, 각 배너 안에서도 장면이 12초마다 바뀌어요. 화면이 좁으면 비율을 지키며 줄어들고, 모바일에서는 세로형을 써요."
       sources={['mom']}
     >
-      <Section title="EffaceBanner (데스크톱)" desc="자동 전환 8초 + 수동(← → · 점 · 방향키 · Home · 스와이프). 슬라이드는 transform 대신 스크롤 위치로 옮기고, 전환 모션은 CSS 키프레임(efSlideR/L)이 맡는다. 모든 내부 모션은 --dur / --play 변수로 한 번에 조절된다.">
+      <Section title="EffaceBanner (데스크톱)" desc="8초마다 자동으로 넘어가고, 화살표·점·키보드·스와이프로도 넘길 수 있어요. 슬라이드는 스크롤 위치로 옮기고 전환 모션은 CSS 키프레임이 맡아요. 안쪽 모션은 --dur, --play 변수 두 개로 한꺼번에 조절돼요.">
         <ToggleGroup title="options">
           <Toggle label="Animate" hint="off stops cuts and autoplay" checked={animate} onChange={setAnimate} />
           <Toggle label="Built-in controls" hint="control bar inside the 1600px stage" checked={controls} onChange={setControls} />
@@ -49,11 +49,11 @@ export function BannerPage() {
           ]}
         />
         <Note>
-          배너 6종의 카피와 레이아웃은 컴포넌트 안에 인라인 스타일로 고정되어 있다 — 디자인 핸드오프(1600×500 보드)를 그대로 코드로 옮긴 것이라 토큰 대신 절대값을 쓴다. 문구를 바꾸려면 컴포넌트 안의 각 슬라이드 JSX 를 직접 고친다.
+          여섯 배너의 카피와 레이아웃은 컴포넌트 안에 인라인 스타일로 고정돼 있어요. 1600×500 디자인 보드를 그대로 코드로 옮긴 거라 토큰 대신 절대값을 써요. 문구를 바꾸려면 컴포넌트 안의 슬라이드 JSX를 직접 고치면 돼요.
         </Note>
       </Section>
 
-      <Section title="EffaceBannerMobile" desc="6종의 카피를 세로형(470px)으로 재배치. snap-x 가로 스크롤 + 자동 전환, 점 인디케이터. 격자 · 글로우 · 시트 장식과 컷 순환은 같은 키프레임을 쓴다.">
+      <Section title="EffaceBannerMobile" desc="같은 여섯 배너를 세로형(470px)으로 다시 배치했어요. 가로로 스냅 스크롤되고 자동으로도 넘어가요. 격자, 글로우, 반짝임과 장면 전환은 데스크톱과 같은 키프레임을 써요.">
         <Preview
           theme="light"
           lockTheme
@@ -69,7 +69,7 @@ const isNarrow = useMediaQuery('(max-width: 767px)')
         </Preview>
       </Section>
 
-      <Section title="키프레임 체계" desc="배너 전용 ef* 키프레임. 컷 순환은 첫 컷만 A 변형(0% 에서 보이는 상태로 시작)을 쓰고 나머지는 delay 로 배분한다.">
+      <Section title="키프레임" desc="배너 전용 ef* 키프레임이에요. 장면 순환은 첫 장면만 A 변형(처음부터 보이는 상태)을 쓰고, 나머지는 delay로 시간을 나눠 가져요.">
         <CodeBlock
           lang="css"
           code={`/* 3컷 순환 — 첫 컷 */

@@ -23,10 +23,10 @@ export function ListsPage() {
     <DocPage
       eyebrow="components"
       title="Lists & Data"
-      lead="번호 매긴 원칙 목록(v2 Approach), FAQ 아코디언(v1), 사실 메타 그리드(v2 About), 카운터 스탯(v1 Stats)."
+      lead="번호를 매긴 원칙 목록, FAQ 아코디언, 회사 정보 같은 메타 표, 숫자가 올라가는 카운터를 모았어요."
       sources={['v1', 'v2']}
     >
-      <Section title="NumberedRow" desc="번호(모노·액센트) + 제목 + 설명. border-t 를 가진 ul 안에 놓는다." sources={['v2']}>
+      <Section title="NumberedRow" desc="강조색 번호에 제목과 설명이 붙은 한 줄이에요. 위쪽 선이 있는 ul 안에 넣어 쓰세요." sources={['v2']}>
         <Preview
           theme="dark"
           code={`import { NumberedRow } from '@/components/ui'
@@ -49,7 +49,7 @@ export function ListsPage() {
         </Preview>
       </Section>
 
-      <Section title="Accordion" desc="번호 + 질문, 오른쪽 + 가 45° 돌아 × 가 되고 답은 height 0 → auto." sources={['v1']}>
+      <Section title="Accordion" desc="번호와 질문이 한 줄에 있고, 오른쪽 +가 45° 돌아 ×가 되면서 답이 펼쳐져요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { Accordion } from '@/components/ui'
@@ -60,7 +60,7 @@ export function ListsPage() {
         </Preview>
       </Section>
 
-      <Section title="MetaGrid" desc="dl 기반 사실 표. 셀은 bg-bg, 사이는 line." sources={['v2']}>
+      <Section title="MetaGrid" desc="dl로 만든 정보 표예요. 셀 사이는 1px 선으로 나뉘어요." sources={['v2']}>
         <Preview
           theme="dark"
           code={`import { MetaGrid } from '@/components/ui'
@@ -71,7 +71,7 @@ export function ListsPage() {
         </Preview>
       </Section>
 
-      <Section title="Stat · Counter" desc="뷰포트에 들어오면 0 에서 목표까지 1.2초 ease-out-cubic. tabular-nums 라 폭이 흔들리지 않는다." sources={['v1']}>
+      <Section title="Stat · Counter" desc="화면에 들어오면 0부터 목표 숫자까지 1.2초 동안 올라가요. 고정폭 숫자라 자릿수가 바뀌어도 흔들리지 않아요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { Stat, Counter } from '@/components/ui'

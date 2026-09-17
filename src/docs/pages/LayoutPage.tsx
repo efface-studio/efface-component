@@ -24,7 +24,7 @@ export function LayoutPage() {
     <DocPage
       eyebrow="foundations"
       title="Layout"
-      lead="컨테이너 폭, 섹션 리듬, 2단 그리드. 세 사이트 모두 좌 5 / 우 7 의 12열 그리드와 1px 선 구분을 기본으로 한다."
+      lead="컨테이너 폭, 섹션 사이 간격, 2단 그리드 규칙이에요. 세 사이트 모두 왼쪽 5칸 / 오른쪽 7칸의 12열 그리드와 1px 선 구분을 기본으로 씁니다."
       sources={['v1', 'v2']}
     >
       <Section title="컨테이너">
@@ -53,7 +53,7 @@ export function LayoutPage() {
         </ul>
       </Section>
 
-      <Section title="2단 섹션" desc="v2 About / Approach 의 뼈대. 왼쪽에 라벨·제목·리드, 오른쪽에 본문.">
+      <Section title="2단 섹션" desc="v2 About, Approach 섹션의 뼈대예요. 왼쪽에 라벨·제목·리드, 오른쪽에 본문을 둡니다.">
         <CodeBlock
           code={`<section className="border-t border-line bg-bg py-24 md:py-36">
   <div className="mx-auto max-w-page px-6 md:px-10">
@@ -65,11 +65,11 @@ export function LayoutPage() {
 </section>`}
         />
         <Note>
-          모바일(md 미만)에서는 열이 세로로 쌓이고 gap 이 12 로 줄어든다. 핀 고정 스크롤 씬(v2 EffaceIntro · AppCards · Capabilities)은 md 미만에서 정적 스택으로 대체된다 — 씬을 축소하면 타입이 읽히지 않기 때문이다.
+          모바일(md 미만)에서는 두 열이 세로로 쌓이고 간격이 12로 줄어요. v2의 핀 고정 씬(EffaceIntro, AppCards, Capabilities)은 모바일에서 축소하는 대신 정적으로 쌓아 보여줘요. 씬을 줄이면 글자가 안 읽히거든요.
         </Note>
       </Section>
 
-      <Section title="1px 선 그리드" desc="카드 사이 간격을 gap-px 와 배경 line 색으로 만든다. 셀은 bg-surface 를 직접 칠한다.">
+      <Section title="1px 선 그리드" desc="카드 사이를 gap-px와 배경의 line 색으로 나누는 방식이에요. 셀마다 bg-surface를 직접 칠해야 선이 드러나요.">
         <CodeBlock
           code={`<div className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
   <div className="bg-surface p-6">…</div>
@@ -77,7 +77,7 @@ export function LayoutPage() {
   <div className="bg-surface p-6">…</div>
 </div>`}
         />
-        <p className="text-[13px] text-fg-dim">실제 모습은 Cards 페이지의 CardGrid 와 Recipes 를 본다.</p>
+        <p className="text-[13px] text-fg-dim">실제 모습은 Cards 페이지의 CardGrid와 Recipes에서 볼 수 있어요.</p>
       </Section>
     </DocPage>
   )

@@ -29,10 +29,10 @@ export function CardsPage() {
     <DocPage
       eyebrow="components"
       title="Cards"
-      lead="1px 선 그리드 셀(v1), 창 크롬이 달린 터미널·브라우저 프레임(v1), 가격·후기 카드(v1), 역량 카드(v2), 그리고 조명이 들어간 서비스 카드 표면(v2)."
+      lead="1px 선으로 나뉜 그리드 셀, 창 크롬이 달린 터미널·브라우저 프레임, 가격표와 후기 카드, 역량 카드, 그리고 빛이 도는 서비스 카드까지 모았어요."
       sources={['v1', 'v2']}
     >
-      <Section title="CardGrid · CardCell" desc="셀 사이를 gap-px + 배경 line 색으로 나눈다. CardCell 은 whileHover=hover 를 걸어 두어 자식 IconTile 이 스프링으로 반응한다. tint 는 배경 옅어짐, underline 은 바닥 선." sources={['v1']}>
+      <Section title="CardGrid · CardCell" desc="셀 사이를 1px 선으로 나누는 그리드예요. CardCell에 마우스를 올리면 안에 있는 IconTile이 스프링으로 튀어요. tint는 배경이 옅어지는 것, underline은 바닥에 선이 그어지는 거예요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { CardGrid, CardCell, IconTile } from '@/components/ui'
@@ -115,7 +115,7 @@ export function CardsPage() {
         />
       </Section>
 
-      <Section title="TerminalCard" desc="창 크롬(신호등 + 파일명) + 코드 + 상태 바. v1 히어로 오른쪽." sources={['v1']}>
+      <Section title="TerminalCard" desc="신호등과 파일명이 있는 창 크롬, 코드, 상태 바로 이뤄진 카드예요. v1 히어로 오른쪽에 있던 그거예요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { TerminalCard } from '@/components/ui'
@@ -151,7 +151,7 @@ export function CardsPage() {
         </Preview>
       </Section>
 
-      <Section title="BrowserFrame" desc="주소창 크롬 + 16:10 뷰포트. 호버 시 프레임이 떠오르고 글로우가 퍼진다. 스크린샷에 whileHover y:-30% 를 걸어 페이지가 내려가는 패럴럭스." sources={['v1']}>
+      <Section title="BrowserFrame" desc="주소창이 달린 브라우저 창 프레임이에요. 마우스를 올리면 살짝 떠오르며 뒤에 글로우가 퍼지고, 안의 스크린샷은 천천히 아래로 스크롤돼요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { BrowserFrame, Badge } from '@/components/ui'
@@ -186,7 +186,7 @@ export function CardsPage() {
         </Preview>
       </Section>
 
-      <Section title="PricingCard" desc="featured 는 잉크 반전. 세 장을 gap-4 그리드에 놓는다." sources={['v1']}>
+      <Section title="PricingCard" desc="featured를 켜면 잉크로 반전돼요. 보통 세 장을 나란히 놓아요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { PricingCard, ButtonLink } from '@/components/ui'
@@ -221,7 +221,7 @@ export function CardsPage() {
         </Preview>
       </Section>
 
-      <Section title="TestimonialCard" desc="인용 아이콘, 세 줄 클램프, 지표 배지, 흐려진 이름. 마퀴에 넣어 흘린다." sources={['v1']}>
+      <Section title="TestimonialCard" desc="인용 부호, 세 줄로 잘리는 본문, 성과 배지, 그리고 흐리게 가린 이름. 마퀴에 넣어 흘려보내면 돼요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { TestimonialCard } from '@/components/ui'
@@ -235,7 +235,7 @@ export function CardsPage() {
         </Preview>
       </Section>
 
-      <Section title="CapabilityCard" desc="번호 + 제목, 대시 행, 점 칩. 열마다 스펙트럼 액센트. v2 에서는 핀 고정 씬의 rAF 가 행·대시·칩을 순서대로 켰고 여기서는 정적 표시." sources={['v2']}>
+      <Section title="CapabilityCard" desc="번호와 제목, 대시가 달린 항목, 점 칩으로 구성돼요. 열마다 스펙트럼 색을 하나씩 가져가요. v2에서는 스크롤에 맞춰 행이 하나씩 켜졌는데, 여기서는 완성된 상태로 보여줘요." sources={['v2']}>
         <Preview
           theme="dark"
           code={`import { CapabilityCard } from '@/components/ui'
@@ -252,7 +252,7 @@ export function CardsPage() {
         </Preview>
       </Section>
 
-      <Section title="AppCard" desc="360×560 타일을 하나의 표면으로 조명한다: 기울기를 따라가는 하이라이트, 두께를 읽게 하는 상하 엣지, 뒤로 물러난 그림자. TiltCard 로 감싸면 커서에 기운다. 아이콘 슬롯에는 AppIcon3D 를 넣는다." sources={['v2']}>
+      <Section title="AppCard" desc="360×560 타일을 하나의 물체처럼 조명한 카드예요. 기울기에 따라 하이라이트가 움직이고, 위아래 모서리에 두께감이 있어요. TiltCard로 감싸면 커서를 따라 기울고, 아이콘 자리에는 AppIcon3D를 넣어요." sources={['v2']}>
         <Preview
           theme="dark"
           center
@@ -276,7 +276,7 @@ import { TiltCard } from '@/components/motion'
           </div>
         </Preview>
         <Note>
-          카드 표면의 하이라이트 위치는 CSS 변수 <code className="font-mono">--gx --gy --spec --shadow-o</code> 로 프레임마다 쓸 수 있다. v2 의 <code className="font-mono">useAppCardsScene</code> 은 Blinn-Phong 항을 계산해 넣었다 — 정적 문서에서는 기본값(정지 상태)이 보인다.
+          하이라이트 위치는 CSS 변수 <code className="font-mono">--gx --gy --spec --shadow-o</code>로 매 프레임 바꿀 수 있어요. v2에서는 <code className="font-mono">useAppCardsScene</code>이 Blinn-Phong 값을 계산해 넣었고, 여기서는 기본값(정지 상태)이 보여요.
         </Note>
       </Section>
     </DocPage>

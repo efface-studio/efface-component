@@ -27,10 +27,10 @@ export function MotionRevealPage() {
     <DocPage
       eyebrow="motion"
       title="Reveal"
-      lead="뷰포트에 들어올 때 한 번 떠오르는 진입. 블록 단위(Reveal), 단어 단위(WordReveal), 글자 단위(LetterReveal). motion 없이 CSS 전환만 쓰는 RevealCSS 도 있다."
+      lead="화면에 들어올 때 한 번 떠오르는 등장 효과예요. 블록 단위는 Reveal, 단어 단위는 WordReveal, 글자 단위는 LetterReveal. motion 없이 CSS만 쓰는 RevealCSS도 있어요."
       sources={['v1', 'v2', 'mom']}
     >
-      <Section title="Reveal" desc="20px 아래에서 0.7초 ease-out-expo. v1 은 y 24 + scale 0.985 로 미세하게 커지며 들어온다. 한 번만 재생(once). 자식은 그대로 통과한다." sources={['v1', 'v2']}>
+      <Section title="Reveal" desc="20px 아래에서 0.7초 동안 떠올라요. v1은 24px 아래에서 0.985배로 시작해 아주 살짝 커지면서 들어와요. 한 번만 재생되고, 자식은 그대로 통과시켜요." sources={['v1', 'v2']}>
         <Preview
           theme="dark"
           code={`import { Reveal } from '@/components/motion'
@@ -71,7 +71,7 @@ import { STAGGER } from '@/lib/motion'
         />
       </Section>
 
-      <Section title="RevealCSS" desc="IntersectionObserver + CSS 전환. motion 을 싣지 않아도 되는 곳, 리스트 셀(as='li')에 쓴다. delay 는 ms." sources={['mom']}>
+      <Section title="RevealCSS" desc="IntersectionObserver와 CSS 전환만으로 같은 효과를 내요. motion을 싣고 싶지 않은 곳이나 리스트 항목(as='li')에 써요. delay는 ms 단위예요." sources={['mom']}>
         <Preview
           theme="light"
           code={`import { RevealCSS } from '@/components/motion'
@@ -96,7 +96,7 @@ import { STAGGER } from '@/lib/motion'
         </Preview>
       </Section>
 
-      <Section title="WordReveal" desc="단어를 자기 클립 박스 안에서 밀어 올린다. \\n 은 줄바꿈. 디센더가 잘리지 않게 pb-[0.18em] -mb-[0.18em] 여유." sources={['v1']}>
+      <Section title="WordReveal" desc="단어 하나하나가 자기 칸 안에서 밀려 올라와요. \\n을 넣으면 줄이 바뀌어요. g, p, y 같은 글자 꼬리가 잘리지 않게 아래에 여유를 뒀어요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { WordReveal } from '@/components/motion'
@@ -122,7 +122,7 @@ import { STAGGER } from '@/lib/motion'
         />
       </Section>
 
-      <Section title="LetterReveal · SplitHeadline" desc="글자가 제각각 흩어진 위치에서 날아와 자리잡는다. v2 Capabilities 제목은 스크롤 진행도로 그렸고, 여기서는 뷰포트 진입 시 한 번. 산포는 결정적(sin·fract)이라 렌더마다 같다. SplitHeadline 은 애니메이션 없이 글자만 쪼갠다." sources={['v2']}>
+      <Section title="LetterReveal · SplitHeadline" desc="글자가 제각각 흩어진 자리에서 날아와 제자리를 찾아요. v2에서는 스크롤에 맞춰 그렸고, 여기서는 화면에 들어올 때 한 번 재생돼요. 흩어지는 위치는 매번 같아요. SplitHeadline은 애니메이션 없이 글자만 쪼개주는 도구예요." sources={['v2']}>
         <Preview
           theme="dark"
           code={`import { LetterReveal, SplitHeadline } from '@/components/motion'
@@ -138,7 +138,7 @@ import { STAGGER } from '@/lib/motion'
         </Preview>
       </Section>
 
-      <Section title="rise-in (CSS)" desc="히어로처럼 첫 화면에 바로 보여야 하는 것은 motion 대신 CSS 키프레임. 스타일시트 파싱 즉시 재생돼 hydration 을 기다리지 않는다.">
+      <Section title="rise-in (CSS)" desc="히어로처럼 첫 화면에 바로 보여야 하는 건 motion 대신 CSS 키프레임을 써요. 스타일시트가 읽히는 순간 재생돼서 JS를 기다릴 필요가 없어요.">
         <Preview
           theme="dark"
           code={`<p className="rise-in label">// AI · web · app studio</p>
@@ -164,7 +164,7 @@ import { STAGGER } from '@/lib/motion'
             )}
           </Replay>
         </Preview>
-        <Note>둘 다 prefers-reduced-motion 을 존중한다. Reveal 계열은 initial 을 건너뛰고, rise-in 은 @media 에서 animation: none.</Note>
+        <Note>둘 다 시스템의 애니메이션 줄이기 설정을 따라요. Reveal 계열은 initial을 건너뛰고, rise-in은 @media에서 animation: none으로 꺼져요.</Note>
       </Section>
     </DocPage>
   )

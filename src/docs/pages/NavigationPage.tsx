@@ -40,12 +40,12 @@ export function NavigationPage() {
     <DocPage
       eyebrow="layout"
       title="Navigation"
-      lead="v2 는 맨 위에서만 보이는 얇은 바 + 전체 화면 오버레이 메뉴, v1 은 스크롤하면 반투명해지는 고정 헤더. 프리뷰 안을 스크롤하거나 메뉴를 열어 동작을 본다."
+      lead="v2는 맨 위에서만 보이는 얇은 바와 전체 화면 메뉴, v1은 스크롤하면 반투명해지는 고정 헤더예요. 프리뷰 안을 스크롤하거나 메뉴를 열어서 직접 확인해 보세요."
       sources={['v1', 'v2']}
     >
       <Section
         title="Nav (v2)"
-        desc="바는 8px 이상 스크롤하면 위로 빠진다 — 아래 씬의 거대 타이포가 뷰포트 끝까지 흐르는데 고정 바가 그걸 잘랐다. 햄버거는 두 선이 45° 로 교차해 × 가 되고, 메뉴 항목은 자기 클립 박스 안에서 스태거로 올라온다. ESC · 배경 스크롤 잠금."
+        desc="조금만 스크롤해도 바가 위로 사라져요. 아래 씬의 큰 글자가 화면 끝까지 흐르는데 고정 바가 그걸 가렸거든요. 햄버거 두 줄은 45°로 교차해 ×가 되고, 메뉴 항목은 각자의 칸 안에서 차례로 올라와요. ESC로 닫히고, 열려 있는 동안 뒤는 스크롤되지 않아요."
         sources={['v2']}
       >
         <div className="flex flex-wrap gap-2">
@@ -112,17 +112,17 @@ export function NavigationPage() {
         </Preview>
         <PropsTable
           rows={[
-            { name: 'items', type: '{ label; href }[]', desc: '오버레이 메뉴 항목. 01, 02… 번호가 자동으로 붙는다' },
+            { name: 'items', type: '{ label; href }[]', desc: '오버레이 메뉴 항목. 01, 02… 번호가 자동으로 붙어요' },
             { name: 'aside', type: 'ReactNode', desc: '바 오른쪽 슬롯 (언어 토글)' },
             { name: 'overlayFooter', type: 'ReactNode', desc: '오버레이 하단 슬롯' },
-            { name: 'hideAfter', type: 'number', default: '8', desc: '이 px 이상 스크롤하면 바가 숨는다' },
+            { name: 'hideAfter', type: 'number', default: '8', desc: '이 px 이상 스크롤하면 바가 숨어요' },
             { name: 'open / onOpenChange', type: 'boolean / (v) => void', desc: '제어 모드' },
-            { name: 'contained / scrollTarget', type: 'boolean / RefObject', desc: 'fixed 대신 absolute · 창 대신 이 컨테이너의 스크롤을 본다' },
+            { name: 'contained / scrollTarget', type: 'boolean / RefObject', desc: 'fixed 대신 absolute · 창 대신 이 컨테이너의 스크롤을 봐요' },
           ]}
         />
       </Section>
 
-      <Section title="Header (v1)" desc="처음엔 투명, 8px 이상 스크롤하면 흰 반투명 + 블러 + 하단 선이 생긴다. 아래 히어로에는 커서 글로우와 점 격자가 깔려 있다 — 마우스를 움직여 본다." sources={['v1']}>
+      <Section title="Header (v1)" desc="처음엔 투명하다가 스크롤하면 흰 반투명 배경과 블러, 아래 선이 생겨요. 아래 히어로에는 커서를 따라오는 글로우와 점 격자가 깔려 있으니 마우스를 움직여 보세요." sources={['v1']}>
         <Button size="sm" variant="secondary" onClick={() => v1Scroll.current?.scrollTo({ top: v1Scroll.current.scrollTop > 0 ? 0 : 300, behavior: 'smooth' })}>
           Toggle scroll
         </Button>
@@ -182,11 +182,11 @@ import { CursorGlow } from '@/components/motion'
         </Preview>
       </Section>
 
-      <Section title="LanguageToggle" desc="KO / EN. 제어 컴포넌트 — 라우팅(next-intl 등)은 바깥에서 한다." sources={['v2']}>
+      <Section title="LanguageToggle" desc="KO / EN 전환이에요. 값과 onChange를 받는 제어 컴포넌트라 실제 라우팅은 바깥에서 처리해요." sources={['v2']}>
         <Preview theme="dark" code={`<LanguageToggle locales={['ko', 'en']} value={locale} onChange={setLocale} />`}>
           <LanguageToggle locales={['ko', 'en'] as const} value={locale} onChange={setLocale} />
         </Preview>
-        <Note>v1 은 Globe 아이콘 + 네이티브 select 였다. 커스텀 UI 원칙에 따라 v2 의 텍스트 토글로 통일한다.</Note>
+        <Note>v1은 지구본 아이콘에 브라우저 기본 select였어요. 커스텀 UI 원칙에 맞춰 v2의 텍스트 토글로 통일했어요.</Note>
       </Section>
     </DocPage>
   )

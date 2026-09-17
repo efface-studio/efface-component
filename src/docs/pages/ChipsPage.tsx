@@ -23,10 +23,10 @@ export function ChipsPage() {
     <DocPage
       eyebrow="components"
       title="Chips & Badges"
-      lead="기술 스택 알약(v1), 점 하나 달린 도구 이름(v2), 선택형 필터 칩, 그리고 상태 점과 배지. 모두 h-6 ~ h-12 사이의 작은 인라인 요소다."
+      lead="기술 스택 알약, 점이 달린 도구 이름, 선택할 수 있는 필터 칩, 그리고 상태 점과 배지예요. 전부 높이 24~48px 사이의 작은 인라인 요소예요."
       sources={['v1', 'v2']}
     >
-      <Section title="TechChip" desc="흰 알약 + 회색 아이콘. 호버하면 살짝 떠오르며 브랜드 컬러가 드러난다. 아이콘은 simple-icons 경로." sources={['v1']}>
+      <Section title="TechChip" desc="흰 알약에 회색 아이콘. 마우스를 올리면 살짝 떠오르면서 브랜드 색이 드러나요. 아이콘은 simple-icons 경로를 넣어요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { TechChip } from '@/components/ui'
@@ -71,7 +71,7 @@ export function ChipsPage() {
         </Preview>
       </Section>
 
-      <Section title="DotChip" desc="크롬 없이 목록처럼 읽히는 도구 이름. 점 색은 4색 순환. 부모의 --acc 가 없으면 accent." sources={['v2']}>
+      <Section title="DotChip" desc="테두리 없이 목록처럼 읽히는 도구 이름이에요. 점 색은 네 가지가 돌아가며 붙어요." sources={['v2']}>
         <Preview
           theme="dark"
           code={`import { DotChip, DOT_COLORS } from '@/components/ui'
@@ -90,7 +90,7 @@ export function ChipsPage() {
         </Preview>
       </Section>
 
-      <Section title="FilterChip" desc="선택 가능한 필터. 선택 시 잉크 채움. 가로 스크롤 목록에서는 shrink-0.">
+      <Section title="FilterChip" desc="고를 수 있는 필터 칩이에요. 선택하면 잉크로 채워져요. 가로로 스크롤되는 목록에 넣을 땐 shrink-0을 잊지 마세요.">
         <Preview
           theme="light"
           code={`import { FilterChip } from '@/components/ui'
@@ -109,7 +109,7 @@ export function ChipsPage() {
         </Preview>
       </Section>
 
-      <Section title="StatusDot · Badge" desc="상태 점은 ping(바깥 확산)과 pulse(자체 숨쉬기) 두 가지. 배지는 점 + 짧은 텍스트 알약." sources={['v1']}>
+      <Section title="StatusDot · Badge" desc="상태 점은 두 가지예요. ping은 바깥으로 퍼지고, pulse는 제자리에서 숨 쉬듯 흐려져요. 배지는 점에 짧은 글자를 붙인 알약이에요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { StatusDot, Badge, PilotBadge } from '@/components/ui'
@@ -151,7 +151,7 @@ export function ChipsPage() {
         />
       </Section>
 
-      <Section title="Label" desc="섹션 제목 위의 모노 eyebrow. 슬래시 색과 캐럿을 고른다.">
+      <Section title="Label" desc="섹션 제목 위에 붙는 모노 라벨이에요. 슬래시 색과 깜빡이는 캐럿을 고를 수 있어요.">
         <Preview
           theme="dark"
           code={`import { Label } from '@/components/ui'

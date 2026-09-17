@@ -27,12 +27,12 @@ export function FooterPage() {
     <DocPage
       eyebrow="layout"
       title="Footer"
-      lead="세 사이트 세 푸터. v2 는 캔버스 워드마크와 스크롤 가역 진입 시퀀스, Mom-Work 는 같은 구조를 CSS 전환과 네이비 톤으로, v1 은 라이트 4열에 연락처 카드."
+      lead="사이트마다 푸터가 하나씩, 셋이에요. v2는 캔버스에 그린 워드마크와 스크롤에 따라 되감기는 등장 시퀀스, Mom-Work는 같은 구조를 CSS와 네이비 톤으로, v1은 밝은 4열에 연락처 카드예요."
       sources={['v1', 'v2', 'mom']}
     >
       <Section
         title="Footer (v2)"
-        desc="대각선 와이프가 블록을 드러내고 → 락업·메타 컬럼이 블러와 함께 스태거로 떠오르고 → 태그라인 취소선 → 워드마크가 왼쪽에서 벗겨지고 → 하단 바. 뷰포트를 떠나면 되감긴다. 워드마크는 캔버스: 흐린 사본 위에 커서 트레일이 지나간 곳만 그라데이션이 드러난다. 프리뷰 안을 아래로 스크롤한다."
+        desc="대각선으로 쓸리며 나타나고, 로고와 정보 열이 흐릿한 채로 차례로 떠오르고, 태그라인에 취소선이 그어지고, 워드마크가 왼쪽부터 벗겨지고, 마지막에 하단 줄. 화면 밖으로 나가면 거꾸로 되감겨요. 워드마크는 캔버스라서 마우스가 지나간 자리만 색이 드러나요. 프리뷰 안을 아래로 스크롤해 보세요."
         sources={['v2']}
       >
         <Preview
@@ -74,13 +74,13 @@ export function FooterPage() {
           ]}
         />
         <Note>
-          워드마크는 Space Grotesk 를 캔버스에 텍스트로 그리므로 <code className="font-mono">document.fonts.ready</code> 뒤에 셋업한다. reduced-motion 이면 트레일을 한 번 가득 채워 풀컬러로 읽히고 시퀀스는 즉시 완료 상태.
+          워드마크는 Space Grotesk를 캔버스에 글자로 그리기 때문에 <code className="font-mono">document.fonts.ready</code>를 기다린 뒤에 준비해요. 애니메이션 줄이기를 켜면 처음부터 전체 색으로 보이고 시퀀스도 완료 상태로 시작해요.
         </Note>
       </Section>
 
       <Section
         title="SiteFooter (Mom-Work)"
-        desc="v2 구조를 네이비 톤 + CSS 전환으로. 뷰포트에 들어오면 로고 글자 → 취소선(영/한) → 컬럼(왼→오 클립 리빌, 90ms 스태거) → CSS 워드마크 → 하단 바. 기본 컬럼 데이터가 내장되어 있다."
+        desc="v2 구조를 네이비 톤과 CSS 전환으로 다시 만든 푸터예요. 화면에 들어오면 로고 글자가 한 자씩, 태그라인 취소선, 정보 열이 왼쪽부터 차례로, 그다음 워드마크와 하단 줄이 나타나요. 기본 정보는 컴포넌트 안에 들어 있어요."
         sources={['mom']}
       >
         <Preview
@@ -99,7 +99,7 @@ export function FooterPage() {
         </Preview>
       </Section>
 
-      <Section title="FooterV1 (efface.dev)" desc="라이트 4열. 대표 알약(LinkedIn), 주 연락처 카드는 호버 시 떠오르고 화살표 원이 잉크로 채워지며 45° 돈다. 보조 연락처 2열, 사이트맵·채널, 저작권 행." sources={['v1']}>
+      <Section title="FooterV1 (efface.dev)" desc="밝은 배경의 4열 푸터예요. 대표 이름 알약, 마우스를 올리면 떠오르면서 화살표가 45° 도는 연락처 카드, 그 아래 보조 연락처, 사이트맵과 채널, 저작권 줄로 되어 있어요." sources={['v1']}>
         <Preview
           theme="light"
           lockTheme

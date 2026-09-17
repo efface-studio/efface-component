@@ -8,7 +8,7 @@ export function TypographyPage() {
     <DocPage
       eyebrow="foundations"
       title="Typography"
-      lead="본문과 제목은 Pretendard Variable, 라벨·번호·코드는 JetBrains Mono. 제목은 항상 tracking-tight, 리드는 leading-relaxed + fg-dim. 세 사이트가 같은 타입 스케일을 공유한다."
+      lead="본문과 제목은 Pretendard, 라벨·번호·코드는 JetBrains Mono를 써요. 제목은 자간을 살짝 좁히고(tracking-tight), 리드 문단은 행간을 넉넉히(leading-relaxed) 잡습니다."
       sources={['v1', 'v2']}
     >
       <Section title="서체">
@@ -33,11 +33,11 @@ export function TypographyPage() {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@500;700&display=swap" />`}
         />
         <Note>
-          본문에는 <code className="font-mono">font-feature-settings: 'ss01', 'ss02', 'cv01'</code> 을 켠다 — Pretendard의 대체 글리프로 숫자·영문이 조금 더 정돈된다. 숫자가 자릿수마다 흔들리면 <code className="font-mono">tabular-nums</code>.
+          본문에는 <code className="font-mono">font-feature-settings: 'ss01', 'ss02', 'cv01'</code>을 켜두세요. Pretendard의 대체 글리프로 숫자와 영문이 조금 더 단정해져요. 숫자가 바뀔 때 폭이 흔들리면 <code className="font-mono">tabular-nums</code>를 더하면 됩니다.
         </Note>
       </Section>
 
-      <Section title="타입 스케일" desc="실제 섹션에서 쓰는 클래스 조합 그대로. 반응형 접미가 붙어 있으니 복사해서 쓴다.">
+      <Section title="타입 스케일" desc="실제 섹션에서 쓰는 클래스 조합 그대로예요. 반응형 접두어까지 붙어 있으니 그대로 복사해서 쓰세요.">
         <div className="space-y-px overflow-hidden rounded-xl border border-line bg-line">
           {TYPE_SCALE.map((t) => (
             <div key={t.name} className="grid gap-3 bg-bg p-5 md:grid-cols-[180px_1fr]">
@@ -54,7 +54,7 @@ export function TypographyPage() {
         </div>
       </Section>
 
-      <Section title="섹션 헤더 관용구" desc="모노 라벨 → 제목 → 리드. v1은 라벨을 muted 색으로, v2는 슬래시만 액센트로 칠한다.">
+      <Section title="섹션 헤더" desc="모노 라벨, 제목, 리드 순서예요. v1은 라벨 전체를 흐리게, v2는 슬래시만 강조색으로 칠해요.">
         <Preview
           theme="dark"
           code={`<p className="label"><span className="text-accent">//</span> approach</p>

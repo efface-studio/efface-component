@@ -165,7 +165,7 @@ export function DocsLayout() {
           </AnimatePresence>
           <footer className="mx-auto mt-24 max-w-[1280px] border-t border-line pt-6 text-xs text-fg-faint">
             <p>
-              efface design system · extracted from efface.dev · v2.efface.dev · mom.efface.dev.{' '}
+              efface design system · efface.dev · v2.efface.dev · mom.efface.dev{' '}
               <a className="link-underline text-fg-dim" href="https://github.com/efface-studio/efface-component" target="_blank" rel="noreferrer">
                 source
               </a>

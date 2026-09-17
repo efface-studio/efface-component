@@ -13,10 +13,10 @@ export function MotionCursorPage() {
     <DocPage
       eyebrow="motion"
       title="Cursor"
-      lead="커서를 따라가는 것들. 외곽선 텍스트 스포트라이트(v1 CTA), 자석 버튼(v1), 3D 기울기(v2 카드), 워드마크 스포트라이트(Mom-Work). 모두 마우스에만 반응하고 터치에서는 정지 상태가 곧 디자인이다. 커서 글로우 + 점 격자는 Recipes 의 v1 히어로에서 볼 수 있다."
+      lead="마우스를 따라 움직이는 것들이에요. 외곽선 글자 스포트라이트, 자석 버튼, 3D 기울기 카드, 워드마크 스포트라이트. 터치 기기에서는 멈춰 있는 상태 자체가 디자인이에요. 커서 글로우와 점 격자는 Recipes의 v1 히어로에서 볼 수 있어요."
       sources={['v1', 'v2', 'mom']}
     >
-      <Section title="SpotlightText" desc="외곽선만 있는 거대 텍스트 위에, 커서 주변 마스크 안에서만 그라데이션 채움이 드러난다. 세 레이어: 외곽선 · 마스크된 채움 · 글로우. 짝수 줄은 왼쪽, 홀수 줄은 오른쪽으로 3% 어긋난다." sources={['v1']}>
+      <Section title="SpotlightText" desc="외곽선만 있는 커다란 글자 위에, 마우스 주변에서만 그라데이션이 채워져요. 외곽선, 마스크된 채움, 글로우 세 겹으로 되어 있고 줄마다 좌우로 3%씩 어긋나 있어요." sources={['v1']}>
         <Preview
           theme="light"
           bleed
@@ -40,7 +40,7 @@ export function MotionCursorPage() {
         </Preview>
       </Section>
 
-      <Section title="TiltCard" desc="커서 위치로 3D 기울기 + 하이라이트. 원본(v2)은 rAF 루프가 transform 을 직접 썼고, 여기서는 motion 스프링. Capabilities 는 10°, AppCards 는 yaw 11° / pitch 7°." sources={['v2']}>
+      <Section title="TiltCard" desc="마우스 위치에 따라 카드가 3D로 기울고 하이라이트가 따라 움직여요. v2에서는 rAF로 직접 그렸고 여기서는 motion 스프링을 썼어요. 역량 카드는 10°, 서비스 카드는 좌우 11° / 상하 7°." sources={['v2']}>
         <Preview
           theme="dark"
           center
@@ -76,7 +76,7 @@ export function MotionCursorPage() {
         />
       </Section>
 
-      <Section title="FooterWordmark (CSS 스포트라이트)" desc="거대 EFFACE 를 가로로만 늘려(scaleX) 폭을 채우고, 그라데이션이 옅게 깔린 위에 포인터 주변 창 안에서만 선명해진다. 포인터가 없으면 7초 주기로 스스로 스윕. 부모에 container-type: inline-size 가 필요하다." sources={['mom']}>
+      <Section title="FooterWordmark (CSS 스포트라이트)" desc="커다란 EFFACE를 가로로만 늘려 폭을 꽉 채우고, 옅은 그라데이션 위에 마우스 주변만 선명하게 밝혀요. 마우스가 없으면 7초에 한 번씩 스스로 훑고 지나가요. 부모에 container-type: inline-size가 필요해요." sources={['mom']}>
         <Preview
           theme="dark"
           bleed
@@ -91,7 +91,7 @@ export function MotionCursorPage() {
             <FooterWordmark active />
           </div>
         </Preview>
-        <Note>v2 원본은 캔버스에 그리고 커서 트레일이 꼬리를 남긴다 — Footer 페이지에서 볼 수 있다. 이 CSS 버전은 캔버스 없이 같은 인상을 내는 경량 대안이다.</Note>
+        <Note>v2 원본은 캔버스에 그리고 마우스가 지나간 자리에 꼬리가 남아요. Footer 페이지에서 볼 수 있어요. 이 CSS 버전은 캔버스 없이 비슷한 인상을 내는 가벼운 대안이에요.</Note>
       </Section>
     </DocPage>
   )

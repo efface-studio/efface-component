@@ -12,9 +12,9 @@ import { LinkUnderline } from '@/components/ui/LinkUnderline'
 import { Reveal } from '@/components/motion/Reveal'
 
 const SOURCES = [
-  { src: 'v1' as const, name: 'efface.dev', stack: 'Next.js 16 · Tailwind v4 · motion', theme: '라이트 (paper / ink)', what: '외주 제작 소개. Header, Hero(커서 글로우), WordReveal, Marquee 칩, Services/Process/Manifesto 카드, Stats 카운터, FAQ, Pricing, Testimonials, CTA 스포트라이트, FloatingCTA, Footer.' },
-  { src: 'v2' as const, name: 'v2.efface.dev', stack: 'Next.js 16 · Tailwind v4 · motion · three', theme: '다크 (#0a0a0b · 로고 블루)', what: '스튜디오 소개. Nav + 오버레이 메뉴, Reveal, EffaceIntro(단어 점등·취소선·구슬), AppCards 표면, Capabilities 카드, Approach 목록, About 메타, Contact CTA, 캔버스 워드마크 Footer.' },
-  { src: 'mom' as const, name: 'mom.efface.dev', stack: 'Vite · React 19 · Tailwind v4', theme: '라이트 + 네이비 푸터', what: '근무 안내 카드 에디터. 여기서는 상단 efface 배너(1600×500 캐러셀 · 모바일 세로형)와 하단 SiteFooter(CSS 워드마크)만 가져왔다.' },
+  { src: 'v1' as const, name: 'efface.dev', stack: 'Next.js 16 · Tailwind v4 · motion', theme: '라이트 (paper / ink)', what: '외주 제작 소개 사이트예요. 헤더, 커서를 따라오는 히어로, 단어별로 올라오는 제목, 기술 스택 마퀴, 카드 그리드, 카운터, FAQ, 가격표, 후기, 스포트라이트 CTA, 플로팅 버튼, 푸터를 가져왔어요.' },
+  { src: 'v2' as const, name: 'v2.efface.dev', stack: 'Next.js 16 · Tailwind v4 · motion · three', theme: '다크 (#0a0a0b · 로고 블루)', what: '스튜디오 소개 사이트예요. 오버레이 메뉴, 등장 모션, 단어가 하나씩 켜지는 문장, 3D 유리 로고, 서비스 카드, 역량 카드, 번호 목록, 메타 표, 이메일 CTA, 캔버스 워드마크 푸터를 가져왔어요.' },
+  { src: 'mom' as const, name: 'mom.efface.dev', stack: 'Vite · React 19 · Tailwind v4', theme: '라이트 + 네이비 푸터', what: '근무 안내 카드를 만드는 에디터예요. 여기서는 상단의 efface 배너와 하단 푸터만 가져왔어요.' },
 ]
 
 export function OverviewPage() {
@@ -22,10 +22,10 @@ export function OverviewPage() {
     <DocPage
       eyebrow="overview"
       title="efface design system"
-      lead="덜어낼수록 선명해진다. efface 가 만드는 모든 화면이 공유하는 색과 서체, 여백과 움직임을 한 벌의 토큰과 컴포넌트로 묶었다. 살아 있는 프리뷰로 보고, 코드 그대로 가져다 쓴다."
+      lead="efface 제품들이 함께 쓰는 색, 글꼴, 간격, 모션을 한곳에 모았어요. 바로 미리 보고, 코드는 복사해서 쓰면 됩니다."
       sources={['v1', 'v2', 'mom']}
     >
-      <Section title="한눈에">
+      <Section title="한눈에 보기">
         <Preview theme="dark" center minHeight={360} code={`import { LogoMark, Label, Button, ButtonLink, Badge, LinkUnderline, Reveal } from '@/components'`}>
           <Reveal>
             <div className="flex max-w-xl flex-col items-start gap-6">
@@ -56,7 +56,7 @@ export function OverviewPage() {
         </Preview>
       </Section>
 
-      <Section title="출처" desc="세 사이트의 소스 코드에서 직접 추출했다. 각 문서 항목의 배지가 어디서 왔는지 알려준다.">
+      <Section title="어디서 왔나" desc="새로 그린 게 아니라 실제 서비스에서 쓰고 있던 걸 옮겨왔어요. 항목마다 붙은 배지가 출처예요.">
         <ul className="grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-3">
           {SOURCES.map((s) => (
             <li key={s.src} className="flex flex-col gap-3 bg-bg p-5">
@@ -82,15 +82,15 @@ export function OverviewPage() {
         </ul>
       </Section>
 
-      <Section title="원칙" desc="세 사이트가 공유하는 디자인 태도. 컴포넌트를 더하거나 고칠 때 기준이 된다.">
+      <Section title="지키는 것들" desc="컴포넌트를 새로 만들거나 고칠 때 이 기준을 따라요.">
         <ol className="grid gap-4 md:grid-cols-2">
           {[
-            ['절제', '검정 캔버스 위 흰 잉크, 액센트는 하나. 카드·그라데이션·그림자를 남발하지 않는다.'],
-            ['한 곡선', '모든 진입과 전환은 ease-out-expo (0.22, 1, 0.36, 1) 하나로. 스태거는 0.06–0.07s.'],
-            ['CSS 먼저', 'above-the-fold 진입은 CSS 키프레임(rise-in)으로 — hydration을 기다리지 않는다. motion은 뷰포트 진입·스크롤 연동에만.'],
-            ['reduced-motion', '모든 모션은 prefers-reduced-motion 을 존중한다. 최종 상태를 즉시 그린다.'],
-            ['모노 라벨', '섹션 제목 위에는 항상 `// label` 모노 eyebrow. 번호는 모노 + 액센트.'],
-            ['1px 선', '카드 사이는 gap-px + 배경 line 색. 테두리는 line 토큰, 강조는 fg.'],
+            ['덜어내기', '검정 바탕에 흰 글자, 강조색은 하나면 충분해요. 카드, 그라데이션, 그림자는 꼭 필요할 때만.'],
+            ['곡선은 하나', '등장과 전환은 전부 ease-out-expo (0.22, 1, 0.36, 1) 하나로 통일해요. 스태거는 0.06~0.07초.'],
+            ['첫 화면은 CSS로', '첫 화면에 바로 보여야 하는 건 CSS 키프레임(rise-in)으로 띄워요. JS를 기다리지 않아도 되니까요. motion은 스크롤에 반응할 때만.'],
+            ['움직임 줄이기 존중', '시스템에서 애니메이션 줄이기를 켰다면 모든 모션이 바로 끝 상태로 그려져요.'],
+            ['모노 라벨', '섹션 제목 위에는 항상 // 로 시작하는 모노 라벨이 있어요. 번호도 모노 + 강조색.'],
+            ['1px 선', '카드 사이 간격은 1px 선으로 나눠요. 테두리는 line 토큰, 강조하고 싶을 땐 fg.'],
           ].map(([t, d], i) => (
             <li key={t} className="flex gap-4 rounded-lg border border-line p-4">
               <span className="font-mono text-sm text-accent">{String(i + 1).padStart(2, '0')}</span>
@@ -103,7 +103,7 @@ export function OverviewPage() {
         </ol>
       </Section>
 
-      <Section title="목차">
+      <Section title="둘러보기">
         <ul className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           {DOC_NAV.filter((g) => g.title !== 'Overview').map((g) => (
             <li key={g.title}>

@@ -11,7 +11,7 @@ export function ButtonsPage() {
     <DocPage
       eyebrow="components"
       title="Buttons"
-      lead="v1 의 잉크 채움 CTA(h-12 px-6 rounded-md)와 Mom-Work 배너의 블루 알약(rounded-full) 두 계열을 variant / pill 로 합쳤다. 이동은 ButtonLink, 동작은 Button."
+      lead="v1의 잉크 채움 버튼과 Mom-Work 배너의 파란 알약 버튼, 두 계열을 variant와 pill 옵션으로 합쳤어요. 어딘가로 이동하면 ButtonLink, 무언가를 실행하면 Button을 쓰세요."
       sources={['v1', 'mom']}
     >
       <Section title="Variants">
@@ -38,7 +38,7 @@ export function ButtonsPage() {
             </Button>
           </div>
         </Preview>
-        <Note>primary 는 테마에 따라 반전된다 — 라이트에서 잉크 채움, 다크에서 흰 채움. 프리뷰 테마를 바꿔 확인한다.</Note>
+        <Note>primary는 테마에 따라 뒤집혀요. 라이트에서는 잉크로, 다크에서는 흰색으로 채워져요. 프리뷰 테마를 바꿔서 확인해 보세요.</Note>
       </Section>
 
       <Section title="Sizes · 아이콘">
@@ -72,12 +72,12 @@ export function ButtonsPage() {
             { name: 'variant', type: "'primary' | 'secondary' | 'accent' | 'ghost' | 'kakao'", default: "'primary'", desc: '채움 방식' },
             { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", desc: 'h-9 / h-11 / h-12' },
             { name: 'pill', type: 'boolean', default: 'false', desc: 'rounded-full' },
-            { name: 'leading / trailing', type: 'ReactNode', desc: '아이콘 슬롯. 버튼은 group 이라 group-hover:* 로 움직인다.' },
+            { name: 'leading / trailing', type: 'ReactNode', desc: '아이콘 슬롯. 버튼은 group 이라 group-hover:* 로 움직여요.' },
           ]}
         />
       </Section>
 
-      <Section title="자석 CTA" desc="주요 CTA 하나에만 MagneticButton 으로 감싼다. 커서 쪽으로 최대 14px 끌린다." sources={['v1']}>
+      <Section title="자석 버튼" desc="가장 중요한 버튼 하나만 MagneticButton으로 감싸세요. 커서 쪽으로 최대 14px 끌려와요." sources={['v1']}>
         <Preview
           theme="light"
           center
@@ -108,7 +108,7 @@ export function ButtonsPage() {
         </Preview>
       </Section>
 
-      <Section title="텍스트 링크" desc="밑줄이 움직이는 링크. grow 는 왼쪽에서 자라고(v1·v2 공통), sweep 은 파란 선이 오른쪽으로 빠졌다 왼쪽에서 들어온다(v2 푸터).">
+      <Section title="텍스트 링크" desc="밑줄이 움직이는 링크예요. grow는 왼쪽에서 자라나고, sweep은 파란 선이 오른쪽으로 빠졌다가 왼쪽에서 다시 들어와요(v2 푸터).">
         <Preview
           theme="dark"
           code={`import { LinkUnderline } from '@/components/ui'

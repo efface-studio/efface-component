@@ -30,10 +30,10 @@ export function BrandPage() {
     <DocPage
       eyebrow="components"
       title="Brand"
-      lead="efface 마크는 겹친 둥근 사각형 두 개다. 뒤는 잉크(다크에서는 흰색), 앞은 로고 블루 #3B62E5. 무배경 SVG, 배경 타일, 유리 질감, 그리고 WebGL 3D 씬까지 — 같은 마크의 모든 표현을 모았다."
+      lead="efface 마크는 둥근 사각형 두 개가 겹친 모양이에요. 뒤는 잉크(다크에서는 흰색), 앞은 로고 블루 #3B62E5. 무배경 SVG부터 배경 타일, 유리 질감, WebGL 3D 씬까지 같은 마크의 표현을 전부 모아뒀어요."
       sources={['v1', 'v2', 'mom']}
     >
-      <Section title="마크 — 무배경" desc="가장 기본. 뒤 사각형이 currentColor 라 text-* 로 배경에 맞춘다. 크기는 className 으로." sources={['v2']}>
+      <Section title="마크 — 무배경" desc="가장 기본이 되는 형태예요. 뒤 사각형이 currentColor라서 text-* 클래스로 배경에 맞추면 돼요. 크기도 className으로." sources={['v2']}>
         <Preview
           theme="dark"
           center
@@ -65,7 +65,7 @@ export function BrandPage() {
         <CodeBlock lang="svg" code={MARK_SVG} />
       </Section>
 
-      <Section title="마크 — v1 (efface.dev)" desc="v1 은 앞뒤가 반대다: 블루가 뒤, 잉크가 앞. 라이트 배경 전용이며 viewBox 100." sources={['v1']}>
+      <Section title="마크 — v1 (efface.dev)" desc="v1은 앞뒤가 반대예요. 블루가 뒤, 잉크가 앞. 밝은 배경에서만 쓰고, viewBox는 100이에요." sources={['v1']}>
         <Preview
           theme="light"
           lockTheme
@@ -85,7 +85,7 @@ export function BrandPage() {
         </Preview>
       </Section>
 
-      <Section title="마크 — 유리 질감" desc="Mom-Work 배너의 마크. 뒤에 어두운 사본 두 장을 깔아 두께를 만들고 앞면은 그라데이션으로 빛을 받는다. SVG 만으로 3D 느낌을 낸다. 다크 배경 전용." sources={['mom']}>
+      <Section title="마크 — 유리 질감" desc="Mom-Work 배너에서 쓰는 마크예요. 뒤에 어두운 사본 두 장을 깔아 두께를 만들고, 앞면엔 그라데이션으로 빛을 얹었어요. SVG만으로 3D 느낌을 내요. 어두운 배경 전용." sources={['mom']}>
         <Preview
           theme="dark"
           lockTheme
@@ -105,7 +105,7 @@ export function BrandPage() {
         </Preview>
       </Section>
 
-      <Section title="마크 — 배경 타일" desc="파비콘·앱 아이콘·아바타 용도. 마크는 타일의 62%, 모서리는 iOS 아이콘 비율(0.22). 다섯 가지 표면.">
+      <Section title="마크 — 배경 타일" desc="파비콘, 앱 아이콘, 아바타에 써요. 마크는 타일의 62% 크기, 모서리는 iOS 아이콘 비율(0.22). 바탕은 다섯 가지예요.">
         <Preview
           theme="dark"
           center
@@ -146,7 +146,7 @@ export function BrandPage() {
 
       <Section
         title="3D — 유리 사각형 씬"
-        desc="v2 히어로 배경. 유리판 두 장과 파란 슬래브가 흩어졌다 모여 한 바퀴 돌며 자리를 바꾼다(11초 루프). three.js 로 실시간 렌더 — 영상과 달리 어느 해상도에서도 선명하다. 세 옵션을 켜고 끄며 확인한다."
+        desc="v2 히어로의 배경이에요. 유리판 두 장과 파란 슬래브가 흩어졌다 모이고, 한 바퀴 돌면서 자리를 바꿔요(11초 루프). three.js로 실시간으로 그리기 때문에 영상과 달리 어떤 해상도에서도 선명해요. 옵션을 켜고 끄면서 확인해 보세요."
         sources={['v2']}
       >
         <ToggleGroup title="options">
@@ -167,6 +167,9 @@ export function BrandPage() {
 {/* 무배경 · 가운데 — 로고 단독 표현 */}
 <LogoScene3D transparent centered className="h-[360px]" />
 
+{/* 가로 위치 — 폭의 72% 지점 */}
+<LogoScene3D anchor={0.72} />
+
 {/* 정지 프레임 (reduced-motion 이면 자동) */}
 <LogoScene3D still />`}
         >
@@ -176,17 +179,18 @@ export function BrandPage() {
         </Preview>
         <PropsTable
           rows={[
-            { name: 'transparent', type: 'boolean', default: 'false', desc: '스튜디오 배경 텍스처와 블룸 없이 투명 캔버스로 그린다' },
-            { name: 'centered', type: 'boolean', default: 'false', desc: '마크를 가운데 놓는다 (히어로 기본은 오른쪽 치우침)' },
-            { name: 'still', type: 'boolean', default: 'reduced-motion', desc: '락업 포즈 한 프레임만 그린다' },
+            { name: 'transparent', type: 'boolean', default: 'false', desc: '스튜디오 배경 텍스처와 블룸 없이 투명 캔버스로 그려요' },
+            { name: 'anchor', type: 'number', default: '0.7', desc: '마크의 가로 위치 — 캔버스 폭의 비율(0…1). 화면 비율이 달라져도 같은 자리에 와요' },
+            { name: 'centered', type: 'boolean', default: 'false', desc: 'anchor 0.5와 같아요' },
+            { name: 'still', type: 'boolean', default: 'reduced-motion', desc: '락업 포즈 한 프레임만 그려요' },
           ]}
         />
         <Note>
-          three.js 는 동적 import 라 이 컴포넌트를 쓰는 페이지에서만 로드된다(~600KB gz 150KB). 씬은 뷰포트를 벗어나면 렌더를 멈추고 탭이 숨겨지면 쉰다. 언마운트 시 지오메트리·머티리얼·텍스처·환경맵을 모두 해제한다.
+          three.js는 동적 import라 이 컴포넌트가 있는 페이지에서만 내려받아요(gzip 약 150KB). 화면 밖으로 나가면 그리기를 멈추고, 탭을 숨기면 쉬어요. 언마운트될 때 지오메트리·머티리얼·텍스처·환경맵을 전부 정리합니다.
         </Note>
       </Section>
 
-      <Section title="3D — 앱 아이콘 타일" desc="v2 서비스 카드의 아이콘. 둥근 상자 위에 SVG 글리프를 돋을새김한다. 한 번만 렌더하는 정적 이미지. SVG 의 각 path 에 fill 과 data-d(돌출 높이)를 준다." sources={['v2']}>
+      <Section title="3D — 앱 아이콘 타일" desc="v2 서비스 카드에 올라가는 아이콘이에요. 둥근 상자 위에 SVG 글리프를 돋을새김해요. 한 번만 그리는 정적 이미지고, SVG의 path마다 fill과 data-d(돌출 높이)를 주면 돼요." sources={['v2']}>
         <Preview
           theme="dark"
           center
@@ -220,7 +224,7 @@ export function BrandPage() {
         />
       </Section>
 
-      <Section title="워드마크 락업" desc="마크 + 소문자 efface. v2 Nav 는 링크로 감싸 호버 시 마크가 -8° 기운다. Mom-Work 푸터는 CSS 사각형에 글자가 순서대로 들어온다." sources={['v2', 'mom']}>
+      <Section title="워드마크" desc="마크에 소문자 efface를 붙인 형태예요. v2 상단 바에서는 링크에 마우스를 올리면 마크가 살짝(-8°) 기울고, Mom-Work 푸터에서는 글자가 한 자씩 들어와요." sources={['v2', 'mom']}>
         <Preview
           theme="dark"
           center
@@ -251,19 +255,19 @@ export function BrandPage() {
         </Preview>
       </Section>
 
-      <Section title="여백과 최소 크기">
+      <Section title="쓸 때 주의할 점">
         <ul className="grid gap-3 text-[13.5px] text-fg-dim md:grid-cols-2">
           <li className="rounded-lg border border-line p-4">
-            <b className="text-fg">최소 크기</b> — 마크 단독 16px, 워드마크 락업 20px(마크 기준). 그 아래에서는 배경 타일(ink)을 쓴다.
+            <b className="text-fg">최소 크기</b> — 마크만 쓸 땐 16px, 워드마크는 마크 기준 20px까지예요. 그보다 작으면 배경 타일(ink)로 바꿔 쓰세요.
           </li>
           <li className="rounded-lg border border-line p-4">
-            <b className="text-fg">여백</b> — 마크 한 변의 1/4 이상. 타일 안에서는 마크가 62%를 차지하는 것으로 이미 확보된다.
+            <b className="text-fg">여백</b> — 마크 한 변의 1/4 이상 비워두세요. 타일은 마크가 62%만 차지하니 이미 확보돼 있어요.
           </li>
           <li className="rounded-lg border border-line p-4">
-            <b className="text-fg">색</b> — 뒤 사각형은 배경 대비 잉크/흰색, 앞은 항상 로고 블루. 단색이 필요하면 둘 다 currentColor 로.
+            <b className="text-fg">색</b> — 뒤 사각형은 배경에 따라 잉크나 흰색, 앞은 항상 로고 블루예요. 단색이 필요하면 둘 다 currentColor로.
           </li>
           <li className="rounded-lg border border-line p-4">
-            <b className="text-fg">하지 말 것</b> — 회전, 그림자 추가, 사각형 비율 변경, 앞뒤 색 뒤집기(v1 마크와 혼용 금지).
+            <b className="text-fg">하지 말 것</b> — 돌리거나, 그림자를 붙이거나, 사각형 비율을 바꾸거나, 앞뒤 색을 뒤집지 마세요. v1 마크와 섞어 쓰는 것도 안 돼요.
           </li>
         </ul>
       </Section>

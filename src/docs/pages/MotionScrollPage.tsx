@@ -50,10 +50,10 @@ export function MotionScrollPage() {
     <DocPage
       eyebrow="motion"
       title="Scroll"
-      lead="스크롤에 묶인 모션. 상단 프로그레스 바(v1), 히어로 카피 패럴럭스(v2), 프로세스 선 긋기(v1), 그리고 무한 마퀴(공통). 핀 고정 씬의 rAF 게이트도 여기 정리한다."
+      lead="스크롤에 따라 움직이는 것들이에요. 상단 진행 바, 히어로 카피 패럴럭스, 프로세스 선 긋기, 무한 마퀴. 핀 고정 씬을 돌리는 rAF 패턴도 여기 정리해 뒀어요."
       sources={['v1', 'v2']}
     >
-      <Section title="ScrollProgress" desc="화면 맨 위 2px. 스프링이 걸려 스크롤을 살짝 늦게 따라간다. 이 문서 페이지에 실제로 켜 두었다 — 위를 보면 된다." sources={['v1']}>
+      <Section title="ScrollProgress" desc="화면 맨 위에 붙는 2px 진행 바예요. 스프링이 걸려 있어서 스크롤을 살짝 늦게 따라와요. 이 페이지에 실제로 켜 뒀으니 위를 보세요." sources={['v1']}>
         <ScrollProgress />
         <CodeBlock
           code={`import { ScrollProgress } from '@/components/motion'
@@ -64,7 +64,7 @@ export function MotionScrollPage() {
         />
       </Section>
 
-      <Section title="히어로 패럴럭스" desc="useScroll 로 섹션의 진행도를 얻어 카피는 -24% 까지 올리고 0.55 지점에서 완전히 사라진다. 스크롤 큐는 0.15 에서 사라진다. 프리뷰 안을 스크롤한다." sources={['v2']}>
+      <Section title="히어로 패럴럭스" desc="섹션이 얼마나 지나갔는지 읽어서, 카피는 위로 24%까지 밀리고 절반쯤에서 완전히 사라져요. 스크롤 안내는 그보다 먼저 꺼져요. 프리뷰 안을 스크롤해 보세요." sources={['v2']}>
         <Preview theme="dark" bleed lockTheme code={`const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
 const y = useTransform(scrollYProgress, [0, 1], ['0%', '-24%'])
 const opacity = useTransform(scrollYProgress, [0, 0.55], [1, 0])
@@ -78,7 +78,7 @@ const cue = useTransform(scrollYProgress, [0, 0.15], [1, 0])
         </Preview>
       </Section>
 
-      <Section title="ScrollLine" desc="회색 기준선 위로 그라데이션 선이 스크롤 진행에 따라 그어진다. v1 Process 의 4단계 위를 지난다. md 이상에서만 보인다." sources={['v1']}>
+      <Section title="ScrollLine" desc="회색 기준선 위로 그라데이션 선이 스크롤에 맞춰 그어져요. v1 프로세스 4단계 위를 지나가던 그 선이에요. 데스크톱에서만 보여요." sources={['v1']}>
         <Preview
           theme="light"
           code={`import { ScrollLine } from '@/components/motion'
@@ -110,7 +110,7 @@ const cue = useTransform(scrollYProgress, [0, 0.15], [1, 0])
         </Preview>
       </Section>
 
-      <Section title="Marquee" desc="자식을 두 번 이어 붙이고 -50% 까지 옮긴다. edge 는 양 끝 처리 — fade 는 배경색 덮개(v1), mask 는 마스크 이미지(v2). reduced-motion 에서 멈춘다." sources={['v1', 'v2']}>
+      <Section title="Marquee" desc="내용을 두 번 이어 붙여서 절반만큼 옮기는 무한 마퀴예요. 양 끝은 fade(배경색으로 덮기)나 mask(마스크로 지우기) 중 골라요. 애니메이션 줄이기를 켜면 멈춰요." sources={['v1', 'v2']}>
         <Preview
           theme="dark"
           bleed
@@ -138,7 +138,7 @@ const cue = useTransform(scrollYProgress, [0, 0.15], [1, 0])
         </Preview>
       </Section>
 
-      <Section title="핀 고정 씬의 rAF 게이트" desc="v2 의 EffaceIntro · AppCards · Capabilities 는 sticky 100vh 안에서 스크롤 진행도(0→1)로 그린다. 세 씬이 같은 훅을 공유한다. 여기서는 패턴만 옮긴다." sources={['v2']}>
+      <Section title="핀 고정 씬의 rAF 패턴" desc="v2의 EffaceIntro, AppCards, Capabilities는 화면에 고정된 채 스크롤 진행도(0→1)로 그려요. 세 씬이 이 훅 하나를 같이 써요. 여기서는 패턴만 옮겨 뒀어요." sources={['v2']}>
         <CodeBlock
           code={`/** 섹션이 자기 핀 runway 를 얼마나 지났는지 0→1 로 frame 에 넘긴다.
  *  화면 밖·숨은 탭에서는 렌더를 건너뛰고, reduced-motion 이면 settleAt 을 한 번 그리고 끝. */
@@ -172,7 +172,7 @@ export function usePinnedSceneMotion(ref, frame: (p: number) => void, enabled: b
 </section>`}
         />
         <Note>
-          씬 길이(vh)는 타임라인이 실제로 끝나는 지점에서 계산한다 — 카피가 짧은 로케일에서 빈 스크롤이 남지 않게. md 미만에서는 씬을 축소하지 않고 정적 스택으로 대체한다.
+          씬의 길이(vh)는 타임라인이 실제로 끝나는 지점으로 계산해요. 카피가 짧은 언어에서 빈 스크롤이 남지 않게요. 모바일에서는 씬을 줄이지 않고 정적으로 쌓아서 보여줘요.
         </Note>
       </Section>
     </DocPage>
