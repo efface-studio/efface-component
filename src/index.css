@@ -1,0 +1,529 @@
+@import 'tailwindcss';
+@import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+
+/* ─────────────────────────────────────────────────────────────
+   efface design system — tokens
+
+   두 테마를 한 벌의 시맨틱 토큰으로 다룬다.
+   · light  = efface.dev (v1)   paper / ink,  accent #2563EB
+   · dark   = v2.efface.dev     black canvas, accent #3B62E5 (로고 블루)
+   테마는 `[data-theme]`로 범위를 정하므로 문서 안에서 프리뷰 박스마다
+   다른 테마를 겹쳐 쓸 수 있다. 유틸리티는 `@theme inline`으로 변수를
+   직접 참조해 중첩 스코프에서도 올바른 값을 읽는다.
+   ───────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f5f5f5;
+
+  --fg: #0a0a0a;
+  --fg-2: #171717;
+  --fg-dim: #525252;
+  --fg-faint: #a3a3a3;
+
+  --line: #e5e5e5;
+  --line-soft: #f0f0f0;
+  --line-strong: #d4d4d4;
+
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.08);
+
+  --success: #16a34a;
+  --selection-bg: #0a0a0a;
+  --selection-fg: #ffffff;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a0a0b;
+  --bg-soft: #101013;
+  --surface: #141418;
+  --surface-2: #1b1b21;
+
+  --fg: #f6f6f7;
+  --fg-2: #ededef;
+  --fg-dim: #9b9ba4;
+  --fg-faint: #6a6a73;
+
+  --line: rgba(255, 255, 255, 0.09);
+  --line-soft: rgba(255, 255, 255, 0.05);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --accent: #3b62e5;
+  --accent-hover: #6183ff;
+  --accent-soft: rgba(59, 98, 229, 0.16);
+
+  --success: #22c55e;
+  --selection-bg: #3b62e5;
+  --selection-fg: #ffffff;
+}
+
+@theme inline {
+  /* 시맨틱 컬러 — 테마에 따라 바뀐다 */
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-dim: var(--fg-dim);
+  --color-fg-faint: var(--fg-faint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+}
+
+@theme {
+  /* 브랜드 고정 컬러 — 테마와 무관 */
+  --color-brand: #3b62e5;
+  --color-brand-bright: #6183ff;
+  --color-brand-deep: #1a2a72;
+  --color-ink: #0a0a0a;
+  --color-paper: #ffffff;
+
+  /* 서비스 카드 그라데이션의 기준색 (v2 AppCards) */
+  --color-app-blue: #2563eb;
+  --color-app-teal: #14b8b0;
+  --color-app-violet: #7c3aed;
+  --color-app-amber: #f59e0b;
+
+  /* 카카오 */
+  --color-kakao: #fee500;
+  --color-kakao-fg: #191919;
+
+  --font-sans:
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI',
+    Roboto, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: 'Space Grotesk', 'Pretendard Variable', sans-serif;
+  --font-black: 'Archivo Black', 'Pretendard Variable', sans-serif;
+
+  /* 모션 — 앱 전체의 진입/전환이 공유하는 하나의 곡선 */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-back: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-symmetric: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --duration-fast: 0.4s;
+  --duration-base: 0.6s;
+  --duration-slow: 0.7s;
+
+  --container-page: 1400px;
+  --container-page-v1: 1200px;
+  --container-prose: 1080px;
+}
+
+/* JetBrains Mono — 가변 파일 하나, 작은 모노 라벨에만 쓴다 */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTOlOV.woff2')
+    format('woff2');
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  html,
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'ss01', 'ss02', 'cv01';
+  }
+  * {
+    box-sizing: border-box;
+  }
+  ::selection {
+    background: var(--selection-bg);
+    color: var(--selection-fg);
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ── 타이포 유틸 ─────────────────────────────────────────────── */
+@utility label {
+  /* 섹션 제목 위 모노 eyebrow — `// like this` */
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+/* v1 — 옅은 점 격자 배경 */
+@utility bg-dot {
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.07) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+@utility bg-dot-dark {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* iOS 노치/홈 인디케이터 */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── 모션 유틸 ───────────────────────────────────────────────────
+   above-the-fold 진입은 CSS 애니메이션으로 — 스타일시트 파싱 즉시 재생,
+   hydration을 기다리지 않는다. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise-in {
+  animation: rise-in var(--duration-slow) var(--ease-out-expo) both;
+}
+.rise-d1 {
+  animation-delay: 0.08s;
+}
+.rise-d2 {
+  animation-delay: 0.18s;
+}
+.rise-d3 {
+  animation-delay: 0.28s;
+}
+.rise-d4 {
+  animation-delay: 0.4s;
+}
+.rise-d5 {
+  animation-delay: 0.52s;
+}
+
+/* 스크롤 큐의 느린 상하 운동 */
+@keyframes scroll-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+.scroll-bob {
+  animation: scroll-bob 1.8s ease-in-out infinite;
+}
+
+/* 마퀴 — 내용을 두 번 이어 붙이고 -50%까지 이동 */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+/* 커서 깜빡임 (v2 캡션 캐럿 / v1 blink) */
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.caret-blink {
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+/* 잡동사니 조각의 느린 부유 (v2 EffaceIntro) */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(-6px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+.animate-bob {
+  animation: bob 5.6s ease-in-out infinite;
+}
+
+/* 텍스트 링크 밑줄 — 왼쪽에서 자라난다 */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.45s var(--ease-out-expo);
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+/* 푸터 링크 — 파란 밑줄이 오른쪽으로 빠지고 왼쪽에서 들어온다 */
+.footer-link {
+  position: relative;
+  display: inline-block;
+  transition: color 0.2s;
+}
+.footer-link:hover {
+  color: var(--fg-2);
+}
+.footer-hl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: #3b82f6;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.22s var(--ease-in-out-symmetric);
+}
+.footer-link:hover .footer-hl {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* v2 Capabilities — 점 하나 달린 도구 칩 (`--dot`은 항목별로 지정) */
+.cap-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  color: var(--fg-dim);
+  transition: color 0.2s;
+}
+.cap-chip::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot, var(--accent));
+  flex: none;
+}
+.cap-chip:hover {
+  color: var(--fg-2);
+}
+
+/* ── v2 App card ─────────────────────────────────────────────────
+   360×560 타일을 하나의 표면으로 조명한다: 기울기를 따라가는 하이라이트,
+   두께를 읽게 하는 상하 엣지, 뒤로 물러난 그림자. --gx/--gy/--spec/--shadow-o는
+   씬 루프가 프레임마다 쓰고, 기본값은 정지 상태(모바일·no-JS)이다. */
+.app-card {
+  position: relative;
+  width: 360px;
+  height: 560px;
+  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 52px 28px 0;
+  box-sizing: border-box;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+}
+.app-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  background:
+    radial-gradient(
+      58% 42% at var(--gx, 50%) var(--gy, 34%),
+      rgba(255, 255, 255, calc(var(--sheen, 0.16) * 2.2 * var(--spec, 0.5))) 0%,
+      rgba(255, 255, 255, 0) 70%
+    ),
+    linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0) 42%,
+      rgba(255, 255, 255, calc(var(--sheen, 0.16) * 0.45)) 50%,
+      rgba(255, 255, 255, 0) 58%
+    );
+  pointer-events: none;
+}
+.app-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1.5px 0 rgba(0, 0, 0, 0.24);
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .app-card {
+    width: min(320px, 86vw);
+    height: auto;
+    min-height: 420px;
+    padding: 40px 24px 32px;
+    margin-inline: auto;
+  }
+}
+
+/* ── Mom-Work 푸터 워드마크 (CSS 스포트라이트) ─────────────────────
+   글자 전체에 옅은 그라데이션, 포인터 주변 창 안에서만 선명. */
+.footer-wordmark {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+.footer-wordmark__scale {
+  --sx: 1;
+  --gx: 0px;
+  --gy: 0px;
+  --gw: 200px;
+  --gh: 100px;
+  position: relative;
+  width: max-content;
+  transform: scaleX(var(--sx));
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+.footer-wordmark__text {
+  display: block;
+  font-size: 21cqw;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  white-space: nowrap;
+  color: #1c2536;
+}
+.footer-wordmark__tint,
+.footer-wordmark__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  color: transparent;
+  background-image: linear-gradient(90deg, #3b82f6 0%, #5b6cf2 35%, #6366f1 60%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.footer-wordmark__tint {
+  opacity: 0.35;
+}
+.footer-wordmark__window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--gw);
+  height: var(--gh);
+  overflow: hidden;
+  transform: translate(var(--gx), var(--gy));
+  will-change: transform;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 0%, #000 25%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 0%, #000 25%, transparent 100%);
+}
+.footer-wordmark__glow {
+  transform: translate(calc(var(--gx) * -1), calc(var(--gy) * -1));
+  will-change: transform;
+}
+
+/* ── efface 홍보 배너 키프레임 (Mom-Work 핸드오프 keyframes.css) ── */
+@keyframes efCut3 { 0% { opacity: 0; } 1% { opacity: 1; } 31% { opacity: 1; } 33.34% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes efCut4 { 0% { opacity: 0; } 1% { opacity: 1; } 23% { opacity: 1; } 25% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes efRise { 0% { transform: translateY(115%); } 3.4% { transform: translateY(0); } 100% { transform: translateY(0); } }
+@keyframes efPop { 0% { opacity: 0; transform: translateY(26px) scale(0.96); filter: blur(10px); } 2.8% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes efCut3A { 0%, 28% { opacity: 1; } 30.34% { opacity: 0; } 95% { opacity: 0; } 97% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes efCut4A { 0%, 20% { opacity: 1; } 22% { opacity: 0; } 96% { opacity: 0; } 98% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes efRiseA { 0%, 28% { transform: translateY(0); } 96% { transform: translateY(115%); } 99.4%, 100% { transform: translateY(0); } }
+@keyframes efRiseH { 0%, 92% { transform: translateY(0); } 96% { transform: translateY(115%); } 99.4%, 100% { transform: translateY(0); } }
+@keyframes efPopA { 0%, 28% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 31% { opacity: 0; transform: translateY(-14px) scale(0.98); filter: blur(6px); } 96.4% { opacity: 0; transform: translateY(26px) scale(0.96); filter: blur(10px); } 99.2%, 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes efPopH { 0%, 92% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 96.4% { opacity: 0; transform: translateY(26px) scale(0.96); filter: blur(10px); } 99.2%, 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes efBar { 0% { transform: scaleX(0); } 4% { transform: scaleX(1); } 100% { transform: scaleX(1); } }
+@keyframes efSheen { 0% { transform: translateX(-45%); opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { transform: translateX(150%); opacity: 0; } }
+@keyframes efGlow { 0%, 100% { opacity: 0.35; transform: scale(0.94); } 50% { opacity: 1; transform: scale(1.06); } }
+@keyframes efMark { 0%, 84% { transform: scale(1) rotate(0deg); opacity: 1; } 90% { transform: scale(1.03) rotate(5deg); opacity: 0; } 91% { transform: scale(0.82) rotate(-10deg); opacity: 0; } 99%, 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes efRoll4 { 0%, 27% { transform: translateY(0); } 33.34%, 60.6% { transform: translateY(-25%); } 66.67%, 94% { transform: translateY(-50%); } 100% { transform: translateY(-75%); } }
+@keyframes efDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.25; transform: scale(0.8); } }
+@keyframes efCaret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes efNudge { 0%, 60%, 100% { transform: translateX(0); } 72% { transform: translateX(7px); } 84% { transform: translateX(0); } }
+@keyframes efScan { 0% { transform: translateY(-100%); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(600%); opacity: 0; } }
+@keyframes efFill { 0% { transform: scaleX(0.04); } 92% { transform: scaleX(1); } 100% { transform: scaleX(1); } }
+@keyframes efFloat { 0%, 100% { transform: translateY(-7px); } 50% { transform: translateY(9px); } }
+@keyframes efTiltS { 0%, 100% { transform: perspective(600px) rotateX(7deg) rotateY(-7deg); } 50% { transform: perspective(600px) rotateX(11deg) rotateY(-22deg); } }
+@keyframes efTiltL { 0%, 100% { transform: perspective(900px) rotateX(13deg) rotateY(-15deg) translateY(2px); } 50% { transform: perspective(900px) rotateX(19deg) rotateY(-27deg) translateY(-9px); } }
+@keyframes efSlideR1 { 0% { transform: translateX(0); opacity: 1; } 0.5% { transform: translateX(110px); opacity: 0.25; } 100% { transform: translateX(0); opacity: 1; } }
+@keyframes efSlideR2 { 0% { transform: translateX(0); opacity: 1; } 0.5% { transform: translateX(110px); opacity: 0.25; } 100% { transform: translateX(0); opacity: 1; } }
+@keyframes efSlideL1 { 0% { transform: translateX(0); opacity: 1; } 0.5% { transform: translateX(-110px); opacity: 0.25; } 100% { transform: translateX(0); opacity: 1; } }
+@keyframes efSlideL2 { 0% { transform: translateX(0); opacity: 1; } 0.5% { transform: translateX(-110px); opacity: 0.25; } 100% { transform: translateX(0); opacity: 1; } }
+
+/* ── reduced motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise-in,
+  .scroll-bob,
+  .animate-marquee,
+  .caret-blink,
+  .animate-bob {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .link-underline,
+  .footer-hl,
+  .cap-chip {
+    transition: none;
+  }
+}
