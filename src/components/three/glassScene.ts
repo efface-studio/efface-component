@@ -13,8 +13,10 @@ export interface GlassSceneOptions {
   still?: boolean;
   /** 스튜디오 배경 텍스처 없이 투명 캔버스로 그린다 (무배경 3D 마크). */
   transparent?: boolean;
-  /** 마크를 캔버스 가운데에 놓는다 (히어로 기본은 오른쪽으로 치우쳐 있다). */
+  /** 마크를 캔버스 가운데에 놓는다 (`anchor: 0.5` 와 같다). */
   centered?: boolean;
+  /** 마크의 가로 위치 — 캔버스 폭의 비율(0 왼쪽 … 1 오른쪽). 비율이 달라져도 화면상 같은 자리에 온다. */
+  anchor?: number;
 }
 
 /** three's WebGLRenderer gained this knob late; treat it as optional. */
@@ -26,6 +28,12 @@ type TransmissionAwareRenderer = THREE.WebGLRenderer & {
 const PERIOD = 11.0;
 /** Phase where the cards sit gathered in the lock-up pose — the still frame. */
 const STILL_PHASE = 0.15;
+/** 히어로 기본 가로 위치 — 폭의 70% 지점 (원본 1.6 비율 화면에서 마크가 놓이던 자리). */
+const HERO_ANCHOR = 0.7;
+/** 카메라가 바라보는 월드 x — 화면 가로 중앙이 여기에 온다. */
+const LOOK_X = 0.4;
+const CAMERA_Z = 12.2;
+const FOV = 26;
 
 /**
  * Live "glass squares" logo scene — ported 1:1 from the source embed and wrapped
@@ -41,7 +49,7 @@ export function createGlassScene(
 ): () => void {
   const still = !!options?.still;
   const transparent = !!options?.transparent;
-  const centered = !!options?.centered;
+  const anchor = options?.centered ? 0.5 : (options?.anchor ?? HERO_ANCHOR);
 
   const renderer: TransmissionAwareRenderer = new THREE.WebGLRenderer({
     canvas,
@@ -99,8 +107,8 @@ export function createGlassScene(
   }
   buildEnv(2.5, 0.6);
 
-  const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 100);
-  camera.position.set(0, 0.6, 12.2);
+  const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100);
+  camera.position.set(0, 0.6, CAMERA_Z);
 
   const darkGlass = darkGlassMaterial();
   const blueGloss = blueGlossMaterial();
@@ -120,9 +128,17 @@ export function createGlassScene(
   const pivot = new THREE.Group();
   pivot.add(spinner);
   pivot.rotation.z = 0.12; // slight roll -> diagonal lock-up like the source
-  const pivotX = centered ? 0 : 1.9;
-  pivot.position.set(pivotX, -0.05, 0); // nudged right + down (or centred)
+  pivot.position.set(0, -0.05, 0); // x 는 resize 에서 anchor 로 계산
   scene.add(pivot);
+
+  /** z=0 평면에서 카메라에 보이는 월드 폭 → anchor 비율을 월드 x 로. */
+  const anchorToWorldX = (aspect: number): number => {
+    const visibleH = 2 * CAMERA_Z * Math.tan(THREE.MathUtils.degToRad(FOV / 2));
+    // 세로로 긴 화면에서는 마크가 잘리지 않게 가운데 쪽으로 당긴다
+    const pull = aspect < 1.2 ? Math.max(0, (aspect - 0.6) / 0.6) : 1;
+    const a = 0.5 + (anchor - 0.5) * pull;
+    return LOOK_X + (a - 0.5) * visibleH * aspect;
+  };
 
   // ---- Lights ----
   const key = new THREE.DirectionalLight(0xffffff, 0.25);
@@ -148,7 +164,7 @@ export function createGlassScene(
     })
   );
   glow.scale.set(3.4, 3.0, 1); // wide + soft so it reads as ambient bloom
-  glow.position.set(centered ? 0 : 2.0, -0.9, -4.0); // behind the cards, facing the camera
+  glow.position.set(0, -0.9, -4.0); // behind the cards, facing the camera (x follows the pivot)
   if (!transparent) scene.add(glow);
 
   // ---- Resize + framing (sized to the canvas box, not the whole window) ----
@@ -158,7 +174,10 @@ export function createGlassScene(
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    camera.lookAt(centered ? 0 : 0.4, -0.15, 0);
+    camera.lookAt(LOOK_X, -0.15, 0);
+    const px = anchorToWorldX(camera.aspect);
+    pivot.position.x = px;
+    glow.position.x = px + 0.1;
   }
 
   /** Poses everything for one point on the loop and renders a frame. */
@@ -180,8 +199,8 @@ export function createGlassScene(
     pivot.rotation.z = 0.12 + 0.018 * Math.sin(TAU * 2 * p + 1.2); // gentle rock
     pivot.rotation.x = 0.05 * L.w * Math.sin(L.psi); // weave sway
     renderer.toneMappingExposure = 1.05 + 0.1 * pop;
-    camera.position.set(0, 0.6 + 0.15 * L.w, 12.2 - 1.15 * L.w); // push in during the transform
-    camera.lookAt(centered ? 0 : 0.4, -0.15, 0);
+    camera.position.set(0, 0.6 + 0.15 * L.w, CAMERA_Z - 1.15 * L.w); // push in during the transform
+    camera.lookAt(LOOK_X, -0.15, 0);
     glow.material.color.setScalar(1 + 0.5 * L.w); // glow breathes with the weave
     renderer.render(scene, camera);
   }
