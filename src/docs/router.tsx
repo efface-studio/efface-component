@@ -6,6 +6,11 @@ import { ColorsPage } from '@/docs/pages/ColorsPage'
 import { TypographyPage } from '@/docs/pages/TypographyPage'
 import { LayoutPage } from '@/docs/pages/LayoutPage'
 import { BrandPage } from '@/docs/pages/BrandPage'
+import { MotionTokensPage } from '@/docs/pages/MotionTokensPage'
+import { ButtonsPage } from '@/docs/pages/ButtonsPage'
+import { ChipsPage } from '@/docs/pages/ChipsPage'
+import { CardsPage } from '@/docs/pages/CardsPage'
+import { ListsPage } from '@/docs/pages/ListsPage'
 
 export const router = createBrowserRouter([
   {
@@ -15,12 +20,12 @@ export const router = createBrowserRouter([
       { path: '/foundations/colors', element: <ColorsPage /> },
       { path: '/foundations/typography', element: <TypographyPage /> },
       { path: '/foundations/layout', element: <LayoutPage /> },
-      { path: '/foundations/motion', element: <PlaceholderPage title="Motion tokens" /> },
+      { path: '/foundations/motion', element: <MotionTokensPage /> },
       { path: '/components/brand', element: <BrandPage /> },
-      { path: '/components/buttons', element: <PlaceholderPage title="Buttons" /> },
-      { path: '/components/chips', element: <PlaceholderPage title="Chips & Badges" /> },
-      { path: '/components/cards', element: <PlaceholderPage title="Cards" /> },
-      { path: '/components/lists', element: <PlaceholderPage title="Lists & Data" /> },
+      { path: '/components/buttons', element: <ButtonsPage /> },
+      { path: '/components/chips', element: <ChipsPage /> },
+      { path: '/components/cards', element: <CardsPage /> },
+      { path: '/components/lists', element: <ListsPage /> },
       { path: '/motion/reveal', element: <PlaceholderPage title="Reveal" /> },
       { path: '/motion/scroll', element: <PlaceholderPage title="Scroll" /> },
       { path: '/motion/cursor', element: <PlaceholderPage title="Cursor" /> },
