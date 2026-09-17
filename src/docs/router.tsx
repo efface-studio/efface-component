@@ -1,25 +1,27 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { DocsLayout } from '@/docs/layout/DocsLayout'
-import { OverviewPage } from '@/docs/pages/OverviewPage'
-import { NotFoundPage } from '@/docs/pages/NotFoundPage'
-import { ColorsPage } from '@/docs/pages/ColorsPage'
-import { TypographyPage } from '@/docs/pages/TypographyPage'
-import { LayoutPage } from '@/docs/pages/LayoutPage'
-import { BrandPage } from '@/docs/pages/BrandPage'
-import { MotionTokensPage } from '@/docs/pages/MotionTokensPage'
-import { ButtonsPage } from '@/docs/pages/ButtonsPage'
-import { ChipsPage } from '@/docs/pages/ChipsPage'
-import { CardsPage } from '@/docs/pages/CardsPage'
-import { ListsPage } from '@/docs/pages/ListsPage'
-import { MotionRevealPage } from '@/docs/pages/MotionRevealPage'
-import { MotionScrollPage } from '@/docs/pages/MotionScrollPage'
-import { MotionCursorPage } from '@/docs/pages/MotionCursorPage'
-import { MotionTextPage } from '@/docs/pages/MotionTextPage'
-import { NavigationPage } from '@/docs/pages/NavigationPage'
-import { FooterPage } from '@/docs/pages/FooterPage'
-import { OverlayPage } from '@/docs/pages/OverlayPage'
-import { BannerPage } from '@/docs/pages/BannerPage'
-import { RecipesPage } from '@/docs/pages/RecipesPage'
+import {
+  OverviewPage,
+  NotFoundPage,
+  ColorsPage,
+  TypographyPage,
+  LayoutPage,
+  BrandPage,
+  MotionTokensPage,
+  ButtonsPage,
+  ChipsPage,
+  CardsPage,
+  ListsPage,
+  MotionRevealPage,
+  MotionScrollPage,
+  MotionCursorPage,
+  MotionTextPage,
+  NavigationPage,
+  FooterPage,
+  OverlayPage,
+  BannerPage,
+  RecipesPage,
+} from '@/docs/pages/lazy'
 
 export const router = createBrowserRouter([
   {

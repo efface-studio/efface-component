@@ -1,0 +1,23 @@
+import { lazy } from 'react'
+
+/* 문서 페이지는 라우트 단위로 코드 분할한다 */
+export const OverviewPage = lazy(() => import('@/docs/pages/OverviewPage').then((m) => ({ default: m.OverviewPage })))
+export const NotFoundPage = lazy(() => import('@/docs/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })))
+export const ColorsPage = lazy(() => import('@/docs/pages/ColorsPage').then((m) => ({ default: m.ColorsPage })))
+export const TypographyPage = lazy(() => import('@/docs/pages/TypographyPage').then((m) => ({ default: m.TypographyPage })))
+export const LayoutPage = lazy(() => import('@/docs/pages/LayoutPage').then((m) => ({ default: m.LayoutPage })))
+export const BrandPage = lazy(() => import('@/docs/pages/BrandPage').then((m) => ({ default: m.BrandPage })))
+export const MotionTokensPage = lazy(() => import('@/docs/pages/MotionTokensPage').then((m) => ({ default: m.MotionTokensPage })))
+export const ButtonsPage = lazy(() => import('@/docs/pages/ButtonsPage').then((m) => ({ default: m.ButtonsPage })))
+export const ChipsPage = lazy(() => import('@/docs/pages/ChipsPage').then((m) => ({ default: m.ChipsPage })))
+export const CardsPage = lazy(() => import('@/docs/pages/CardsPage').then((m) => ({ default: m.CardsPage })))
+export const ListsPage = lazy(() => import('@/docs/pages/ListsPage').then((m) => ({ default: m.ListsPage })))
+export const MotionRevealPage = lazy(() => import('@/docs/pages/MotionRevealPage').then((m) => ({ default: m.MotionRevealPage })))
+export const MotionScrollPage = lazy(() => import('@/docs/pages/MotionScrollPage').then((m) => ({ default: m.MotionScrollPage })))
+export const MotionCursorPage = lazy(() => import('@/docs/pages/MotionCursorPage').then((m) => ({ default: m.MotionCursorPage })))
+export const MotionTextPage = lazy(() => import('@/docs/pages/MotionTextPage').then((m) => ({ default: m.MotionTextPage })))
+export const NavigationPage = lazy(() => import('@/docs/pages/NavigationPage').then((m) => ({ default: m.NavigationPage })))
+export const FooterPage = lazy(() => import('@/docs/pages/FooterPage').then((m) => ({ default: m.FooterPage })))
+export const OverlayPage = lazy(() => import('@/docs/pages/OverlayPage').then((m) => ({ default: m.OverlayPage })))
+export const BannerPage = lazy(() => import('@/docs/pages/BannerPage').then((m) => ({ default: m.BannerPage })))
+export const RecipesPage = lazy(() => import('@/docs/pages/RecipesPage').then((m) => ({ default: m.RecipesPage })))

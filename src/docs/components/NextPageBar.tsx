@@ -5,7 +5,7 @@ import { DOC_NAV } from '@/docs/nav'
 
 const FLAT = DOC_NAV.flatMap((g) => g.links.map((l) => ({ ...l, group: g.title })))
 /** 바닥에서 이만큼 더 밀면 다음 페이지로 */
-const PULL_PX = 360
+const PULL_PX = 280
 
 /**
  * 페이지 끝의 "다음" 카드. 바닥에 닿은 채로 계속 스크롤(휠·터치)하면 게이지가 차고,
@@ -33,9 +33,22 @@ export function NextPageBar() {
     firedRef.current = false
     if (!next) return
     const atBottom = () => window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
+    /** 프리뷰 안의 스크롤 컨테이너를 굴리는 중이면 페이지 넘김으로 치지 않는다 */
+    const insideScroller = (target: EventTarget | null) => {
+      let el = target instanceof Element ? target : null
+      while (el && el !== document.body) {
+        const oy = getComputedStyle(el).overflowY
+        if ((oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight + 1) {
+          return el.scrollTop + el.clientHeight < el.scrollHeight - 1
+        }
+        el = el.parentElement
+      }
+      return false
+    }
     let idle = 0
-    const bump = (dy: number) => {
+    const bump = (dy: number, target: EventTarget | null) => {
       if (firedRef.current) return
+      if (insideScroller(target)) return
       if (!atBottom() || dy <= 0) {
         if (pullRef.current !== 0) {
           pullRef.current = 0
@@ -50,20 +63,20 @@ export function NextPageBar() {
       idle = window.setTimeout(() => {
         pullRef.current = 0
         setPull(0)
-      }, 700)
+      }, 900)
       if (pullRef.current >= PULL_PX) {
         firedRef.current = true
         navigate(next.to)
       }
     }
-    const onWheel = (e: WheelEvent) => bump(e.deltaY)
+    const onWheel = (e: WheelEvent) => bump(e.deltaY, e.target)
     const onTouchStart = (e: TouchEvent) => {
       touchY.current = e.touches[0]?.clientY ?? null
     }
     const onTouchMove = (e: TouchEvent) => {
       const y = e.touches[0]?.clientY
       if (touchY.current == null || y == null) return
-      bump((touchY.current - y) * 1.5)
+      bump((touchY.current - y) * 1.5, e.target)
       touchY.current = y
     }
     window.addEventListener('wheel', onWheel, { passive: true })

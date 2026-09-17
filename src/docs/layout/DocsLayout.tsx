@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { NavLink, useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Menu, Moon, Sun, X } from 'lucide-react'
@@ -44,10 +44,6 @@ export function DocsLayout() {
     }
   }, [theme])
 
-  // 라우트가 바뀌면 맨 위로. 사이드바는 링크 클릭 시 닫는다.
-  useEffect(() => {
-    window.scrollTo({ top: 0 })
-  }, [pathname])
 
   const sidebar = (
     <nav aria-label="문서" className="flex flex-col gap-7">
@@ -151,15 +147,17 @@ export function DocsLayout() {
         )}
 
         <main className="min-w-0 flex-1 px-5 py-10 md:px-10 md:py-14">
-          <AnimatePresence mode="wait" initial={false}>
+          {/* 나가는 페이지는 제자리에서 위로 빠지고(카메라가 아래로), 새 페이지는 아래에서 올라온다.
+              스크롤 리셋은 exit 가 끝난 뒤 — 먼저 되돌리면 옛 페이지가 위로 튀어 방향이 거꾸로 읽힌다. */}
+          <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo({ top: 0 })}>
             <motion.div
               key={pathname}
-              initial={reduce ? false : { opacity: 0, y: 24 }}
+              initial={reduce ? false : { opacity: 0, y: 56 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={reduce ? undefined : { opacity: 0, y: -16, transition: { duration: 0.22, ease: EASE_OUT_EXPO } }}
-              transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
+              exit={reduce ? undefined : { opacity: 0, y: -40, transition: { duration: 0.28, ease: [0.4, 0, 1, 1] } }}
+              transition={{ duration: 0.55, ease: EASE_OUT_EXPO }}
             >
-              {outlet}
+              <Suspense fallback={null}>{outlet}</Suspense>
               <NextPageBar />
             </motion.div>
           </AnimatePresence>
