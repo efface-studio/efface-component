@@ -152,16 +152,16 @@
   function measure(a, b) {
     const lines = []
     const contains = (o, i) => i.x >= o.x - 0.5 && i.y >= o.y - 0.5 && i.x + i.w <= o.x + o.w + 0.5 && i.y + i.h <= o.y + o.h + 0.5
-    const line = (x1, y1, x2, y2) => lines.push({ x1, y1, x2, y2, d: r1(Math.hypot(x2 - x1, y2 - y1)) })
+    const line = (x1, y1, x2, y2, dir) => lines.push({ x1, y1, x2, y2, dir, d: r1(Math.hypot(x2 - x1, y2 - y1)) })
     if (contains(a, b) || contains(b, a)) {
       const o = contains(a, b) ? a : b
       const i = contains(a, b) ? b : a
       const cx = i.x + i.w / 2
       const cy = i.y + i.h / 2
-      if (i.y - o.y > 0.5) line(cx, o.y, cx, i.y)
-      if (o.y + o.h - (i.y + i.h) > 0.5) line(cx, i.y + i.h, cx, o.y + o.h)
-      if (i.x - o.x > 0.5) line(o.x, cy, i.x, cy)
-      if (o.x + o.w - (i.x + i.w) > 0.5) line(i.x + i.w, cy, o.x + o.w, cy)
+      if (i.y - o.y > 0.5) line(cx, o.y, cx, i.y, 'top')
+      if (o.y + o.h - (i.y + i.h) > 0.5) line(cx, i.y + i.h, cx, o.y + o.h, 'bottom')
+      if (i.x - o.x > 0.5) line(o.x, cy, i.x, cy, 'left')
+      if (o.x + o.w - (i.x + i.w) > 0.5) line(i.x + i.w, cy, o.x + o.w, cy, 'right')
       return lines
     }
     const ax2 = a.x + a.w, ay2 = a.y + a.h, bx2 = b.x + b.w, by2 = b.y + b.h
@@ -171,7 +171,7 @@
       const bot = top === a ? b : a
       const ox1 = Math.max(a.x, b.x), ox2 = Math.min(ax2, bx2)
       const x = ox2 > ox1 ? (ox1 + ox2) / 2 : (top.x + top.w / 2 + bot.x + bot.w / 2) / 2
-      line(x, top.y + top.h, x, bot.y)
+      line(x, top.y + top.h, x, bot.y, 'v')
     }
     // 가로 간격
     if (a.x >= bx2 || b.x >= ax2) {
@@ -179,7 +179,7 @@
       const right = left === a ? b : a
       const oy1 = Math.max(a.y, b.y), oy2 = Math.min(ay2, by2)
       const y = oy2 > oy1 ? (oy1 + oy2) / 2 : (left.y + left.h / 2 + right.y + right.h / 2) / 2
-      line(left.x + left.w, y, right.x, y)
+      line(left.x + left.w, y, right.x, y, 'h')
     }
     return lines
   }
@@ -205,7 +205,7 @@
       }
       label(`${l.d}`, (l.x1 + l.x2) / 2 + (vertical ? 8 : 0), (l.y1 + l.y2) / 2 - (vertical ? 9 : 22), { anchor: vertical ? 'left' : 'center', bg: C.measure })
     }
-    return lines.map((l) => l.d)
+    return lines.map((l) => ({ d: l.d, dir: l.dir }))
   }
 
   function drawGrid() {

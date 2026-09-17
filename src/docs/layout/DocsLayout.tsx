@@ -10,7 +10,7 @@ import { DocsThemeContext, type DocsTheme } from '@/docs/theme'
 import { NextPageBar } from '@/docs/components/NextPageBar'
 import { EASE_OUT_EXPO } from '@/lib/motion'
 import { InspectPanel } from '@/docs/components/InspectPanel'
-import { isInspectMessage, loadInspectScript, type InspectInfo } from '@/lib/inspectBridge'
+import { isInspectMessage, loadInspectScript, type InspectDistance, type InspectInfo } from '@/lib/inspectBridge'
 
 type Theme = DocsTheme
 const STORAGE_KEY = 'efface-ds-theme'
@@ -41,7 +41,7 @@ export function DocsLayout() {
   const [inspect, setInspect] = useState(false)
   const [selected, setSelected] = useState<InspectInfo | null>(null)
   const [hovered, setHovered] = useState<InspectInfo | null>(null)
-  const [distances, setDistances] = useState<number[] | null>(null)
+  const [distances, setDistances] = useState<InspectDistance[] | null>(null)
   useEffect(() => {
     const onEv = (e: Event) => {
       const m = (e as CustomEvent).detail

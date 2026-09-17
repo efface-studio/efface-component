@@ -31,11 +31,17 @@ export interface InspectInfo {
   text: string
 }
 
+/** 두 요소 사이 거리 한 줄. dir: 안쪽 요소 기준 바깥 변(top/bottom/left/right) 또는 떨어진 요소 사이 v/h */
+export interface InspectDistance {
+  d: number
+  dir: 'top' | 'bottom' | 'left' | 'right' | 'v' | 'h'
+}
+
 export type InspectMessage =
   | { source: 'ef-inspect'; type: 'ready'; path: string; title: string; inspect: boolean }
   | { source: 'ef-inspect'; type: 'route'; path: string; title: string }
   | { source: 'ef-inspect'; type: 'state'; on: boolean; grid: boolean }
-  | { source: 'ef-inspect'; type: 'hover'; info: InspectInfo | null; distances: number[] | null }
+  | { source: 'ef-inspect'; type: 'hover'; info: InspectInfo | null; distances: InspectDistance[] | null }
   | { source: 'ef-inspect'; type: 'select'; info: InspectInfo | null }
 
 export type InspectCommand =

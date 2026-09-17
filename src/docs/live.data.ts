@@ -168,6 +168,8 @@ export const LIVE_PROJECTS: LiveProject[] = [
 ]
 
 export const VIEWPORTS = [
+  /** 화면 폭에 맞춰 100% 로 — 축소 없이 실제 브라우저 창처럼 */
+  { id: 'fit', label: '맞춤', width: 0, height: 0 },
   { id: 'desktop', label: 'Desktop', width: 1440, height: 900 },
   { id: 'laptop', label: 'Laptop', width: 1280, height: 800 },
   { id: 'tablet', label: 'Tablet', width: 768, height: 1024 },

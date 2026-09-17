@@ -7,13 +7,15 @@ export interface DocPageProps {
   title: string
   lead?: ReactNode
   sources?: Source[]
+  /** 폭 제한 없이 본문 전체를 쓴다 (라이브 검사처럼 넓어야 하는 페이지) */
+  wide?: boolean
   children: ReactNode
 }
 
 /** 문서 페이지 프레임 — eyebrow, 제목, 리드, 출처 배지. */
-export function DocPage({ eyebrow, title, lead, sources, children }: DocPageProps) {
+export function DocPage({ eyebrow, title, lead, sources, wide = false, children }: DocPageProps) {
   return (
-    <article className="mx-auto w-full max-w-[1280px]">
+    <article className={cn('mx-auto w-full', wide ? 'max-w-none' : 'max-w-[1280px]')}>
       <header className="mb-12 border-b border-line pb-8">
         <p className="label">
           <span className="text-accent">//</span> {eyebrow}

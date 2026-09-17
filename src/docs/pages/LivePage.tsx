@@ -1,30 +1,35 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
-import { ArrowUpRight, Crosshair, Grid3x3, RotateCw } from 'lucide-react'
+import { ArrowUpRight, Crosshair, Grid3x3, Maximize2, Minimize2, PanelRight, RotateCw, ZoomIn } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { DocPage, Note } from '@/docs/components/Doc'
 import { InspectPanel } from '@/docs/components/InspectPanel'
 import { LIVE_PROJECTS, VIEWPORTS, type LivePage as LivePageDef, type ViewportId } from '@/docs/live.data'
-import { isInspectMessage, sendToFrame, type InspectInfo } from '@/lib/inspectBridge'
+import { isInspectMessage, sendToFrame, type InspectDistance, type InspectInfo } from '@/lib/inspectBridge'
 import { TrafficLights } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
 
 export function LivePage() {
   const { project } = useParams<{ project: string }>()
   const proj = LIVE_PROJECTS.find((p) => p.id === project)
   const [group, setGroup] = useState(0)
   const [page, setPage] = useState<LivePageDef | null>(proj?.groups[0]?.pages[0] ?? null)
-  const [viewport, setViewport] = useState<ViewportId>('desktop')
+  const [viewport, setViewport] = useState<ViewportId>('fit')
+  const [zoom, setZoom] = useState<'fit' | '100'>('fit')
   const [inspect, setInspect] = useState(false)
   const [grid, setGrid] = useState(false)
+  const [panel, setPanel] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false)
   const [selected, setSelected] = useState<InspectInfo | null>(null)
   const [hovered, setHovered] = useState<InspectInfo | null>(null)
-  const [distances, setDistances] = useState<number[] | null>(null)
+  const [distances, setDistances] = useState<InspectDistance[] | null>(null)
   const [route, setRoute] = useState('')
-  const [scale, setScale] = useState(1)
+  const [stageW, setStageW] = useState(0)
   const [reloadKey, setReloadKey] = useState(0)
   const [seen, setSeen] = useState(proj?.id)
   const frameRef = useRef<HTMLIFrameElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
+  const wrapRef = useRef<HTMLDivElement>(null)
   const pendingRef = useRef<string | null>(null)
 
   if (proj && seen !== proj.id) {
@@ -37,15 +42,24 @@ export function LivePage() {
   }
 
   const vp = VIEWPORTS.find((v) => v.id === viewport) ?? VIEWPORTS[0]
+  const responsive = vp.id === 'fit'
 
-  // 스테이지 폭에 맞춰 iframe 을 축소한다
+  // 스테이지 폭 추적 — 고정 뷰포트를 맞출 때 쓴다
   useEffect(() => {
     const el = stageRef.current
     if (!el) return
-    const ro = new ResizeObserver(() => setScale(Math.min(1, el.clientWidth / vp.width)))
+    const ro = new ResizeObserver(() => setStageW(el.clientWidth))
     ro.observe(el)
+    setStageW(el.clientWidth)
     return () => ro.disconnect()
-  }, [vp.width])
+  }, [])
+
+  // 전체 화면 상태 동기화
+  useEffect(() => {
+    const onFs = () => setFullscreen(document.fullscreenElement === wrapRef.current)
+    document.addEventListener('fullscreenchange', onFs)
+    return () => document.removeEventListener('fullscreenchange', onFs)
+  }, [])
 
   // iframe 에서 오는 메시지
   useEffect(() => {
@@ -55,7 +69,6 @@ export function LivePage() {
       if (!isInspectMessage(m)) return
       if (m.type === 'ready') {
         setRoute(m.path)
-        // via(부트스트랩) 경로를 거친 뒤 목적지로
         if (pendingRef.current && m.path.split('?')[0] !== pendingRef.current) {
           const to = pendingRef.current
           pendingRef.current = null
@@ -69,8 +82,10 @@ export function LivePage() {
       else if (m.type === 'hover') {
         setHovered(m.info)
         setDistances(m.distances)
-      } else if (m.type === 'select') setSelected(m.info)
-      else if (m.type === 'state') setInspect(m.on)
+      } else if (m.type === 'select') {
+        setSelected(m.info)
+        if (m.info) setPanel(true)
+      } else if (m.type === 'state') setInspect(m.on)
     }
     window.addEventListener('message', onMsg)
     return () => window.removeEventListener('message', onMsg)
@@ -80,7 +95,6 @@ export function LivePage() {
     if (!proj || !page) return ''
     return `${proj.liveOrigin}${page.via ?? page.path}`
   }, [proj, page])
-  // via(부트스트랩) 경로를 거치는 페이지는 ready 가 오면 목적지로 보낸다
   useEffect(() => {
     pendingRef.current = page?.via ? page.path : null
   }, [page, reloadKey])
@@ -89,7 +103,8 @@ export function LivePage() {
     const next = !inspect
     setInspect(next)
     sendToFrame(frameRef.current, { cmd: next ? 'enable' : 'disable' })
-    if (!next) {
+    if (next) setPanel(true)
+    else {
       setSelected(null)
       setHovered(null)
     }
@@ -99,12 +114,119 @@ export function LivePage() {
     setGrid(next)
     sendToFrame(frameRef.current, { cmd: 'grid', value: next })
   }, [grid])
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) void document.exitFullscreen()
+    else void wrapRef.current?.requestFullscreen?.()
+  }, [])
 
   if (!proj) return <Navigate to="/live/efface" replace />
   const g = proj.groups[group] ?? proj.groups[0]
 
+  // 프레임 크기 — 맞춤이면 스테이지 폭 그대로(100%), 고정이면 fit 축소 또는 100% + 가로 스크롤
+  const scale = responsive || zoom === '100' ? 1 : Math.min(1, (stageW || vp.width) / vp.width)
+  const frameW = responsive ? '100%' : vp.width
+  const frameH = responsive ? '100%' : vp.height
+  const stageH = fullscreen ? '100vh' : responsive ? 'min(82vh, 980px)' : `${Math.round(vp.height * scale)}px`
+
+  const toolbar = (
+    <div data-ef-ignore className={cn('flex flex-wrap items-center gap-2 border-line bg-bg/92 px-2 py-2 backdrop-blur-md', fullscreen ? 'border-b' : 'sticky top-14 z-30 -mx-1 rounded-lg border')}>
+      <div className="flex items-center gap-1 rounded-md border border-line p-0.5">
+        {VIEWPORTS.map((v) => (
+          <button
+            key={v.id}
+            type="button"
+            onClick={() => setViewport(v.id)}
+            className={cn('h-7 rounded px-2.5 font-mono text-[11px] transition-colors', viewport === v.id ? 'bg-fg text-bg' : 'text-fg-dim hover:text-fg')}
+          >
+            {v.label} {v.width > 0 && <span className="opacity-60">{v.width}</span>}
+          </button>
+        ))}
+      </div>
+      {!responsive && (
+        <button
+          type="button"
+          onClick={() => setZoom(zoom === 'fit' ? '100' : 'fit')}
+          className="inline-flex h-8 items-center gap-1.5 rounded-md border border-line px-3 font-mono text-[11px] text-fg-dim hover:border-line-strong hover:text-fg"
+          title="축소해서 맞추기 ↔ 100% (가로 스크롤)"
+        >
+          <ZoomIn size={13} /> {zoom === 'fit' ? `${Math.round(scale * 100)}%` : '100%'}
+        </button>
+      )}
+      <button
+        type="button"
+        onClick={toggleInspect}
+        aria-pressed={inspect}
+        className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-medium transition-colors', inspect ? 'border-accent bg-accent text-white' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
+      >
+        <Crosshair size={13} /> 검사
+      </button>
+      <button
+        type="button"
+        onClick={toggleGrid}
+        aria-pressed={grid}
+        className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] transition-colors', grid ? 'border-fg bg-fg text-bg' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
+      >
+        <Grid3x3 size={13} /> 8px
+      </button>
+      <button
+        type="button"
+        onClick={() => setPanel((v) => !v)}
+        aria-pressed={panel}
+        className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] transition-colors', panel ? 'border-fg bg-fg text-bg' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
+      >
+        <PanelRight size={13} /> 패널
+      </button>
+      <button type="button" onClick={() => setReloadKey((k) => k + 1)} className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-line text-fg-dim hover:border-line-strong hover:text-fg" aria-label="다시 불러오기">
+        <RotateCw size={13} />
+      </button>
+      <span className="ml-auto hidden font-mono text-[11px] text-fg-faint md:inline">
+        {proj.host}
+        {route}
+      </span>
+      <a href={`${proj.siteUrl}${page?.path ?? ''}`} target="_blank" rel="noreferrer" className="inline-flex h-8 items-center gap-1 rounded-md border border-line px-3 text-[12.5px] text-fg-dim hover:border-line-strong hover:text-fg">
+        열기 <ArrowUpRight size={12} />
+      </a>
+      <button
+        type="button"
+        onClick={toggleFullscreen}
+        className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] transition-colors', fullscreen ? 'border-fg bg-fg text-bg' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
+      >
+        {fullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />} {fullscreen ? '나가기' : '전체 화면'}
+      </button>
+    </div>
+  )
+
+  const drawer = (
+    <div
+      data-ef-ignore
+      className={cn(
+        'absolute inset-y-0 right-0 z-20 w-[320px] max-w-[85%] overflow-y-auto border-l border-line bg-surface/95 p-4 shadow-[-20px_0_50px_-30px_rgba(0,0,0,0.5)] backdrop-blur-md transition-transform duration-300 ease-out-quart',
+        panel ? 'translate-x-0' : 'translate-x-full',
+      )}
+      aria-hidden={!panel}
+    >
+      <div className="mb-3 flex items-center justify-between">
+        <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">inspect</span>
+        <button type="button" onClick={() => setPanel(false)} className="rounded px-1.5 py-0.5 font-mono text-[10.5px] text-fg-dim hover:bg-line/40 hover:text-fg">
+          닫기
+        </button>
+      </div>
+      {!inspect ? (
+        <div className="rounded-lg border border-line bg-bg-soft p-4">
+          <p className="text-[13px] font-medium">검사 모드가 꺼져 있어요</p>
+          <p className="mt-1.5 text-[12.5px] leading-relaxed text-fg-dim">켜면 프레임 안의 요소에 마우스를 올려 크기·여백을 보고, 눌러서 고정한 뒤 다른 요소까지의 거리를 잴 수 있어요.</p>
+          <Button size="sm" className="mt-3" onClick={toggleInspect} leading={<Crosshair size={13} />}>
+            검사 켜기
+          </Button>
+        </div>
+      ) : (
+        <InspectPanel selected={selected} hovered={hovered} distances={distances} />
+      )}
+    </div>
+  )
+
   return (
-    <DocPage eyebrow={`live · ${proj.host}`} title={proj.name} lead={proj.tagline}>
+    <DocPage eyebrow={`live · ${proj.host}`} title={proj.name} lead={proj.tagline} wide>
       <div className="-mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-fg-dim">
         <span className="font-mono text-[12px]">{proj.stack}</span>
         <a href={proj.siteUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-fg">
@@ -155,52 +277,13 @@ export function LivePage() {
         </div>
       </div>
 
-      {/* 툴바 */}
-      <div className="sticky top-14 z-30 -mx-1 flex flex-wrap items-center gap-2 rounded-lg border border-line bg-bg/90 px-2 py-2 backdrop-blur-md">
-        <div className="flex items-center gap-1 rounded-md border border-line p-0.5">
-          {VIEWPORTS.map((v) => (
-            <button
-              key={v.id}
-              type="button"
-              onClick={() => setViewport(v.id)}
-              className={cn('h-7 rounded px-2.5 font-mono text-[11px] transition-colors', viewport === v.id ? 'bg-fg text-bg' : 'text-fg-dim hover:text-fg')}
-            >
-              {v.label} <span className="opacity-60">{v.width}</span>
-            </button>
-          ))}
-        </div>
-        <button
-          type="button"
-          onClick={toggleInspect}
-          aria-pressed={inspect}
-          className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-medium transition-colors', inspect ? 'border-accent bg-accent text-white' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
-        >
-          <Crosshair size={13} /> 검사
-        </button>
-        <button
-          type="button"
-          onClick={toggleGrid}
-          aria-pressed={grid}
-          className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] transition-colors', grid ? 'border-fg bg-fg text-bg' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
-        >
-          <Grid3x3 size={13} /> 8px 그리드
-        </button>
-        <button type="button" onClick={() => setReloadKey((k) => k + 1)} className="inline-flex h-8 items-center gap-1.5 rounded-md border border-line px-3 text-[12.5px] text-fg-dim hover:border-line-strong hover:text-fg" aria-label="다시 불러오기">
-          <RotateCw size={13} />
-        </button>
-        <span className="ml-auto hidden font-mono text-[11px] text-fg-faint md:inline">
-          {Math.round(scale * 100)}% · {proj.host}
-          {route}
-        </span>
-        <a href={`${proj.siteUrl}${page?.path ?? ''}`} target="_blank" rel="noreferrer" className="inline-flex h-8 items-center gap-1 rounded-md border border-line px-3 text-[12.5px] text-fg-dim hover:border-line-strong hover:text-fg">
-          열기 <ArrowUpRight size={12} />
-        </a>
-      </div>
+      {!fullscreen && toolbar}
 
-      {/* 스테이지 + 패널 */}
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
-        <div ref={stageRef} className="min-w-0">
-          <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)]">
+      {/* 스테이지 — 전체 화면이면 이 래퍼가 화면을 채운다 */}
+      <div ref={wrapRef} className={cn('relative', fullscreen && 'flex h-screen flex-col bg-bg')}>
+        {fullscreen && toolbar}
+        <div className={cn('relative overflow-hidden border border-line bg-surface', fullscreen ? 'flex-1 border-0' : 'rounded-xl shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)]')}>
+          {!fullscreen && (
             <div className="flex h-9 items-center gap-2.5 border-b border-line bg-bg-soft px-3">
               <TrafficLights />
               <div className="mx-auto flex h-6 max-w-[70%] min-w-0 flex-1 items-center truncate rounded border border-line bg-surface px-2 font-mono text-[11px] text-fg-dim">
@@ -209,28 +292,24 @@ export function LivePage() {
               </div>
               <div className="w-8 shrink-0" />
             </div>
-            <div className={cn('relative', vp.id === 'mobile' && 'flex justify-center bg-bg-soft')} style={{ height: vp.height * scale }}>
-              <iframe
-                key={`${src}-${reloadKey}`}
-                ref={frameRef}
-                src={src}
-                title={`${proj.name} — ${page?.title ?? ''}`}
-                width={vp.width}
-                height={vp.height}
-                className="block origin-top-left border-0 bg-white"
-                style={{ width: vp.width, height: vp.height, transform: `scale(${scale})`, marginLeft: vp.id === 'mobile' ? undefined : 0 }}
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-              />
-            </div>
+          )}
+          <div ref={stageRef} className={cn('relative', !responsive && zoom === '100' && 'overflow-auto', !responsive && zoom === 'fit' && vp.id === 'mobile' && 'flex justify-center bg-bg-soft')} style={{ height: stageH }}>
+            <iframe
+              key={`${src}-${reloadKey}`}
+              ref={frameRef}
+              src={src}
+              title={`${proj.name} — ${page?.title ?? ''}`}
+              className="block origin-top-left border-0 bg-white"
+              style={{ width: frameW, height: frameH, transform: scale !== 1 ? `scale(${scale})` : undefined }}
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+            />
+            {drawer}
           </div>
-          <p className="mt-2 text-[12px] text-fg-faint">
-            검사를 켜면 프레임 안에서 링크 클릭이 막혀요. 페이지를 옮기려면 위 목록에서 고르거나 검사를 끄세요. 실제 서비스를 그대로 프록시한 사본이라 폼 전송은 하지 마세요.
-          </p>
-        </div>
-        <div className="xl:sticky xl:top-[7.5rem] xl:self-start">
-          <InspectPanel selected={selected} hovered={hovered} distances={distances} className="rounded-xl border border-line bg-surface p-4" />
         </div>
       </div>
+      <p className="-mt-2 text-[12px] text-fg-faint">
+        맞춤은 현재 화면 폭에 100%로 띄워요. 고정 뷰포트는 폭에 맞춰 축소되고, 배율 버튼으로 100%(가로 스크롤)로 볼 수 있어요. 검사가 켜져 있으면 프레임 안 클릭은 선택으로 쓰여요 — 페이지 이동은 위 목록에서. 실제 서비스를 그대로 프록시한 사본이라 폼 전송은 하지 마세요.
+      </p>
     </DocPage>
   )
 }
