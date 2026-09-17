@@ -20,12 +20,12 @@ import {
 
 const BOARD_W = 1600;
 const NAMES = [
-  "브랜드",
-  "가격",
-  "속도",
-  "AI · 엔지니어링",
-  "인수인계",
-  "모집 · 실적",
+  "Brand",
+  "Pricing",
+  "Speed",
+  "AI · Engineering",
+  "Handoff",
+  "Open · Track record",
 ] as const;
 
 export type EffaceBannerProps = {
@@ -484,7 +484,7 @@ export function EffaceBanner({
                             animationPlayState: "var(--play)",
                           }}
                         ></span>
-                        2026 Q3 신규 프로젝트 모집 중
+                        Now taking Q3 2026 projects
                       </div>
                     </div>
 
@@ -527,7 +527,7 @@ export function EffaceBanner({
                                 animationPlayState: "var(--play)",
                               }}
                             >
-                              웹사이트 외주, 막막하셨다면.
+                              Website outsourcing, minus the headache.
                             </h1>
                           </div>
                           <div
@@ -540,7 +540,7 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            기획 · 디자인 · 개발 · 배포까지 한 곳에서.
+                            Planning · design · build · launch, in one place.
                           </div>
                         </div>
                       </div>
@@ -601,7 +601,7 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            필요한 것만 남기는 웹 외주 제작 스튜디오.
+                            A web studio that keeps only what matters.
                           </div>
                         </div>
                       </div>
@@ -639,7 +639,7 @@ export function EffaceBanner({
                                 animationPlayState: "var(--play)",
                               }}
                             >
-                              1~3주, 35만원부터 시작합니다.
+                              1–3 weeks, from ₩350K.
                             </h1>
                           </div>
                           <div
@@ -653,7 +653,7 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            랜딩 · 기업 사이트 · 쇼핑몰 · 사내 관리툴
+                            Landing · brand site · commerce · internal tools
                           </div>
                         </div>
                       </div>
@@ -780,11 +780,11 @@ export function EffaceBanner({
                           color: "#c9c9d1",
                         }}
                       >
-                        <span>랜딩 35만원부터</span>
+                        <span>Landing from ₩350K</span>
                         <span style={{ color: "#45454e" }}>/</span>
-                        <span>1~3주 납품</span>
+                        <span>1–3 week delivery</span>
                         <span style={{ color: "#45454e" }}>/</span>
-                        <span>1개월 무상 유지보수</span>
+                        <span>1 month free support</span>
                       </div>
                       <div
                         style={{
@@ -829,7 +829,7 @@ export function EffaceBanner({
                             pointerEvents: "auto",
                           }}
                         >
-                          무료 견적 받기
+                          Get a free quote
                           <span
                             style={{
                               animation:
@@ -1073,7 +1073,7 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            견적, 처음부터 공개합니다.
+                            Pricing, published up front.
                           </div>
                         </div>
                         <div
@@ -1102,7 +1102,7 @@ export function EffaceBanner({
                                   lineHeight: "1",
                                 }}
                               >
-                                35만원
+                                ₩350K
                               </div>
                               <div
                                 style={{
@@ -1115,7 +1115,7 @@ export function EffaceBanner({
                                   lineHeight: "1",
                                 }}
                               >
-                                60만원
+                                ₩600K
                               </div>
                               <div
                                 style={{
@@ -1128,7 +1128,7 @@ export function EffaceBanner({
                                   lineHeight: "1",
                                 }}
                               >
-                                70만원
+                                ₩700K
                               </div>
                               <div
                                 style={{
@@ -1141,7 +1141,7 @@ export function EffaceBanner({
                                   lineHeight: "1",
                                 }}
                               >
-                                35만원
+                                ₩350K
                               </div>
                             </div>
                           </div>
@@ -1154,7 +1154,7 @@ export function EffaceBanner({
                               paddingBottom: "12px",
                             }}
                           >
-                            부터
+                            from
                           </div>
                         </div>
                         <div style={{ position: "relative", height: "26px" }}>
@@ -1171,7 +1171,7 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            랜딩 페이지 · 1페이지 · 1~2주
+                            Landing page · 1 page · 1–2 wks
                           </div>
                           <div
                             style={{
@@ -1187,7 +1187,7 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            기업 · 브랜드 사이트 · 5~10페이지 · 2~3주
+                            Brand site · 5–10 pages · 2–3 wks
                           </div>
                           <div
                             style={{
@@ -1203,7 +1203,7 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            쇼핑몰 · 커머스 · 결제 연동 · 3~5주
+                            Commerce · payments · 3–5 wks
                           </div>
                         </div>
                       </div>
@@ -1256,7 +1256,7 @@ export function EffaceBanner({
                                 background: "var(--ef-accent)",
                               }}
                             ></span>
-                            반응형 · 기본 SEO · OG 태그
+                            Responsive · SEO · OG tags
                           </div>
                           <div
                             style={{
@@ -1277,7 +1277,7 @@ export function EffaceBanner({
                                 background: "var(--ef-accent)",
                               }}
                             ></span>
-                            Vercel 배포 · 도메인 연결
+                            Vercel deploy · custom domain
                           </div>
                           <div
                             style={{
@@ -1298,7 +1298,7 @@ export function EffaceBanner({
                                 background: "var(--ef-accent)",
                               }}
                             ></span>
-                            GitHub 이관 · 운영 가이드
+                            GitHub transfer · ops guide
                           </div>
                           <div
                             style={{
@@ -1319,7 +1319,7 @@ export function EffaceBanner({
                                 background: "var(--ef-accent)",
                               }}
                             ></span>
-                            1개월 무상 유지보수
+                            1 month free support
                           </div>
                         </div>
                       </div>
@@ -1371,7 +1371,7 @@ export function EffaceBanner({
                           pointerEvents: "auto",
                         }}
                       >
-                        1분 견적 계산기
+                        1-minute estimate
                         <span
                           style={{
                             animation:
@@ -1603,9 +1603,9 @@ export function EffaceBanner({
                             animationPlayState: "var(--play)",
                           }}
                         >
-                          상담부터 인계까지,{" "}
+                          From first call to handoff,{" "}
                           <span style={{ color: "var(--ef-accent)" }}>
-                            1~3주.
+                            1–3 weeks.
                           </span>
                         </h1>
                       </div>
@@ -1653,7 +1653,7 @@ export function EffaceBanner({
                               color: "var(--ef-accent)",
                             }}
                           >
-                            01 · 1~2일
+                            01 · 1–2 days
                           </div>
                           <div
                             style={{
@@ -1662,7 +1662,7 @@ export function EffaceBanner({
                               letterSpacing: "-0.03em",
                             }}
                           >
-                            상담 · 견적
+                            Call · quote
                           </div>
                           <div
                             style={{
@@ -1671,8 +1671,8 @@ export function EffaceBanner({
                               color: "#9b9ba4",
                             }}
                           >
-                            신청폼 제출 후 1영업일 내 회신, 1차 견적과 일정 초안
-                            전달.
+                            Reply within 1 business day with a first quote
+                            and schedule.
                           </div>
                         </div>
                         <div
@@ -1695,7 +1695,7 @@ export function EffaceBanner({
                               color: "var(--ef-accent)",
                             }}
                           >
-                            02 · 1~3주
+                            02 · 1–3 wks
                           </div>
                           <div
                             style={{
@@ -1704,7 +1704,7 @@ export function EffaceBanner({
                               letterSpacing: "-0.03em",
                             }}
                           >
-                            디자인 · 개발
+                            Design · build
                           </div>
                           <div
                             style={{
@@ -1713,8 +1713,8 @@ export function EffaceBanner({
                               color: "#9b9ba4",
                             }}
                           >
-                            Figma 시안 검토 후 개발. 매주 스테이징 미리보기
-                            공유.
+                            Build after Figma sign-off. Weekly staging
+                            previews.
                           </div>
                         </div>
                         <div
@@ -1737,7 +1737,7 @@ export function EffaceBanner({
                               color: "var(--ef-accent)",
                             }}
                           >
-                            03 · 1~2일
+                            03 · 1–2 days
                           </div>
                           <div
                             style={{
@@ -1746,7 +1746,7 @@ export function EffaceBanner({
                               letterSpacing: "-0.03em",
                             }}
                           >
-                            배포 · 인계
+                            Launch · handoff
                           </div>
                           <div
                             style={{
@@ -1755,8 +1755,8 @@ export function EffaceBanner({
                               color: "#9b9ba4",
                             }}
                           >
-                            도메인 연결, 배포, 운영 문서까지. 1개월 무상
-                            유지보수.
+                            Domain, deploy, ops docs. One month of free
+                            support.
                           </div>
                         </div>
                       </div>
@@ -1782,9 +1782,9 @@ export function EffaceBanner({
                           color: "#c9c9d1",
                         }}
                       >
-                        <span>1영업일 내 회신</span>
+                        <span>Reply within 1 business day</span>
                         <span style={{ color: "#45454e" }}>/</span>
-                        <span>견적 확정 후 평균 3일 내 착수</span>
+                        <span>Kickoff ~3 days after the quote</span>
                       </div>
                       <a
                         href="https://efface.dev/"
@@ -1804,7 +1804,7 @@ export function EffaceBanner({
                           pointerEvents: "auto",
                         }}
                       >
-                        일정 상담하기
+                        Talk timeline
                         <span
                           style={{
                             animation:
@@ -2041,9 +2041,9 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            AI까지 다루는
+                            An engineering team
                             <br />
-                            엔지니어링 팀.
+                            that ships AI too.
                           </h1>
                         </div>
                         <div
@@ -2054,8 +2054,8 @@ export function EffaceBanner({
                             textWrap: "pretty",
                           }}
                         >
-                          LLM 기능부터 웹, 앱, 인프라까지. 데모에서 멈추지 않고
-                          실제 제품에 넣어 검증합니다.
+                          From LLM features to web, apps and infra. Not demos —
+                          proven inside real products.
                         </div>
                       </div>
 
@@ -2102,7 +2102,7 @@ export function EffaceBanner({
                               letterSpacing: "-0.03em",
                             }}
                           >
-                            LLM 기능 설계 · 구축 · 배포
+                            LLM features · build · ship
                           </div>
                           <div
                             style={{
@@ -2111,8 +2111,8 @@ export function EffaceBanner({
                               color: "#9b9ba4",
                             }}
                           >
-                            에이전트, 툴 콜링, 자동화 파이프라인, 운영에서
-                            버티는 RAG.
+                            Agents, tool calling, pipelines and RAG that
+                            holds up in production.
                           </div>
                           <div
                             style={{
@@ -2158,7 +2158,7 @@ export function EffaceBanner({
                               letterSpacing: "-0.03em",
                             }}
                           >
-                            Next.js App Router 풀스택
+                            Next.js App Router full-stack
                           </div>
                           <div
                             style={{
@@ -2167,8 +2167,8 @@ export function EffaceBanner({
                               color: "#9b9ba4",
                             }}
                           >
-                            서버 컴포넌트, 스트리밍, 캐싱 전략. i18n · SEO ·
-                            접근성은 기본.
+                            Server components, streaming, caching. i18n · SEO ·
+                            a11y by default.
                           </div>
                           <div
                             style={{
@@ -2214,7 +2214,7 @@ export function EffaceBanner({
                               letterSpacing: "-0.03em",
                             }}
                           >
-                            웹앱 · 대시보드 · 모바일
+                            Web apps · dashboards · mobile
                           </div>
                           <div
                             style={{
@@ -2223,7 +2223,7 @@ export function EffaceBanner({
                               color: "#9b9ba4",
                             }}
                           >
-                            어드민 도구, PWA, WebGL과 3D 모션 인터랙션까지.
+                            Admin tools, PWA, WebGL and 3D motion.
                           </div>
                           <div
                             style={{
@@ -2269,7 +2269,7 @@ export function EffaceBanner({
                               letterSpacing: "-0.03em",
                             }}
                           >
-                            배포 · CI/CD · 모니터링
+                            Deploy · CI/CD · monitoring
                           </div>
                           <div
                             style={{
@@ -2278,8 +2278,8 @@ export function EffaceBanner({
                               color: "#9b9ba4",
                             }}
                           >
-                            DB 설계와 마이그레이션, 인증·결제 연동, 성능과 비용
-                            튜닝.
+                            DB design and migrations, auth and payments, perf
+                            and cost tuning.
                           </div>
                           <div
                             style={{
@@ -2342,7 +2342,7 @@ export function EffaceBanner({
                           pointerEvents: "auto",
                         }}
                       >
-                        기술 상담 요청
+                        Book a tech call
                         <span
                           style={{
                             animation:
@@ -2572,9 +2572,9 @@ export function EffaceBanner({
                               animationPlayState: "var(--play)",
                             }}
                           >
-                            넘겨받기 좋은
+                            Code that is
                             <br />
-                            코드로 마무리합니다.
+                            easy to inherit.
                           </h1>
                         </div>
                         <div
@@ -2585,8 +2585,8 @@ export function EffaceBanner({
                             textWrap: "pretty",
                           }}
                         >
-                          TypeScript · 일관된 컨벤션 · README와 운영 가이드
-                          동봉. 다른 개발자에게 인계해도 막히지 않습니다.
+                          TypeScript · consistent conventions · README and ops guide
+                          included. Hand it to any developer without friction.
                         </div>
                         <div style={{ display: "flex", gap: "10px" }}>
                           <span
@@ -2599,7 +2599,7 @@ export function EffaceBanner({
                               padding: "8px 13px",
                             }}
                           >
-                            GitHub 권한 이관
+                            GitHub ownership transfer
                           </span>
                           <span
                             style={{
@@ -2611,7 +2611,7 @@ export function EffaceBanner({
                               padding: "8px 13px",
                             }}
                           >
-                            운영 가이드
+                            Ops guide
                           </span>
                           <span
                             style={{
@@ -2623,7 +2623,7 @@ export function EffaceBanner({
                               padding: "8px 13px",
                             }}
                           >
-                            1개월 무상 유지보수
+                            1 month free support
                           </span>
                         </div>
                       </div>
@@ -2721,7 +2721,7 @@ export function EffaceBanner({
                             <div>
                               timeline:{" "}
                               <span style={{ color: "var(--ef-accent)" }}>
-                                "1~3주"
+                                "1–3 wks"
                               </span>
                             </div>
                           </div>
@@ -2746,19 +2746,19 @@ export function EffaceBanner({
                             <div>
                               repo:{" "}
                               <span style={{ color: "var(--ef-accent)" }}>
-                                "GitHub 권한 이관"
+                                "GitHub ownership transfer"
                               </span>
                             </div>
                             <div>
                               docs:{" "}
                               <span style={{ color: "var(--ef-accent)" }}>
-                                "README · 운영 가이드"
+                                "README · Ops guide"
                               </span>
                             </div>
                             <div>
                               support:{" "}
                               <span style={{ color: "var(--ef-accent)" }}>
-                                "1개월 무상 유지보수"
+                                "1 month free support"
                               </span>
                             </div>
                           </div>
@@ -2822,9 +2822,9 @@ export function EffaceBanner({
                       >
                         <span>25 tools</span>
                         <span style={{ color: "#45454e" }}>/</span>
-                        <span>표준 도구만 사용</span>
+                        <span>Standard tooling only</span>
                         <span style={{ color: "#45454e" }}>/</span>
-                        <span>자체 운영 가능</span>
+                        <span>Self-operable</span>
                       </div>
                       <a
                         href="https://efface.dev/"
@@ -2844,7 +2844,7 @@ export function EffaceBanner({
                           pointerEvents: "auto",
                         }}
                       >
-                        작업 사례 보기
+                        See our work
                         <span
                           style={{
                             animation:
@@ -3074,7 +3074,7 @@ export function EffaceBanner({
                             animationPlayState: "var(--play)",
                           }}
                         ></span>
-                        2026 Q3 신규 프로젝트 모집 중
+                        Now taking Q3 2026 projects
                       </div>
                       <div style={{ overflow: "hidden", paddingBottom: "8px" }}>
                         <h1
@@ -3089,7 +3089,7 @@ export function EffaceBanner({
                             animationPlayState: "var(--play)",
                           }}
                         >
-                          프로젝트, 시작해 볼까요?
+                          Let's start a project.
                         </h1>
                       </div>
                       <div
@@ -3120,10 +3120,10 @@ export function EffaceBanner({
                               color: "var(--ef-accent)",
                             }}
                           >
-                            30개+
+                            30+
                           </span>
                           <span style={{ fontSize: "19px", color: "#9b9ba4" }}>
-                            완료한 프로젝트
+                            Projects shipped
                           </span>
                         </div>
                         <div
@@ -3150,7 +3150,7 @@ export function EffaceBanner({
                             4.9 / 5.0
                           </span>
                           <span style={{ fontSize: "19px", color: "#9b9ba4" }}>
-                            평균 만족도
+                            Avg. satisfaction
                           </span>
                         </div>
                         <div
@@ -3174,10 +3174,10 @@ export function EffaceBanner({
                               color: "var(--ef-accent)",
                             }}
                           >
-                            24시간 내
+                            Within 24h
                           </span>
                           <span style={{ fontSize: "19px", color: "#9b9ba4" }}>
-                            평일 응답 시간
+                            Weekday response
                           </span>
                         </div>
                       </div>
@@ -3209,7 +3209,7 @@ export function EffaceBanner({
                           pointerEvents: "auto",
                         }}
                       >
-                        무료 견적 받기
+                        Get a free quote
                         <span
                           style={{
                             animation:
@@ -3255,14 +3255,14 @@ export function EffaceBanner({
             >
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <button type="button" onClick={() => go(0)} style={btn}>
-                  ↺ 처음으로
+                  ↺ First
                 </button>
                 <button
                   type="button"
                   onClick={() => setPlaying((p) => !p)}
                   style={btn}
                 >
-                  {playing ? "❚❚ 자동 전환 중" : "▶ 자동 전환"}
+                  {playing ? "❚❚ Autoplay on" : "▶ Autoplay"}
                 </button>
               </div>
 
@@ -3272,7 +3272,7 @@ export function EffaceBanner({
                     <button
                       key={name}
                       type="button"
-                      aria-label={`${n + 1}번 배너 — ${name}`}
+                      aria-label={`Banner ${n + 1} — ${name}`}
                       onClick={() => go(n)}
                       style={{
                         width: n === index ? 34 : 8,
@@ -3345,16 +3345,16 @@ export function EffaceBanner({
         >
           <button
             type="button"
-            aria-label={playing ? "자동 전환 멈춤" : "자동 전환 시작"}
+            aria-label={playing ? "Pause autoplay" : "Start autoplay"}
             onClick={() => setPlaying((p) => !p)}
             className="h-8 rounded-full px-3 text-xs font-semibold text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800"
           >
-            {playing ? "❚❚ 자동" : "▶ 자동"}
+            {playing ? "❚❚ Auto" : "▶ Auto"}
           </button>
           <div
             className="flex items-center gap-1.5"
             role="tablist"
-            aria-label="배너 선택"
+            aria-label="Select banner"
           >
             {NAMES.map((name, n) => (
               <button
@@ -3362,7 +3362,7 @@ export function EffaceBanner({
                 type="button"
                 role="tab"
                 aria-selected={n === index}
-                aria-label={`${n + 1}번 배너 — ${name}`}
+                aria-label={`Banner ${n + 1} — ${name}`}
                 onClick={() => {
                   go(n);
                   setPlaying(false);
@@ -3382,7 +3382,7 @@ export function EffaceBanner({
           <div className="flex items-center gap-1">
             <button
               type="button"
-              aria-label="이전 배너"
+              aria-label="Previous banner"
               onClick={() => {
                 go(index - 1);
                 setPlaying(false);
@@ -3393,7 +3393,7 @@ export function EffaceBanner({
             </button>
             <button
               type="button"
-              aria-label="다음 배너"
+              aria-label="Next banner"
               onClick={() => {
                 go(index + 1);
                 setPlaying(false);

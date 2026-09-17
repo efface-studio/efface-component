@@ -53,7 +53,7 @@ export function FloatingCTA({ bubble, eyebrow = 'Get in touch', title, actions, 
                     <p className="mb-1 text-xs tracking-[0.2em] text-fg-dim uppercase">{eyebrow}</p>
                     <p className="text-sm font-semibold">{title}</p>
                   </div>
-                  <button type="button" onClick={() => setOpen(false)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-bg-soft" aria-label="닫기">
+                  <button type="button" onClick={() => setOpen(false)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full hover:bg-bg-soft" aria-label="Close">
                     <X size={14} />
                   </button>
                 </div>

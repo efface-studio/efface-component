@@ -13,21 +13,21 @@ import { NumberedRow } from '@/components/ui/NumberedRow'
 import { CursorGlow } from '@/components/motion/CursorGlow'
 
 const V2_ITEMS = [
-  { label: '만든 앱', href: '#apps' },
-  { label: '기술 역량', href: '#capabilities' },
-  { label: '소개', href: '#about' },
-  { label: '연락처', href: '#contact' },
+  { label: 'Apps', href: '#apps' },
+  { label: 'Capabilities', href: '#capabilities' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
 ]
 const V1_ITEMS = [
-  { label: '서비스', href: '#services' },
-  { label: '작업', href: '#work' },
-  { label: '가격', href: '#pricing' },
+  { label: 'Services', href: '#services' },
+  { label: 'Work', href: '#work' },
+  { label: 'Pricing', href: '#pricing' },
   { label: 'FAQ', href: '#faq' },
 ]
 const ROWS = [
-  { no: '01', title: '본질만 남기는 설계', desc: '화려함보다 명료함. 정말 필요한 것만 남을 때까지 덜어냅니다.' },
-  { no: '02', title: '검증된 기술만', desc: '유행이 아니라 오래 살아남는 도구.' },
-  { no: '03', title: '끝까지 책임지는 완성도', desc: '배포로 끝이 아니라, 실제로 잘 돌아가는 상태까지.' },
+  { no: '01', title: 'Keep the essence', desc: 'Clarity over flair. We cut until only what matters is left.' },
+  { no: '02', title: 'Proven tools only', desc: 'Tools that last, not tools that trend.' },
+  { no: '03', title: 'Own it to the end', desc: 'Not shipped — working.' },
 ]
 
 export function NavigationPage() {
@@ -50,10 +50,10 @@ export function NavigationPage() {
       >
         <div className="flex flex-wrap gap-2">
           <Button size="sm" variant="secondary" onClick={() => setMenuOpen((v) => !v)}>
-            {menuOpen ? '메뉴 닫기' : '메뉴 열기'}
+            {menuOpen ? 'Close menu' : 'Open menu'}
           </Button>
           <Button size="sm" variant="secondary" onClick={() => v2Scroll.current?.scrollTo({ top: v2Scroll.current.scrollTop > 0 ? 0 : 320, behavior: 'smooth' })}>
-            스크롤 토글
+            Toggle scroll
           </Button>
         </div>
         <Preview
@@ -62,7 +62,7 @@ export function NavigationPage() {
           code={`import { Nav, LanguageToggle } from '@/components/layout'
 
 <Nav
-  items={[{ label: '만든 앱', href: '#apps' }, …]}
+  items={[{ label: 'Apps', href: '#apps' }, …]}
   homeHref="/"
   aside={<LanguageToggle locales={['ko', 'en']} value={locale} onChange={setLocale} />}
   overlayFooter={<>
@@ -90,13 +90,13 @@ export function NavigationPage() {
             />
             <div className="flex h-[520px] flex-col justify-end bg-[radial-gradient(ellipse_at_85%_35%,#1b2340,transparent_55%)] px-6 pb-14 md:px-10">
               <p className="rise-in flex items-center gap-3 text-xs font-medium tracking-[0.16em] text-fg-dim uppercase">
-                <span className="inline-block h-px w-8 bg-accent" aria-hidden /> AI · 웹 · 앱 개발 스튜디오
+                <span className="inline-block h-px w-8 bg-accent" aria-hidden /> AI · web · app studio
               </p>
               <h2 className="mt-5 text-4xl font-semibold leading-[1.04] tracking-tight md:text-6xl">
-                <span className="rise-in rise-d1 block">복잡함은 지우고,</span>
-                <span className="rise-in rise-d2 block">효과만 남깁니다.</span>
+                <span className="rise-in rise-d1 block">Erase the complexity.</span>
+                <span className="rise-in rise-d2 block">Keep the effect.</span>
               </h2>
-              <p className="rise-in rise-d3 mt-6 max-w-md text-fg-dim">아래로 스크롤하면 바가 사라지고, 맨 위로 오면 다시 나타난다.</p>
+              <p className="rise-in rise-d3 mt-6 max-w-md text-fg-dim">Scroll down and the bar retracts; back at the top it returns.</p>
             </div>
             <div className="border-t border-line px-6 py-16 md:px-10">
               <p className="label">
@@ -124,7 +124,7 @@ export function NavigationPage() {
 
       <Section title="Header (v1)" desc="처음엔 투명, 8px 이상 스크롤하면 흰 반투명 + 블러 + 하단 선이 생긴다. 아래 히어로에는 커서 글로우와 점 격자가 깔려 있다 — 마우스를 움직여 본다." sources={['v1']}>
         <Button size="sm" variant="secondary" onClick={() => v1Scroll.current?.scrollTo({ top: v1Scroll.current.scrollTop > 0 ? 0 : 300, behavior: 'smooth' })}>
-          스크롤 토글
+          Toggle scroll
         </Button>
         <Preview
           theme="light"
@@ -134,10 +134,10 @@ export function NavigationPage() {
 import { CursorGlow } from '@/components/motion'
 
 <Header
-  items={[{ label: '서비스', href: '#services' }, …]}
+  items={[{ label: 'Services', href: '#services' }, …]}
   actions={<>
     <a href="mailto:sales@efface.dev" className="hidden h-9 w-9 items-center justify-center rounded-md text-fg-dim transition hover:bg-line/40 hover:text-fg md:inline-flex"><Mail size={16} /></a>
-    <ButtonLink href="/apply" size="sm" className="ml-2">프로젝트 신청</ButtonLink>
+    <ButtonLink href="/apply" size="sm" className="ml-2">Start a project</ButtonLink>
   </>}
 />
 <CursorGlow dots className="pt-36 pb-24">…히어로…</CursorGlow>`}
@@ -153,31 +153,31 @@ import { CursorGlow } from '@/components/motion'
                     <Mail size={16} />
                   </a>
                   <ButtonLink href="#" size="sm" className="ml-2">
-                    프로젝트 신청
+                    Start a project
                   </ButtonLink>
                 </>
               }
             />
             <CursorGlow dots className="border-b border-line px-5 pt-32 pb-20 md:px-8">
               <div className="max-w-xl">
-                <PilotBadge>2026 Q3 신규 프로젝트 모집 중</PilotBadge>
+                <PilotBadge>Now taking Q3 2026 projects</PilotBadge>
                 <h2 className="rise-in rise-d1 mt-6 text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl">
-                  웹사이트 외주,
+                  Website outsourcing,
                   <br />
-                  <span className="text-fg-dim">막막하셨다면.</span>
+                  <span className="text-fg-dim">minus the headache.</span>
                 </h2>
-                <p className="rise-in rise-d2 mt-6 max-w-lg text-fg-dim">기획 · 디자인 · 개발 · 배포까지 한 곳에서. 1~3주, 35만원부터.</p>
+                <p className="rise-in rise-d2 mt-6 max-w-lg text-fg-dim">Planning · design · build · launch, in one place. 1–3 weeks, from ₩350K.</p>
                 <div className="rise-in rise-d3 mt-8 flex gap-3">
                   <ButtonLink href="#" size="lg" trailing={<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />}>
-                    무료 견적 받기
+                    Get a free quote
                   </ButtonLink>
                   <ButtonLink href="#" size="lg" variant="secondary">
-                    작업 보기
+                    See our work
                   </ButtonLink>
                 </div>
               </div>
             </CursorGlow>
-            <div className="px-5 py-16 text-sm text-fg-dim md:px-8">스크롤하면 헤더에 반투명 배경과 블러가 생긴다.</div>
+            <div className="px-5 py-16 text-sm text-fg-dim md:px-8">Scroll — the header picks up a translucent, blurred backdrop.</div>
           </div>
         </Preview>
       </Section>

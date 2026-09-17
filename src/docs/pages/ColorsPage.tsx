@@ -56,7 +56,7 @@ export function ColorsPage() {
         <CodeBlock
           code={`<section className="bg-bg text-fg border-t border-line">
   <p className="label"><span className="text-accent">//</span> about</p>
-  <p className="text-fg-dim">보조 텍스트</p>
+  <p className="text-fg-dim">Secondary text</p>
 </section>
 
 {/* 부분 테마 — 이 안에서만 다크 */}

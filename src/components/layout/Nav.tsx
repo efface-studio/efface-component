@@ -47,7 +47,7 @@ export function Nav({
   scrollTarget,
   open: openProp,
   onOpenChange,
-  labels = { menu: '메뉴', close: '닫기' },
+  labels = { menu: 'Menu', close: 'Close' },
   className,
 }: NavProps) {
   const [openState, setOpenState] = useState(false)

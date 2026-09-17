@@ -89,15 +89,15 @@ export const STAGGER = { tight: 0.06, base: 0.07, word: 0.05 } as const
         >
           <div className="mb-4">
             <Button size="sm" variant="secondary" onClick={() => setKey((k) => k + 1)}>
-              다시 재생
+              Replay
             </Button>
           </div>
           <div key={key} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ['본질만 남기는 설계', '화려함보다 명료함.'],
-              ['검증된 기술만', '유행이 아니라 오래 살아남는 도구.'],
-              ['끝까지 책임지는 완성도', '배포로 끝이 아니라 잘 돌아갈 때까지.'],
-              ['빠른 판단, 정확한 일정', '기획·디자인·개발을 한 흐름으로.'],
+              ['Keep the essence', 'Clarity over flair.'],
+              ['Proven tools only', 'Tools that last, not tools that trend.'],
+              ['Own it to the end', 'Not shipped — working.'],
+              ['Fast calls, exact dates', 'Plan, design and build in one flow.'],
             ].map(([t, d], i) => (
               <motion.div
                 key={t}
@@ -143,8 +143,8 @@ export const STAGGER = { tight: 0.06, base: 0.07, word: 0.05 } as const
         <Preview
           theme="dark"
           code={`<h1>
-  <span className="rise-in rise-d1 block">복잡함은 지우고,</span>
-  <span className="rise-in rise-d2 block">효과만 남깁니다.</span>
+  <span className="rise-in rise-d1 block">Erase the complexity.</span>
+  <span className="rise-in rise-d2 block">Keep the effect.</span>
 </h1>
 <p className="rise-in rise-d3">…</p>
 
@@ -153,10 +153,10 @@ export const STAGGER = { tight: 0.06, base: 0.07, word: 0.05 } as const
         >
           <div key={`kf-${key}`} className="flex flex-col gap-6">
             <h3 className="text-3xl font-semibold tracking-tight">
-              <span className="rise-in rise-d1 block">복잡함은 지우고,</span>
-              <span className="rise-in rise-d2 block">효과만 남깁니다.</span>
+              <span className="rise-in rise-d1 block">Erase the complexity.</span>
+              <span className="rise-in rise-d2 block">Keep the effect.</span>
             </h3>
-            <p className="rise-in rise-d3 max-w-md text-fg-dim">CSS 키프레임이라 스타일시트가 파싱되는 즉시 재생된다.</p>
+            <p className="rise-in rise-d3 max-w-md text-fg-dim">CSS keyframes play the moment the stylesheet parses.</p>
             <div className="flex items-center gap-8">
               <span className="flex items-center gap-3 text-xs tracking-[0.2em] text-fg-faint uppercase">
                 scroll <span className="scroll-bob inline-block h-8 w-px bg-fg-faint" />

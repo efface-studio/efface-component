@@ -8,7 +8,7 @@ import { Strike } from '@/components/motion/Strike'
 import { TypeWriter } from '@/components/motion/TypeWriter'
 import { EffaceSentence } from '@/components/motion/EffaceSentence'
 
-const SENTENCE = '우리는 더하는 대신 지웁니다. {orb1} 군더더기를 ~지우고,~ 마찰을 ~지워~ 본질만 {orb2} 남깁니다. 덜어낼수록 선명해지는 것, *efface*의 방식입니다.'
+const SENTENCE = 'We erase instead of adding. {orb1} Strip the ~clutter,~ remove the ~friction,~ keep only the {orb2} essence. The less there is, the clearer it gets — the *efface* way.'
 
 function SentenceDemo() {
   const [p, setP] = useState(0)
@@ -30,7 +30,7 @@ function SentenceDemo() {
     <div>
       <div className="mb-8 flex flex-wrap items-center gap-4">
         <Button size="sm" variant="secondary" onClick={() => setPlaying((v) => !v)}>
-          {playing ? '멈춤' : '재생'}
+          {playing ? 'Pause' : 'Play'}
         </Button>
         <label className="flex flex-1 items-center gap-3 font-mono text-xs text-fg-faint">
           progress
@@ -69,28 +69,28 @@ export function MotionTextPage() {
           code={`import { Strike } from '@/components/motion'
 
 <p className="text-2xl font-semibold tracking-tight">
-  복잡함은 <Strike shown={shown} delay={500}>지우고</Strike>, 효과만 남깁니다.
+  Erase the <Strike shown={shown} delay={500}>complexity</Strike>. Keep the effect.
 </p>
-<p lang="en">Erase the <Strike shown={shown} delay={800}>complexity</Strike>. Keep the effect.</p>`}
+<p>Less, but <Strike shown={shown} delay={800}>louder</Strike> — sharper.</p>`}
         >
           <div className="mb-6">
             <Button size="sm" variant="secondary" onClick={() => setStruck((v) => !v)}>
-              {struck ? '되돌리기' : '긋기'}
+              {struck ? 'Reset' : 'Strike'}
             </Button>
           </div>
           <p className="text-2xl font-semibold tracking-tight md:text-3xl">
-            복잡함은{' '}
-            <Strike shown={struck} delay={100}>
-              지우고
-            </Strike>
-            , 효과만 남깁니다.
-          </p>
-          <p lang="en" className="mt-3 text-lg font-medium tracking-tight text-fg-dim">
             Erase the{' '}
-            <Strike shown={struck} delay={400}>
+            <Strike shown={struck} delay={100}>
               complexity
             </Strike>
             . Keep the effect.
+          </p>
+          <p className="mt-3 text-lg font-medium tracking-tight text-fg-dim">
+            Less, but{' '}
+            <Strike shown={struck} delay={400}>
+              louder
+            </Strike>
+            {' '}— sharper.
           </p>
         </Preview>
         <PropsTable
@@ -111,14 +111,14 @@ export function MotionTextPage() {
   <TypeWriter text="EFFACE" speed={60} />
 </Label>
 <p className="font-mono text-sm leading-[1.9] text-fg-dim">
-  <TypeWriter text="ef·face /ɪˈfeɪs/ — 동사 · 1. (글씨·자국을) 문질러 지우다 · 2. (기억·인상을) 흐리게 하다" speed={18} delay={600} caret={false} />
+  <TypeWriter text="ef·face /ɪˈfeɪs/ — verb · 1. to rub out, to erase · 2. to make (a memory, an impression) fade" speed={18} delay={600} caret={false} />
 </p>`}
         >
           <Label>
             <TypeWriter text="EFFACE" speed={60} />
           </Label>
           <p className="mt-4 max-w-xl font-mono text-[13.5px] leading-[1.9] text-fg-dim">
-            <TypeWriter text="ef·face /ɪˈfeɪs/ — 동사 · 1. (글씨·자국을) 문질러 지우다 · 2. (기억·인상을) 흐리게 하다, 지우다 · 3. efface oneself — 자신을 내세우지 않다" speed={18} delay={600} caret={false} />
+            <TypeWriter text="ef·face /ɪˈfeɪs/ — verb · 1. to rub out, to erase · 2. to make (a memory, an impression) fade · 3. efface oneself — to keep out of the spotlight" speed={18} delay={600} caret={false} />
           </p>
         </Preview>
       </Section>
@@ -133,7 +133,7 @@ export function MotionTextPage() {
           lockTheme
           code={`import { EffaceSentence } from '@/components/motion'
 
-const SENTENCE = '우리는 더하는 대신 지웁니다. {orb1} 군더더기를 ~지우고,~ 마찰을 ~지워~ 본질만 {orb2} 남깁니다. 덜어낼수록 선명해지는 것, *efface*의 방식입니다.'
+const SENTENCE = 'We erase instead of adding. {orb1} Strip the ~clutter,~ remove the ~friction,~ keep only the {orb2} essence. The less there is, the clearer it gets — the *efface* way.'
 
 <EffaceSentence sentence={SENTENCE} progress={progress} />
 

@@ -209,7 +209,7 @@ export function PricingCard({
   features,
   cta,
   featured = false,
-  popularLabel = '가장 많이 선택',
+  popularLabel = 'Most popular',
   className,
 }: PricingCardProps) {
   return (

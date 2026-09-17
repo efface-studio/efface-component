@@ -33,18 +33,18 @@ export function OverviewPage() {
               <div className="flex items-center gap-4">
                 <LogoMark className="h-12 w-12 text-fg" />
                 <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                  복잡함은 지우고,
+                  Erase the complexity.
                   <br />
-                  효과만 남깁니다.
+                  Keep the effect.
                 </h2>
               </div>
-              <p className="max-w-md text-fg-dim">덜어낼수록 선명해지는 것 — 세 사이트가 공유하는 하나의 언어.</p>
+              <p className="max-w-md text-fg-dim">Less, but sharper — one language shared by every efface product.</p>
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="primary" size="lg" trailing={<ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}>
-                  시작하기
+                  Get started
                 </Button>
                 <ButtonLink href="#" variant="secondary" size="lg">
-                  둘러보기
+                  Browse
                 </ButtonLink>
                 <Badge ping>Live</Badge>
               </div>

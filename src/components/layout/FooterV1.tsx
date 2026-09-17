@@ -38,7 +38,7 @@ export function FooterV1({
   secondary,
   sitemap,
   channels,
-  sectionLabels = { sitemap: '사이트맵', channels: '채널' },
+  sectionLabels = { sitemap: 'Sitemap', channels: 'Channels' },
   legal,
   copyright = `© ${new Date().getFullYear()} efface. All rights reserved.`,
   className,

@@ -19,22 +19,22 @@ export function ButtonsPage() {
           theme="light"
           code={`import { Button, ButtonLink } from '@/components/ui'
 
-<Button variant="primary">무료 견적 받기</Button>
-<Button variant="secondary">작업 사례 보기</Button>
-<Button variant="accent" pill>무료 견적 받기 →</Button>
-<Button variant="ghost">취소</Button>
-<Button variant="kakao">카카오톡 상담</Button>`}
+<Button variant="primary">Button</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="accent" pill>Get a quote →</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="kakao">KakaoTalk</Button>`}
         >
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="primary">무료 견적 받기</Button>
-            <Button variant="secondary">작업 사례 보기</Button>
+            <Button variant="primary">Button</Button>
+            <Button variant="secondary">Secondary</Button>
             <Button variant="accent" pill>
-              무료 견적 받기 →
+              Get a quote →
             </Button>
-            <Button variant="ghost">취소</Button>
-            <Button variant="kakao">카카오톡 상담</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="kakao">KakaoTalk</Button>
             <Button variant="primary" disabled>
-              비활성
+              Disabled
             </Button>
           </div>
         </Preview>
@@ -44,26 +44,26 @@ export function ButtonsPage() {
       <Section title="Sizes · 아이콘">
         <Preview
           theme="light"
-          code={`<Button size="sm">작게</Button>
-<Button size="md">기본</Button>
+          code={`<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
 <Button size="lg" trailing={<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />}>
-  무료 견적 받기
+  Get a free quote
 </Button>
 <ButtonLink href="mailto:sales@efface.dev" variant="secondary" size="lg" leading={<Mail size={15} />}>
-  이메일
+  Email
 </ButtonLink>`}
         >
           <div className="flex flex-wrap items-center gap-3">
-            <Button size="sm">작게</Button>
-            <Button size="md">기본</Button>
+            <Button size="sm">Small</Button>
+            <Button size="md">Medium</Button>
             <Button size="lg" trailing={<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />}>
-              무료 견적 받기
+              Get a free quote
             </Button>
             <ButtonLink href="mailto:sales@efface.dev" variant="secondary" size="lg" leading={<Mail size={15} />}>
-              이메일
+              Email
             </ButtonLink>
             <Button size="lg" variant="accent" pill trailing={<ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />}>
-              기술 상담 요청
+              Book a tech call
             </Button>
           </div>
         </Preview>
@@ -86,22 +86,22 @@ export function ButtonsPage() {
 
 <MagneticButton>
   <ButtonLink href="/apply" size="lg" trailing={<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />}>
-    프로젝트 시작하기
+    Start a project
   </ButtonLink>
 </MagneticButton>
 <MagneticButton strength={8}>
-  <ButtonLink href="#work" variant="secondary" size="lg">작업 보기</ButtonLink>
+  <ButtonLink href="#work" variant="secondary" size="lg">See our work</ButtonLink>
 </MagneticButton>`}
         >
           <div className="flex flex-wrap items-center gap-4">
             <MagneticButton>
               <ButtonLink href="#" size="lg" trailing={<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />}>
-                프로젝트 시작하기
+                Start a project
               </ButtonLink>
             </MagneticButton>
             <MagneticButton strength={8}>
               <ButtonLink href="#" variant="secondary" size="lg">
-                작업 보기
+                See our work
               </ButtonLink>
             </MagneticButton>
           </div>
@@ -114,7 +114,7 @@ export function ButtonsPage() {
           code={`import { LinkUnderline } from '@/components/ui'
 
 <LinkUnderline href="mailto:contact@efface.dev">contact@efface.dev</LinkUnderline>
-<LinkUnderline href="/policies" variant="sweep">개인정보 처리방침</LinkUnderline>
+<LinkUnderline href="/policies" variant="sweep">Privacy policy</LinkUnderline>
 
 {/* v2 Contact — 거대 이메일 링크 */}
 <a href="mailto:…" className="group inline-flex items-center gap-3 text-3xl font-semibold tracking-tight md:text-5xl">
@@ -128,10 +128,10 @@ export function ButtonsPage() {
                 contact@efface.dev
               </LinkUnderline>
               <LinkUnderline href="#" variant="sweep">
-                개인정보 처리방침
+                Privacy policy
               </LinkUnderline>
               <LinkUnderline href="#" variant="sweep">
-                서비스 이용약관
+                Terms of service
               </LinkUnderline>
             </div>
             <a href="#" className="group inline-flex items-center gap-3 text-2xl font-semibold tracking-tight md:text-4xl">

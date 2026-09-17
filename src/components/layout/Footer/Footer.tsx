@@ -56,7 +56,7 @@ function RowValue({ row }: { row: FooterRow }) {
  * v2 푸터 — 다크 전용. 대각선 와이프 진입, 스태거 메타 컬럼, 취소선 태그라인,
  * 캔버스 워드마크(커서 트레일). 데이터는 전부 props로 받는다.
  */
-export function Footer({ tagline, groups, policies, policyLabel = 'POLICY', rights, bottomLinks, toTopLabel = '맨 위로 ↑', onToTop }: FooterProps) {
+export function Footer({ tagline, groups, policies, policyLabel = 'POLICY', rights, bottomLinks, toTopLabel = 'Back to top ↑', onToTop }: FooterProps) {
   const t = parseTagline(tagline)
   const { rootRef, wipeRef, headRef, metaRef, strikeRef, barRef, canvasRef, cwrapRef } = useFooterMotion()
 

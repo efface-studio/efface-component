@@ -8,10 +8,10 @@ export function NotFoundPage() {
       <p className="label">
         <span className="text-accent">//</span> 404
       </p>
-      <h1 className="text-4xl font-semibold tracking-tight">여기엔 아무것도 없습니다.</h1>
-      <p className="max-w-md text-fg-dim">지워진 페이지거나 주소가 잘못됐습니다.</p>
+      <h1 className="text-4xl font-semibold tracking-tight">Nothing here.</h1>
+      <p className="max-w-md text-fg-dim">The page was erased, or the address is wrong.</p>
       <Link to="/" className="link-underline text-sm text-fg-dim hover:text-fg">
-        처음으로 →
+        Back to overview →
       </Link>
     </div>
   )

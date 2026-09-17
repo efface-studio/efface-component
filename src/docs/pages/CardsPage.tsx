@@ -14,14 +14,14 @@ import { AppIcon3D } from '@/components/brand/AppIcon3D'
 import { APP_ICONS } from '@/components/brand/appIcons'
 
 const SERVICES = [
-  { icon: Globe, title: '랜딩 페이지', desc: '신제품 출시, 캠페인, 채용 페이지', period: '1~2주', from: '35만원' },
-  { icon: Building2, title: '기업·브랜드 사이트', desc: '회사 소개, 포트폴리오, 채용', period: '2~3주', from: '60만원' },
-  { icon: ShoppingBag, title: '쇼핑몰 / 커머스', desc: '결제(PG) · 재고 · 주문 관리 연동', period: '3~5주', from: '70만원' },
+  { icon: Globe, title: 'Landing page', desc: 'Launches, campaigns, hiring pages', period: '1–2 wks', from: '₩350K' },
+  { icon: Building2, title: 'Brand site', desc: 'Company, portfolio, careers', period: '2–3 wks', from: '₩600K' },
+  { icon: ShoppingBag, title: 'Commerce', desc: 'Payments · inventory · orders', period: '3–5 wks', from: '₩700K' },
 ]
 
 const CAPS = [
-  { no: '01', title: 'AI 엔지니어링', items: ['LLM 기능을 설계하고, 만들고, 배포까지', '에이전트 · 툴 호출 · 자동화 파이프라인', '운영 환경에서 버티는 RAG · 벡터 검색'], tools: ['Claude', 'OpenAI', 'Vercel AI SDK', 'pgvector'] },
-  { no: '02', title: '웹 엔지니어링', items: ['Next.js App Router 기반 풀스택', '서버 컴포넌트 · 스트리밍 · 캐싱 전략', '다국어 · SEO · 접근성을 기본값으로'], tools: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS'] },
+  { no: '01', title: 'AI engineering', items: ['Design, build and ship LLM features', 'Agents · tool calling · automation pipelines', 'RAG and vector search that hold up in production'], tools: ['Claude', 'OpenAI', 'Vercel AI SDK', 'pgvector'] },
+  { no: '02', title: 'Web engineering', items: ['Full-stack on Next.js App Router', 'Server components · streaming · caching', 'i18n · SEO · accessibility by default'], tools: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS'] },
 ]
 
 export function CardsPage() {
@@ -64,11 +64,11 @@ export function CardsPage() {
                 <p className="mt-1.5 text-sm leading-relaxed text-fg-dim">{it.desc}</p>
                 <div className="mt-5 grid grid-cols-2 gap-4 border-t border-line pt-5 text-sm">
                   <div>
-                    <div className="mb-0.5 text-[11px] text-fg-dim">기간</div>
+                    <div className="mb-0.5 text-[11px] text-fg-dim">Timeline</div>
                     <div className="font-medium tabular-nums">{it.period}</div>
                   </div>
                   <div>
-                    <div className="mb-0.5 text-[11px] text-fg-dim">시작가</div>
+                    <div className="mb-0.5 text-[11px] text-fg-dim">From</div>
                     <div className="font-medium tabular-nums">{it.from}</div>
                   </div>
                 </div>
@@ -82,15 +82,15 @@ export function CardsPage() {
 <CardGrid cols={2} rounded={false}>
   <CardCell underline className="p-7 md:p-10">
     <IconTile rotate={-4} className="mb-5 transition-colors duration-300 group-hover:bg-fg group-hover:text-bg"><Zap size={18} /></IconTile>
-    <h3 className="mb-2 text-lg font-semibold md:text-xl">빠르게, 그러나 대충은 아니게</h3>
+    <h3 className="mb-2 text-lg font-semibold md:text-xl">Fast, never sloppy</h3>
     <p className="text-[15px] leading-relaxed text-fg-dim">…</p>
   </CardCell>
 </CardGrid>`}
         >
           <CardGrid cols={2} rounded={false}>
             {[
-              [Zap, '빠르게, 그러나 대충은 아니게', '평균 2~4주. 기획·디자인·개발을 한 흐름으로 묶어 커뮤니케이션 비용을 줄입니다.'],
-              [Shield, '넘겨받기 좋은 코드', 'TypeScript · 일관된 컨벤션 · README 와 운영 가이드. 다른 팀이 이어받아도 막히지 않습니다.'],
+              [Zap, 'Fast, never sloppy', '2–4 weeks on average. Planning, design and build in one flow to cut communication overhead.'],
+              [Shield, 'Code that is easy to inherit', 'TypeScript · consistent conventions · README and ops guide. Any team can pick it up.'],
             ].map(([Icon, t, d]) => {
               const I = Icon as typeof Zap
               return (
@@ -121,7 +121,7 @@ export function CardsPage() {
           code={`import { TerminalCard } from '@/components/ui'
 
 <TerminalCard title="project.config.ts" status="ready to ship" version="v0.0.1" tag={<><span className="font-mono">$</span> npm run build</>}>
-  <span className="text-fg-dim">// 견적 후 3일 내 착수</span>{'\\n'}
+  <span className="text-fg-dim">// kickoff within 3 days of the quote</span>{'\\n'}
   <span className="text-accent">const</span> project = {'{'}{'\\n  '}
   <span className="text-pink-600">type</span>: <span className="text-emerald-700">"landing"</span>,{'\\n'}
   {'}'};
@@ -138,7 +138,7 @@ export function CardsPage() {
                 </>
               }
             >
-              <span className="text-fg-dim">// 견적 후 3일 내 착수</span>
+              <span className="text-fg-dim">// kickoff within 3 days of the quote</span>
               {'\n'}
               <span className="text-accent">const</span> project = {'{'}
               {'\n  '}
@@ -191,28 +191,28 @@ export function CardsPage() {
           theme="light"
           code={`import { PricingCard, ButtonLink } from '@/components/ui'
 
-<PricingCard name="Standard" desc="기업·브랜드 사이트" price="60만원" period="부터" duration="기간 · 2~3주"
-  features={['5~8 페이지', '반응형', '1개월 무상 유지보수']} featured
-  cta={<ButtonLink href="/apply" className="w-full">시작하기 <ArrowRight size={14} /></ButtonLink>} />`}
+<PricingCard name="Standard" desc="Brand site" price="₩600K" period="from" duration="Timeline · 2–3 weeks"
+  features={['5–8 pages', 'Responsive', '1 month free support']} featured
+  cta={<ButtonLink href="/apply" className="w-full">Get started <ArrowRight size={14} /></ButtonLink>} />`}
         >
           <div className="grid gap-4 md:grid-cols-3">
             {[
-              { name: 'Basic', desc: '랜딩 페이지', price: '35만원', weeks: '1~2주', feats: ['1~3 페이지', '반응형', '기본 SEO'] },
-              { name: 'Standard', desc: '기업·브랜드 사이트', price: '60만원', weeks: '2~3주', feats: ['5~8 페이지', '반응형', 'CMS 연동', '1개월 무상 유지보수'], featured: true },
-              { name: 'Commerce', desc: '쇼핑몰 / 커머스', price: '70만원', weeks: '3~5주', feats: ['결제(PG) 연동', '재고·주문 관리', '관리자 페이지'] },
+              { name: 'Basic', desc: 'Landing page', price: '₩350K', weeks: '1–2 weeks', feats: ['1–3 pages', 'Responsive', 'Basic SEO'] },
+              { name: 'Standard', desc: 'Brand site', price: '₩600K', weeks: '2–3 weeks', feats: ['5–8 pages', 'Responsive', 'CMS integration', '1 month free support'], featured: true },
+              { name: 'Commerce', desc: 'Commerce', price: '₩700K', weeks: '3–5 weeks', feats: ['Payment gateway', 'Inventory & orders', 'Admin dashboard'] },
             ].map((t) => (
               <PricingCard
                 key={t.name}
                 name={t.name}
                 desc={t.desc}
                 price={t.price}
-                period="부터"
-                duration={`기간 · ${t.weeks}`}
+                period="from"
+                duration={`Timeline · ${t.weeks}`}
                 features={t.feats}
                 featured={t.featured}
                 cta={
                   <ButtonLink href="#" className={t.featured ? 'w-full bg-bg text-fg hover:bg-bg/90' : 'w-full'} trailing={<ArrowRight size={14} />}>
-                    시작하기
+                    Get started
                   </ButtonLink>
                 }
               />
@@ -226,11 +226,11 @@ export function CardsPage() {
           theme="light"
           code={`import { TestimonialCard } from '@/components/ui'
 
-<TestimonialCard quote="…" metric="전환율 +62%" author="김OO" role="마케팅 리드" company="OO커머스" initials="K" color="#fde68a" />`}
+<TestimonialCard quote="…" metric="+62% conversion" author="Minsu Kim" role="Marketing lead" company="Acme Commerce" initials="K" color="#fde68a" />`}
         >
           <div className="flex flex-wrap gap-5">
-            <TestimonialCard quote="견적부터 배포까지 2주. 중간에 방향이 바뀌었는데도 일정이 밀리지 않았어요." metric="전환율 +62%" author="김민수" role="마케팅 리드" company="OO커머스" initials="K" color="#fde68a" />
-            <TestimonialCard quote="넘겨받은 코드가 깔끔해서 사내 개발자가 바로 이어받았습니다." author="이서연" role="CTO" company="OO스타트업" initials="L" color="#bfdbfe" blur={false} />
+            <TestimonialCard quote="Two weeks from quote to launch. The direction changed midway and the schedule still held." metric="+62% conversion" author="Minsu Kim" role="Marketing lead" company="Acme Commerce" initials="K" color="#fde68a" />
+            <TestimonialCard quote="The handoff was so clean our in-house developer picked it up the same day." author="Seoyeon Lee" role="CTO" company="Nimbus" initials="L" color="#bfdbfe" blur={false} />
           </div>
         </Preview>
       </Section>
@@ -262,16 +262,16 @@ import { AppIcon3D, APP_ICONS } from '@/components/brand'
 import { TiltCard } from '@/components/motion'
 
 <TiltCard tiltX={7} tiltY={11}>
-  <AppCard title="HiNest" sub="사내 관리의 새로운 시작" gradient={APP_CARDS[0].gradient} sheen={0.16}
+  <AppCard title="HiNest" sub="A new start for team ops" gradient={APP_CARDS[0].gradient} sheen={0.16}
     icon={<AppIcon3D {...APP_ICONS[1]} size={260} />} />
 </TiltCard>`}
         >
           <div className="flex flex-wrap justify-center gap-8">
             <TiltCard tiltX={7} tiltY={11} glare={false}>
-              <AppCard title="HiNest" sub="사내 관리의 새로운 시작" gradient={APP_CARDS[0].gradient} sheen={0.16} icon={<AppIcon3D {...APP_ICONS[1]} size={240} />} />
+              <AppCard title="HiNest" sub="A new start for team ops" gradient={APP_CARDS[0].gradient} sheen={0.16} icon={<AppIcon3D {...APP_ICONS[1]} size={240} />} />
             </TiltCard>
             <TiltCard tiltX={7} tiltY={11} glare={false} className="hidden lg:block">
-              <AppCard title="efface" sub="복잡함은 지우고" gradient={APP_CARDS[2].gradient} sheen={0.1} icon={<LogoMark className="h-40 w-40 text-white" />} />
+              <AppCard title="efface" sub="Erase the complexity" gradient={APP_CARDS[2].gradient} sheen={0.1} icon={<LogoMark className="h-40 w-40 text-white" />} />
             </TiltCard>
           </div>
         </Preview>

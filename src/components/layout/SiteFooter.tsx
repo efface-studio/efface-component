@@ -17,9 +17,10 @@ export interface SiteFooterColumn {
 
 export interface SiteFooterProps {
   columns?: readonly SiteFooterColumn[]
-  /** 영문 태그라인의 취소선 단어 앞/뒤 */
-  taglineEn?: { before: string; struck: string; after: string }
-  taglineKo?: { before: string; struck: string; after: string }
+  /** 태그라인 — 취소선 단어 앞/뒤 */
+  tagline?: { before: string; struck: string; after: string }
+  /** 아래 작은 줄 */
+  subline?: { before: string; struck: string; after: string }
   rights?: string
   toTopLabel?: string
   onToTop?: () => void
@@ -32,10 +33,10 @@ export interface SiteFooterProps {
  */
 export function SiteFooter({
   columns = SITE_FOOTER_COLUMNS,
-  taglineEn = { before: 'Erase the ', struck: 'complexity', after: '. Keep the effect.' },
-  taglineKo = { before: '복잡함은 ', struck: '지우고', after: ', 효과만 남깁니다.' },
+  tagline = { before: 'Erase the ', struck: 'complexity', after: '. Keep the effect.' },
+  subline = { before: 'Less, but ', struck: 'louder', after: ' — sharper.' },
   rights = `© ${new Date().getFullYear()} efface. All rights reserved.`,
-  toTopLabel = '맨 위로 ↑',
+  toTopLabel = 'Back to top ↑',
   onToTop,
   className,
 }: SiteFooterProps) {
@@ -62,18 +63,18 @@ export function SiteFooter({
           <EffaceLogo animate={shown} dark />
           <div className="flex flex-col gap-1.5">
             <p lang="en" className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-              {taglineEn.before}
+              {tagline.before}
               <Strike shown={shown} delay={500} className="text-[#6E7A90]">
-                {taglineEn.struck}
+                {tagline.struck}
               </Strike>
-              {taglineEn.after}
+              {tagline.after}
             </p>
             <p className="text-[15px] font-medium tracking-tight text-[#A9B1C2] sm:text-base">
-              {taglineKo.before}
+              {subline.before}
               <Strike shown={shown} delay={800} className="text-[#6E7A90]">
-                {taglineKo.struck}
+                {subline.struck}
               </Strike>
-              {taglineKo.after}
+              {subline.after}
             </p>
           </div>
         </div>

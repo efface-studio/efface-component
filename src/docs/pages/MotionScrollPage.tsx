@@ -11,10 +11,10 @@ import { IconTile } from '@/components/ui/IconTile'
 import { CardCell, CardGrid } from '@/components/ui/Card'
 
 const STEPS = [
-  { icon: MessageSquare, title: '상담·견적', days: '1~2일', out: '견적서 · 범위 정의서' },
-  { icon: FileSignature, title: '기획·디자인', days: '3~5일', out: '와이어프레임 · 디자인 시안' },
-  { icon: Code, title: '개발', days: '5~10일', out: '스테이징 URL' },
-  { icon: Rocket, title: '배포·인계', days: '1~2일', out: '도메인 연결 · README' },
+  { icon: MessageSquare, title: 'Call · quote', days: '1–2 days', out: 'Quote · scope doc' },
+  { icon: FileSignature, title: 'Plan · design', days: '3–5 days', out: 'Wireframes · mockups' },
+  { icon: Code, title: 'Build', days: '5–10 days', out: 'Staging URL' },
+  { icon: Rocket, title: 'Launch · handoff', days: '1–2 days', out: 'Domain · README' },
 ]
 const STACK = ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Anthropic', 'OpenAI', 'Vercel', 'Supabase', 'PostgreSQL', 'React Native', 'Framer Motion', 'Cloudflare']
 
@@ -33,14 +33,14 @@ function ParallaxDemo() {
           <p className="label">
             <span className="text-accent">//</span> hero
           </p>
-          <h3 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tight">스크롤하면 카피가 위로 밀리며 사라진다.</h3>
+          <h3 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tight">Scroll — the copy lifts and fades away.</h3>
         </motion.div>
         <motion.div style={{ opacity: cue }} className="absolute right-6 bottom-6 flex items-center gap-3">
           <span className="text-[10px] tracking-[0.2em] text-fg-faint uppercase">scroll</span>
           <span className="scroll-bob inline-block h-6 w-px bg-fg-faint" />
         </motion.div>
       </div>
-      <div className="h-[520px] border-t border-line bg-bg-soft p-6 text-sm text-fg-dim">다음 섹션</div>
+      <div className="h-[520px] border-t border-line bg-bg-soft p-6 text-sm text-fg-dim">Next section</div>
     </div>
   )
 }
@@ -100,7 +100,7 @@ const cue = useTransform(scrollYProgress, [0, 0.15], [1, 0])
                   </IconTile>
                   <h3 className="text-lg font-semibold">{s.title}</h3>
                   <div className="mt-5 border-t border-line pt-4">
-                    <div className="mb-1 text-[11px] text-fg-dim">산출물</div>
+                    <div className="mb-1 text-[11px] text-fg-dim">Deliverable</div>
                     <div className="text-sm leading-snug font-medium">{s.out}</div>
                   </div>
                 </CardCell>

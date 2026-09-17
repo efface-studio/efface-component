@@ -149,10 +149,10 @@ export function BrandPage() {
         desc="v2 히어로 배경. 유리판 두 장과 파란 슬래브가 흩어졌다 모여 한 바퀴 돌며 자리를 바꾼다(11초 루프). three.js 로 실시간 렌더 — 영상과 달리 어느 해상도에서도 선명하다. 세 옵션을 켜고 끄며 확인한다."
         sources={['v2']}
       >
-        <ToggleGroup title="옵션">
-          <Toggle label="무배경" hint="스튜디오 배경 없이 투명하게" checked={scene.transparent} onChange={(v) => setScene((s) => ({ ...s, transparent: v }))} />
-          <Toggle label="가운데 정렬" hint="히어로 기본은 오른쪽 치우침" checked={scene.centered} onChange={(v) => setScene((s) => ({ ...s, centered: v }))} />
-          <Toggle label="정지 프레임" hint="reduced-motion 과 같은 상태" checked={scene.still} onChange={(v) => setScene((s) => ({ ...s, still: v }))} />
+        <ToggleGroup title="options">
+          <Toggle label="Transparent" hint="no studio backdrop" checked={scene.transparent} onChange={(v) => setScene((s) => ({ ...s, transparent: v }))} />
+          <Toggle label="Centered" hint="hero default sits right" checked={scene.centered} onChange={(v) => setScene((s) => ({ ...s, centered: v }))} />
+          <Toggle label="Still frame" hint="same as reduced-motion" checked={scene.still} onChange={(v) => setScene((s) => ({ ...s, still: v }))} />
         </ToggleGroup>
         <Preview
           theme="dark"
@@ -244,7 +244,7 @@ export function BrandPage() {
                 <EffaceLogo animate={animate} />
               </span>
               <Button size="sm" variant="secondary" onClick={() => setAnimate((v) => !v)}>
-                {animate ? '숨기기' : '등장'}
+                {animate ? 'Hide' : 'Reveal'}
               </Button>
             </div>
           </div>

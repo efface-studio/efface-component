@@ -15,10 +15,10 @@ const ICONS: Record<string, string> = {
 }
 
 const TOOLS = ['Claude', 'OpenAI', 'Vercel AI SDK', 'pgvector', 'Next.js', 'React', 'TypeScript', 'Tailwind CSS']
-const CATS = ['전체', '반차', '연차', '외근', '대직', '기타']
+const CATS = ['All', 'Half-day', 'Leave', 'Field', 'Cover', 'Other']
 
 export function ChipsPage() {
-  const [cat, setCat] = useState('전체')
+  const [cat, setCat] = useState('All')
   return (
     <DocPage
       eyebrow="components"
@@ -99,7 +99,7 @@ export function ChipsPage() {
   {cats.map((c) => <FilterChip key={c} selected={c === cat} onClick={() => setCat(c)}>{c}</FilterChip>)}
 </nav>`}
         >
-          <nav className="scrollbar-none flex gap-2 overflow-x-auto" aria-label="카테고리">
+          <nav className="scrollbar-none flex gap-2 overflow-x-auto" aria-label="Category">
             {CATS.map((c) => (
               <FilterChip key={c} selected={c === cat} onClick={() => setCat(c)}>
                 {c}
@@ -120,7 +120,7 @@ export function ChipsPage() {
 <Badge tone="warning">Demo</Badge>
 <Badge mono tone="warning">privacy</Badge>
 <Badge floating ping>Live</Badge>   {/* 스크린샷 위 */}
-<PilotBadge>2026 Q3 신규 프로젝트 모집 중</PilotBadge>`}
+<PilotBadge>Now taking Q3 2026 projects</PilotBadge>`}
         >
           <div className="flex flex-wrap items-center gap-4">
             <span className="flex items-center gap-2 text-xs text-fg-dim">
@@ -138,7 +138,7 @@ export function ChipsPage() {
             <span className="rounded-md bg-surface-2 p-2">
               <Badge floating ping>Live</Badge>
             </span>
-            <PilotBadge>2026 Q3 신규 프로젝트 모집 중</PilotBadge>
+            <PilotBadge>Now taking Q3 2026 projects</PilotBadge>
           </div>
         </Preview>
         <PropsTable

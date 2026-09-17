@@ -17,7 +17,7 @@ export function TypographyPage() {
             <li key={f.name} className="rounded-lg border border-line p-5">
               <p className="mb-2 font-mono text-[10.5px] tracking-[0.2em] text-fg-faint uppercase">font-{f.name}</p>
               <p className="text-3xl tracking-tight" style={{ fontFamily: f.value, fontWeight: f.name === 'black' ? 400 : 600 }}>
-                efface 지우다 Aa 0123
+                efface Erase Aa 0123
               </p>
               <p className="mt-3 font-mono text-[11px] leading-relaxed break-all text-fg-faint">{f.value}</p>
               <p className="mt-2 text-[12.5px] leading-relaxed text-fg-dim">{f.note}</p>
@@ -58,28 +58,28 @@ export function TypographyPage() {
         <Preview
           theme="dark"
           code={`<p className="label"><span className="text-accent">//</span> approach</p>
-<h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">적게, 그러나 정확하게.</h2>
-<p className="mt-6 max-w-md text-fg-dim">efface는 '지우다'라는 뜻입니다. 우리는 덜어내는 방식으로 문제를 풉니다.</p>`}
+<h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">Less, but precise.</h2>
+<p className="mt-6 max-w-md text-fg-dim">efface means "to erase". We solve problems by taking things away.</p>`}
         >
           <p className="label">
             <span className="text-accent">//</span> approach
           </p>
-          <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">적게, 그러나 정확하게.</h2>
-          <p className="mt-6 max-w-md text-fg-dim">efface는 '지우다'라는 뜻입니다. 우리는 덜어내는 방식으로 문제를 풉니다.</p>
+          <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">Less, but precise.</h2>
+          <p className="mt-6 max-w-md text-fg-dim">efface means "to erase". We solve problems by taking things away.</p>
         </Preview>
         <Preview
           theme="light"
           code={`<p className="mb-3 font-mono text-xs text-fg-dim">{"// services"}</p>
 <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
-  이런 걸 만듭니다.<br />
-  <span className="text-fg-dim">필요한 것만, 정확하게.</span>
+  What we build.<br />
+  <span className="text-fg-dim">Only what matters, precisely.</span>
 </h2>`}
         >
           <p className="mb-3 font-mono text-xs text-fg-dim">{'// services'}</p>
           <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
-            이런 걸 만듭니다.
+            What we build.
             <br />
-            <span className="text-fg-dim">필요한 것만, 정확하게.</span>
+            <span className="text-fg-dim">Only what matters, precisely.</span>
           </h2>
         </Preview>
       </Section>

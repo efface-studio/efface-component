@@ -14,7 +14,7 @@ function Replay({ children }: { children: (key: number) => React.ReactNode }) {
     <>
       <div className="mb-5">
         <Button size="sm" variant="secondary" onClick={() => setKey((k) => k + 1)}>
-          다시 재생
+          Replay
         </Button>
       </div>
       <div key={key}>{children(key)}</div>
@@ -49,7 +49,7 @@ import { STAGGER } from '@/lib/motion'
           <Replay>
             {() => (
               <div className="grid gap-3 sm:grid-cols-3">
-                {['본질만 남기는 설계', '검증된 기술만', '끝까지 책임지는 완성도'].map((t, i) => (
+                {['Keep the essence', 'Proven tools only', 'Own it to the end'].map((t, i) => (
                   <Reveal key={t} delay={i * 0.06}>
                     <div className="rounded-lg border border-line bg-surface p-5">
                       <span className="font-mono text-xs text-accent">0{i + 1}</span>
@@ -102,13 +102,13 @@ import { STAGGER } from '@/lib/motion'
           code={`import { WordReveal } from '@/components/motion'
 
 <WordReveal as="h2" className="text-3xl font-semibold tracking-tight md:text-5xl">
-  {'이런 걸 만듭니다.\\n필요한 것만, 정확하게.'}
+  {'What we build.\\nOnly what matters, precisely.'}
 </WordReveal>`}
         >
           <Replay>
             {() => (
               <WordReveal as="h2" className="text-3xl font-semibold tracking-tight md:text-5xl">
-                {'이런 걸 만듭니다.\n필요한 것만, 정확하게.'}
+                {'What we build.\nOnly what matters, precisely.'}
               </WordReveal>
             )}
           </Replay>
@@ -127,13 +127,13 @@ import { STAGGER } from '@/lib/motion'
           theme="dark"
           code={`import { LetterReveal, SplitHeadline } from '@/components/motion'
 
-<LetterReveal as="h2" text="무엇을, 얼마나 깊게 다루는가." className="text-3xl font-semibold tracking-tight md:text-5xl" scatter={40} />
+<LetterReveal as="h2" text="What, and how deep, we go." className="text-3xl font-semibold tracking-tight md:text-5xl" scatter={40} />
 
 {/* rAF 루프가 [data-l] 을 찾아 직접 움직일 때 */}
 <h2><SplitHeadline text="…" letterClassName="inline-block" letterStyle={{ opacity: 0 }} /></h2>`}
         >
           <Replay>
-            {() => <LetterReveal as="h2" text="무엇을, 얼마나 깊게 다루는가." className="text-3xl font-semibold tracking-tight md:text-5xl" />}
+            {() => <LetterReveal as="h2" text="What, and how deep, we go." className="text-3xl font-semibold tracking-tight md:text-5xl" />}
           </Replay>
         </Preview>
       </Section>
@@ -141,10 +141,10 @@ import { STAGGER } from '@/lib/motion'
       <Section title="rise-in (CSS)" desc="히어로처럼 첫 화면에 바로 보여야 하는 것은 motion 대신 CSS 키프레임. 스타일시트 파싱 즉시 재생돼 hydration 을 기다리지 않는다.">
         <Preview
           theme="dark"
-          code={`<p className="rise-in label">// AI · 웹 · 앱 개발 스튜디오</p>
+          code={`<p className="rise-in label">// AI · web · app studio</p>
 <h1>
-  <span className="rise-in rise-d1 block">복잡함은 지우고,</span>
-  <span className="rise-in rise-d2 block">효과만 남깁니다.</span>
+  <span className="rise-in rise-d1 block">Erase the complexity.</span>
+  <span className="rise-in rise-d2 block">Keep the effect.</span>
 </h1>
 <p className="rise-in rise-d3">…</p>
 <div className="rise-in rise-d4">CTA</div>`}
@@ -153,13 +153,13 @@ import { STAGGER } from '@/lib/motion'
             {() => (
               <div className="max-w-xl">
                 <p className="rise-in flex items-center gap-3 text-xs font-medium tracking-[0.16em] text-fg-dim uppercase">
-                  <span className="inline-block h-px w-8 bg-accent" aria-hidden /> AI · 웹 · 앱 개발 스튜디오
+                  <span className="inline-block h-px w-8 bg-accent" aria-hidden /> AI · web · app studio
                 </p>
                 <h1 className="mt-5 text-4xl font-semibold leading-[1.04] tracking-tight md:text-5xl">
-                  <span className="rise-in rise-d1 block">복잡함은 지우고,</span>
-                  <span className="rise-in rise-d2 block">효과만 남깁니다.</span>
+                  <span className="rise-in rise-d1 block">Erase the complexity.</span>
+                  <span className="rise-in rise-d2 block">Keep the effect.</span>
                 </h1>
-                <p className="rise-in rise-d3 mt-6 max-w-md text-fg-dim">AI와 웹·앱을 다루는 개발팀입니다. 기술을 깊게 파고, 잘 작동하는 제품으로 만듭니다.</p>
+                <p className="rise-in rise-d3 mt-6 max-w-md text-fg-dim">A team that builds AI, web and apps. We go deep on the tech and ship products that simply work.</p>
               </div>
             )}
           </Replay>

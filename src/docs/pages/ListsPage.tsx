@@ -7,15 +7,15 @@ import { Stat } from '@/components/ui/Counter'
 import { Reveal } from '@/components/motion/Reveal'
 
 const FAQ = [
-  { q: '견적은 어떻게 받나요?', a: '신청 폼에 요구사항을 적어 보내주시면 1영업일 내 회신드립니다. 범위가 정해지면 3일 내 착수합니다.' },
-  { q: '수정 요청은 몇 번까지 가능한가요?', a: '단계별 2회. 방향 자체가 바뀌는 변경은 별도로 협의합니다.' },
-  { q: '배포 후 유지보수는요?', a: '1개월 무상. 이후는 월 단위 유지보수 플랜을 제안드립니다.' },
+  { q: 'How do I get a quote?', a: 'Send your requirements through the form and we reply within one business day. Once scope is set, we start within three days.' },
+  { q: 'How many revision rounds?', a: 'Two per stage. Changes of direction are discussed separately.' },
+  { q: 'What about maintenance after launch?', a: 'One month free. After that we propose a monthly plan.' },
 ]
 
 const APPROACH = [
-  { no: '01', title: '본질만 남기는 설계', desc: '화려함보다 명료함. 정말 필요한 것만 남을 때까지 덜어냅니다.' },
-  { no: '02', title: '검증된 기술만', desc: '유행이 아니라 오래 살아남는 도구. 넘겨받아도 막히지 않는 코드를 씁니다.' },
-  { no: '03', title: '끝까지 책임지는 완성도', desc: '배포로 끝이 아니라, 실제로 잘 돌아가는 상태까지 책임집니다.' },
+  { no: '01', title: 'Keep the essence', desc: 'Clarity over flair. We cut until only what matters is left.' },
+  { no: '02', title: 'Proven tools only', desc: 'Tools that last, not tools that trend. Code anyone can inherit.' },
+  { no: '03', title: 'Own it to the end', desc: 'Not shipped — working. We stay until it actually runs well.' },
 ]
 
 export function ListsPage() {
@@ -54,7 +54,7 @@ export function ListsPage() {
           theme="light"
           code={`import { Accordion } from '@/components/ui'
 
-<Accordion items={[{ q: '견적은 어떻게 받나요?', a: '…' }, …]} defaultOpen={0} />`}
+<Accordion items={[{ q: 'How do I get a quote?', a: '…' }, …]} defaultOpen={0} />`}
         >
           <Accordion items={FAQ} />
         </Preview>
@@ -65,9 +65,9 @@ export function ListsPage() {
           theme="dark"
           code={`import { MetaGrid } from '@/components/ui'
 
-<MetaGrid items={[{ label: '대표', value: '서지완' }, { label: '다루는 것', value: 'AI · 웹 · 앱' }, { label: '연락', value: 'contact@efface.dev' }]} />`}
+<MetaGrid items={[{ label: 'CEO', value: 'Jiwan Seo' }, { label: 'Focus', value: 'AI · Web · App' }, { label: 'Contact', value: 'contact@efface.dev' }]} />`}
         >
-          <MetaGrid items={[{ label: '대표', value: '서지완' }, { label: '다루는 것', value: 'AI · 웹 · 앱' }, { label: '연락', value: 'contact@efface.dev' }]} />
+          <MetaGrid items={[{ label: 'CEO', value: 'Jiwan Seo' }, { label: 'Focus', value: 'AI · Web · App' }, { label: 'Contact', value: 'contact@efface.dev' }]} />
         </Preview>
       </Section>
 
@@ -77,18 +77,18 @@ export function ListsPage() {
           code={`import { Stat, Counter } from '@/components/ui'
 
 <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-  <Stat to={30} suffix="+" label="완료 프로젝트" />
-  <Stat to={4.9} decimals={1} suffix=" / 5.0" label="평균 만족도" />
-  <Stat to={62} suffix="%" label="평균 전환율 개선" />
-  <Stat to={3} suffix="h" label="평균 회신" />
+  <Stat to={30} suffix="+" label="Projects shipped" />
+  <Stat to={4.9} decimals={1} suffix=" / 5.0" label="Avg. satisfaction" />
+  <Stat to={62} suffix="%" label="Avg. conversion lift" />
+  <Stat to={3} suffix="h" label="Avg. reply time" />
 </div>
-<p>총 <Counter to={1240} />건</p>`}
+<p><Counter to={1240} /> requests</p>`}
         >
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-4">
-            <Stat to={30} suffix="+" label="완료 프로젝트" />
-            <Stat to={4.9} decimals={1} suffix=" / 5.0" label="평균 만족도" />
-            <Stat to={62} suffix="%" label="평균 전환율 개선" />
-            <Stat to={3} suffix="h" label="평균 회신" />
+            <Stat to={30} suffix="+" label="Projects shipped" />
+            <Stat to={4.9} decimals={1} suffix=" / 5.0" label="Avg. satisfaction" />
+            <Stat to={62} suffix="%" label="Avg. conversion lift" />
+            <Stat to={3} suffix="h" label="Avg. reply time" />
           </div>
         </Preview>
       </Section>

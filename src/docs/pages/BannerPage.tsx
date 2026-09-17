@@ -18,9 +18,9 @@ export function BannerPage() {
       sources={['mom']}
     >
       <Section title="EffaceBanner (데스크톱)" desc="자동 전환 8초 + 수동(← → · 점 · 방향키 · Home · 스와이프). 슬라이드는 transform 대신 스크롤 위치로 옮기고, 전환 모션은 CSS 키프레임(efSlideR/L)이 맡는다. 모든 내부 모션은 --dur / --play 변수로 한 번에 조절된다.">
-        <ToggleGroup title="옵션">
-          <Toggle label="애니메이션" hint="끄면 컷 순환·자동 전환 정지" checked={animate} onChange={setAnimate} />
-          <Toggle label="내장 컨트롤 바" hint="1600px 스테이지 안의 조작부" checked={controls} onChange={setControls} />
+        <ToggleGroup title="options">
+          <Toggle label="Animate" hint="off stops cuts and autoplay" checked={animate} onChange={setAnimate} />
+          <Toggle label="Built-in controls" hint="control bar inside the 1600px stage" checked={controls} onChange={setControls} />
         </ToggleGroup>
         <Preview
           theme="light"

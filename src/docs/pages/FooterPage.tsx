@@ -7,17 +7,17 @@ import { SiteFooter } from '@/components/layout/SiteFooter'
 import { FooterV1 } from '@/components/layout/FooterV1'
 
 const GROUPS = [
-  { label: 'COMPANY', rows: [{ k: '상호', v: 'efface' }, { k: '대표', v: '서지완 ↗', href: 'https://www.linkedin.com/in/xixn2' }, { k: '소재지', v: '서울, 대한민국' }] },
-  { label: 'CONTACT', rows: [{ k: '비즈니스', v: 'sales@efface.dev', href: 'mailto:sales@efface.dev' }, { k: '일반 문의', v: 'contact@efface.dev', href: 'mailto:contact@efface.dev' }, { k: '고객 지원', v: 'support@efface.dev', href: 'mailto:support@efface.dev' }] },
-  { label: 'CHANNEL', rows: [{ k: '카카오톡', v: '@efface', href: 'https://pf.kakao.com/_zxmWKX/chat' }, { k: 'GitHub', v: 'efface-studio', href: 'https://github.com/efface-studio' }, { k: '응답', v: '평일 24시간 내' }] },
+  { label: 'COMPANY', rows: [{ k: 'Company', v: 'efface' }, { k: 'CEO', v: 'Jiwan Seo ↗', href: 'https://www.linkedin.com/in/xixn2' }, { k: 'Based in', v: 'Seoul, Korea' }] },
+  { label: 'CONTACT', rows: [{ k: 'Business', v: 'sales@efface.dev', href: 'mailto:sales@efface.dev' }, { k: 'General', v: 'contact@efface.dev', href: 'mailto:contact@efface.dev' }, { k: 'Support', v: 'support@efface.dev', href: 'mailto:support@efface.dev' }] },
+  { label: 'CHANNEL', rows: [{ k: 'KakaoTalk', v: '@efface', href: 'https://pf.kakao.com/_zxmWKX/chat' }, { k: 'GitHub', v: 'efface-studio', href: 'https://github.com/efface-studio' }, { k: 'Response', v: 'Within 24h, weekdays' }] },
 ]
 const POLICIES = [
-  { t: '개인정보 처리방침', href: '#privacy', strong: true },
-  { t: '서비스 이용약관', href: '#terms' },
-  { t: '오픈소스 라이선스', href: '#oss' },
-  { t: '쿠키 정책', href: '#cookies' },
-  { t: '이메일무단수집거부', href: '#no-email' },
-  { t: '보안 취약점 신고', href: '#security' },
+  { t: 'Privacy policy', href: '#privacy', strong: true },
+  { t: 'Terms of service', href: '#terms' },
+  { t: 'Open source licenses', href: '#oss' },
+  { t: 'Cookie policy', href: '#cookies' },
+  { t: 'No unsolicited email', href: '#no-email' },
+  { t: 'Report a vulnerability', href: '#security' },
 ]
 
 export function FooterPage() {
@@ -42,23 +42,23 @@ export function FooterPage() {
           code={`import { Footer } from '@/components/layout'
 
 <Footer
-  tagline="복잡함은 ~지우고~, 효과만 남깁니다."   {/* ~단어~ 가 취소선 */}
-  groups={[{ label: 'COMPANY', rows: [{ k: '상호', v: 'efface' }, …] }, …]}
-  policies={[{ t: '개인정보 처리방침', href: '/policies#privacy', strong: true }, …]}
+  tagline="Erase the ~complexity~, keep the effect."   {/* ~word~ gets the strike */}
+  groups={[{ label: 'COMPANY', rows: [{ k: 'Company', v: 'efface' }, …] }, …]}
+  policies={[{ t: 'Privacy policy', href: '/policies#privacy', strong: true }, …]}
   rights="© 2026 efface. All rights reserved."
-  bottomLinks={[{ t: '개인정보처리방침', href: '/policies#privacy' }, …]}
+  bottomLinks={[{ t: 'Privacy', href: '/policies#privacy' }, …]}
 />`}
         >
           <div ref={v2Scroll} className="h-[560px] overflow-y-auto">
-            <div className="flex h-[480px] items-end px-6 pb-8 text-sm text-fg-dim">↓ 아래로 스크롤</div>
+            <div className="flex h-[480px] items-end px-6 pb-8 text-sm text-fg-dim">↓ Scroll down</div>
             <Footer
-              tagline="복잡함은 ~지우고~, 효과만 남깁니다."
+              tagline="Erase the ~complexity~, keep the effect."
               groups={GROUPS}
               policies={POLICIES}
               rights="© 2026 efface. All rights reserved."
               bottomLinks={[
-                { t: '개인정보처리방침', href: '#privacy' },
-                { t: '이용약관', href: '#terms' },
+                { t: 'Privacy', href: '#privacy' },
+                { t: 'Terms', href: '#terms' },
               ]}
               onToTop={() => v2Scroll.current?.scrollTo({ top: 0, behavior: 'smooth' })}
             />
@@ -90,10 +90,10 @@ export function FooterPage() {
           code={`import { SiteFooter, SITE_FOOTER_COLUMNS } from '@/components/layout'
 
 <SiteFooter />                              {/* 기본 컬럼 */}
-<SiteFooter columns={SITE_FOOTER_COLUMNS} taglineKo={{ before: '복잡함은 ', struck: '지우고', after: ', 효과만 남깁니다.' }} />`}
+<SiteFooter columns={SITE_FOOTER_COLUMNS} subline={{ before: 'Less, but ', struck: 'louder', after: ' — sharper.' }} />`}
         >
           <div ref={momScroll} className="h-[560px] overflow-y-auto bg-[#f9fafb]">
-            <div className="flex h-[420px] items-end px-6 pb-8 text-sm text-fg-dim">↓ 아래로 스크롤</div>
+            <div className="flex h-[420px] items-end px-6 pb-8 text-sm text-fg-dim">↓ Scroll down</div>
             <SiteFooter onToTop={() => momScroll.current?.scrollTo({ top: 0, behavior: 'smooth' })} />
           </div>
         </Preview>
@@ -107,37 +107,37 @@ export function FooterPage() {
           code={`import { FooterV1 } from '@/components/layout'
 
 <FooterV1
-  tagline="필요한 것만 남기는 웹 외주 제작 스튜디오."
-  ceo={{ label: 'CEO', name: '서지완', href: 'https://www.linkedin.com/in/xixn2' }}
+  tagline="A web studio that keeps only what matters."
+  ceo={{ label: 'CEO', name: 'Jiwan Seo', href: 'https://www.linkedin.com/in/xixn2' }}
   primary={{ label: 'project · sales', email: 'sales@efface.dev' }}
   secondary={[{ label: 'general', email: 'contact@efface.dev' }, { label: 'support', email: 'support@efface.dev' }]}
-  sitemap={[{ label: '서비스', href: '#services' }, …]}
-  channels={[{ label: '카카오톡 채널', href: '…', icon: 'kakao' }, { label: 'GitHub', href: '…', icon: 'github' }]}
-  legal={[{ label: '개인정보처리방침', href: '/privacy' }, { label: '이용약관', href: '/terms' }]}
+  sitemap={[{ label: 'Services', href: '#services' }, …]}
+  channels={[{ label: 'KakaoTalk channel', href: '…', icon: 'kakao' }, { label: 'GitHub', href: '…', icon: 'github' }]}
+  legal={[{ label: 'Privacy', href: '/privacy' }, { label: 'Terms', href: '/terms' }]}
 />`}
         >
           <FooterV1
-            tagline="필요한 것만 남기는 웹 외주 제작 스튜디오. 기획 · 디자인 · 개발 · 배포까지 한 곳에서."
-            ceo={{ label: 'CEO', name: '서지완', href: 'https://www.linkedin.com/in/xixn2' }}
+            tagline="A web studio that keeps only what matters. Planning · design · build · launch, in one place."
+            ceo={{ label: 'CEO', name: 'Jiwan Seo', href: 'https://www.linkedin.com/in/xixn2' }}
             primary={{ label: 'project · sales', email: 'sales@efface.dev' }}
             secondary={[
               { label: 'general', email: 'contact@efface.dev' },
               { label: 'support', email: 'support@efface.dev' },
             ]}
             sitemap={[
-              { label: '서비스', href: '#services' },
-              { label: '작업', href: '#work' },
-              { label: '가격', href: '#pricing' },
-              { label: '프로세스', href: '#process' },
+              { label: 'Services', href: '#services' },
+              { label: 'Work', href: '#work' },
+              { label: 'Pricing', href: '#pricing' },
+              { label: 'Process', href: '#process' },
               { label: 'FAQ', href: '#faq' },
             ]}
             channels={[
-              { label: '카카오톡 채널', href: 'https://pf.kakao.com/_zxmWKX/chat', icon: 'kakao' },
+              { label: 'KakaoTalk channel', href: 'https://pf.kakao.com/_zxmWKX/chat', icon: 'kakao' },
               { label: 'GitHub', href: 'https://github.com/efface-studio', icon: 'github' },
             ]}
             legal={[
-              { label: '개인정보처리방침', href: '#privacy' },
-              { label: '이용약관', href: '#terms' },
+              { label: 'Privacy', href: '#privacy' },
+              { label: 'Terms', href: '#terms' },
             ]}
           />
         </Preview>

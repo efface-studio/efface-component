@@ -13,7 +13,7 @@ export interface DocGroup {
 export const DOC_NAV: DocGroup[] = [
   {
     title: 'Overview',
-    links: [{ label: '소개', to: '/' }],
+    links: [{ label: 'Overview', to: '/' }],
   },
   {
     title: 'Foundations',

@@ -25,28 +25,28 @@ export function OverlayPage() {
 
 <FloatingCTA
   visible={scrolled}
-  bubble="상담하기"
-  title="프로젝트, 이야기해 볼까요?"
+  bubble="Talk to us"
+  title="Let's talk about your project"
   actions={[
-    { label: '프로젝트 신청', href: '/apply' },
-    { label: '카카오톡 상담', href: KAKAO_URL, variant: 'kakao', external: true },
-    { label: '이메일 보내기', href: 'mailto:sales@efface.dev', variant: 'outline' },
+    { label: 'Start a project', href: '/apply' },
+    { label: 'Chat on KakaoTalk', href: KAKAO_URL, variant: 'kakao', external: true },
+    { label: 'Send an email', href: 'mailto:sales@efface.dev', variant: 'outline' },
   ]}
-  note="1영업일 내 회신"
+  note="Replies within 1 business day"
 />`}
         >
           <div className="relative h-[420px] p-8">
-            <p className="text-sm text-fg-dim">우하단 버튼을 누른다.</p>
+            <p className="text-sm text-fg-dim">Press the button in the bottom-right corner.</p>
             <FloatingCTA
               contained
-              bubble="상담하기"
-              title="프로젝트, 이야기해 볼까요?"
+              bubble="Talk to us"
+              title="Let's talk about your project"
               actions={[
-                { label: '프로젝트 신청', href: '#' },
-                { label: '카카오톡 상담', href: '#', variant: 'kakao' },
-                { label: '이메일 보내기', href: '#', variant: 'outline' },
+                { label: 'Start a project', href: '#' },
+                { label: 'Chat on KakaoTalk', href: '#', variant: 'kakao' },
+                { label: 'Send an email', href: '#', variant: 'outline' },
               ]}
-              note="1영업일 내 회신"
+              note="Replies within 1 business day"
             />
           </div>
         </Preview>
@@ -69,19 +69,19 @@ export function OverlayPage() {
 
 <Modal open={open} onClose={() => setOpen(false)}>
   <p className="label">before you go</p>
-  <h3 className="mt-3 text-2xl font-semibold tracking-tight">견적만 받아 보셔도 됩니다.</h3>
+  <h3 className="mt-3 text-2xl font-semibold tracking-tight">A quote costs nothing.</h3>
   <p className="mt-3 text-sm text-fg-dim">…</p>
-  <ButtonLink href="/apply" size="lg" className="mt-6 w-full">무료 견적 받기 <ArrowRight size={16} /></ButtonLink>
+  <ButtonLink href="/apply" size="lg" className="mt-6 w-full">Get a free quote <ArrowRight size={16} /></ButtonLink>
 </Modal>`}
         >
           <div className="relative flex h-[420px] items-center justify-center overflow-hidden">
-            <Button onClick={() => setOpen(true)}>모달 열기</Button>
+            <Button onClick={() => setOpen(true)}>Open modal</Button>
             <Modal open={open} onClose={() => setOpen(false)} contained>
               <p className="label">before you go</p>
-              <h3 className="mt-3 text-2xl font-semibold tracking-tight">견적만 받아 보셔도 됩니다.</h3>
-              <p className="mt-3 text-sm leading-relaxed text-fg-dim">요구사항을 적어 보내주시면 1영업일 내 견적과 일정을 회신드립니다. 부담 없이 비교해 보세요.</p>
+              <h3 className="mt-3 text-2xl font-semibold tracking-tight">A quote costs nothing.</h3>
+              <p className="mt-3 text-sm leading-relaxed text-fg-dim">Send your requirements and we reply with a quote and schedule within one business day. Compare freely.</p>
               <ButtonLink href="#" size="lg" className="mt-6 w-full" trailing={<ArrowRight size={16} />} onClick={(e) => { e.preventDefault(); setOpen(false) }}>
-                무료 견적 받기
+                Get a free quote
               </ButtonLink>
             </Modal>
           </div>

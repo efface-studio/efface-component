@@ -29,10 +29,10 @@ export function MotionCursorPage() {
           <SpotlightText lines={['EFFACE', 'BUILT IN SEOUL', 'EFFACE']} className="px-8 py-16">
             <div className="max-w-md">
               <p className="mb-4 font-mono text-xs text-fg-dim">{'// contact'}</p>
-              <h2 className="text-3xl font-semibold leading-[1.1] tracking-tight md:text-5xl">프로젝트, 시작해 볼까요?</h2>
+              <h2 className="text-3xl font-semibold leading-[1.1] tracking-tight md:text-5xl">Ready to start a project?</h2>
               <MagneticButton className="mt-8 inline-block">
                 <ButtonLink href="#" size="lg" trailing={<ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />} className="shadow-[0_8px_30px_rgba(37,99,235,0.18)]">
-                  무료 견적 받기
+                  Get a free quote
                 </ButtonLink>
               </MagneticButton>
             </div>
@@ -55,13 +55,13 @@ export function MotionCursorPage() {
             <TiltCard tiltX={7} tiltY={11}>
               <div className="w-72 rounded-2xl border border-line bg-surface p-6">
                 <span className="font-mono text-sm text-[#3B82F6]">01</span>
-                <h3 className="mt-2 text-xl font-medium tracking-tight">AI 엔지니어링</h3>
-                <p className="mt-2 text-sm text-fg-dim">LLM 기능을 설계하고, 만들고, 배포까지.</p>
+                <h3 className="mt-2 text-xl font-medium tracking-tight">AI engineering</h3>
+                <p className="mt-2 text-sm text-fg-dim">Design, build and ship LLM features.</p>
               </div>
             </TiltCard>
             <TiltCard tiltX={10} tiltY={10} glare={false}>
               <div className="w-72 rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(160deg, #4E8CFF 0%, #2563EB 55%, #1D46C8 100%)' }}>
-                <p className="text-sm font-medium text-white/90">사내 관리의 새로운 시작</p>
+                <p className="text-sm font-medium text-white/90">A new start for team ops</p>
                 <h3 className="mt-1 text-3xl font-extrabold tracking-tight">HiNest</h3>
               </div>
             </TiltCard>
