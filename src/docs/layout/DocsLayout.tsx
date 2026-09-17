@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useOutlet } from 'react-router-dom'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Menu, Moon, Sun, X } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { DOC_NAV } from '@/docs/nav'
 import { LogoMark } from '@/components/brand/LogoMark'
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import { DocsThemeContext, type DocsTheme } from '@/docs/theme'
+import { NextPageBar } from '@/docs/components/NextPageBar'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 type Theme = DocsTheme
 const STORAGE_KEY = 'efface-ds-theme'
@@ -28,6 +31,8 @@ export function DocsLayout() {
   const [theme, setTheme] = useState<Theme>(readTheme)
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
+  const outlet = useOutlet()
+  const reduce = useReducedMotion()
   useBodyScrollLock(open)
 
   useEffect(() => {
@@ -58,22 +63,34 @@ export function DocsLayout() {
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
                     cn(
-                      '-ml-px flex items-center justify-between gap-2 border-l py-1.5 pl-3 text-[13.5px] transition-colors',
-                      isActive ? 'border-accent text-fg' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg',
+                      'relative -ml-px flex items-center justify-between gap-2 border-l border-line py-1.5 pl-3 text-[13.5px] transition-colors',
+                      isActive ? 'text-fg' : 'text-fg-dim hover:border-line-strong hover:text-fg',
                     )
                   }
                 >
-                  <span>{l.label}</span>
-                  {l.src && (
-                    <span className="flex gap-0.5" aria-hidden>
-                      {l.src.map((s) => (
-                        <span
-                          key={s}
-                          className="h-1 w-1 rounded-full"
-                          style={{ background: s === 'v1' ? '#2563eb' : s === 'v2' ? '#3b62e5' : 'var(--fg-faint)' }}
+                  {({ isActive }) => (
+                    <>
+                      {isActive && (
+                        <motion.span
+                          layoutId="docs-nav-active"
+                          aria-hidden
+                          className="absolute top-0 bottom-0 -left-px w-px bg-accent"
+                          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                         />
-                      ))}
-                    </span>
+                      )}
+                      <span>{l.label}</span>
+                      {l.src && (
+                        <span className="flex gap-0.5" aria-hidden>
+                          {l.src.map((s) => (
+                            <span
+                              key={s}
+                              className="h-1 w-1 rounded-full"
+                              style={{ background: s === 'v1' ? '#2563eb' : s === 'v2' ? '#3b62e5' : 'var(--fg-faint)' }}
+                            />
+                          ))}
+                        </span>
+                      )}
+                    </>
                   )}
                 </NavLink>
               </li>
@@ -134,7 +151,18 @@ export function DocsLayout() {
         )}
 
         <main className="min-w-0 flex-1 px-5 py-10 md:px-10 md:py-14">
-          <Outlet />
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={pathname}
+              initial={reduce ? false : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0, y: -16, transition: { duration: 0.22, ease: EASE_OUT_EXPO } }}
+              transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
+            >
+              {outlet}
+              <NextPageBar />
+            </motion.div>
+          </AnimatePresence>
           <footer className="mx-auto mt-24 max-w-[1280px] border-t border-line pt-6 text-xs text-fg-faint">
             <p>
               efface design system · efface.dev · v2.efface.dev · mom.efface.dev 에서 추출.{' '}

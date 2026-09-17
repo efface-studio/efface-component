@@ -13,6 +13,7 @@ import { APP_ICONS } from '@/components/brand/appIcons'
 import { EffaceLogo } from '@/components/brand/EffaceLogo'
 import { Wordmark } from '@/components/brand/Wordmark'
 import { Button } from '@/components/ui/Button'
+import { Toggle, ToggleGroup } from '@/docs/components/Toggle'
 
 const MARK_SVG = `<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect x="5.5" y="5.5" width="13" height="13" rx="3.6" fill="currentColor"/>
@@ -148,17 +149,11 @@ export function BrandPage() {
         desc="v2 히어로 배경. 유리판 두 장과 파란 슬래브가 흩어졌다 모여 한 바퀴 돌며 자리를 바꾼다(11초 루프). three.js 로 실시간 렌더 — 영상과 달리 어느 해상도에서도 선명하다. 세 옵션을 켜고 끄며 확인한다."
         sources={['v2']}
       >
-        <div className="flex flex-wrap gap-2">
-          <Button size="sm" variant={scene.transparent ? 'primary' : 'secondary'} onClick={() => setScene((s) => ({ ...s, transparent: !s.transparent }))}>
-            transparent {scene.transparent ? 'on' : 'off'}
-          </Button>
-          <Button size="sm" variant={scene.centered ? 'primary' : 'secondary'} onClick={() => setScene((s) => ({ ...s, centered: !s.centered }))}>
-            centered {scene.centered ? 'on' : 'off'}
-          </Button>
-          <Button size="sm" variant={scene.still ? 'primary' : 'secondary'} onClick={() => setScene((s) => ({ ...s, still: !s.still }))}>
-            still {scene.still ? 'on' : 'off'}
-          </Button>
-        </div>
+        <ToggleGroup title="옵션">
+          <Toggle label="무배경" hint="스튜디오 배경 없이 투명하게" checked={scene.transparent} onChange={(v) => setScene((s) => ({ ...s, transparent: v }))} />
+          <Toggle label="가운데 정렬" hint="히어로 기본은 오른쪽 치우침" checked={scene.centered} onChange={(v) => setScene((s) => ({ ...s, centered: v }))} />
+          <Toggle label="정지 프레임" hint="reduced-motion 과 같은 상태" checked={scene.still} onChange={(v) => setScene((s) => ({ ...s, still: v }))} />
+        </ToggleGroup>
         <Preview
           theme="dark"
           bleed

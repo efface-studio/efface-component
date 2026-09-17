@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { DocsLayout } from '@/docs/layout/DocsLayout'
 import { OverviewPage } from '@/docs/pages/OverviewPage'
-import { PlaceholderPage } from '@/docs/pages/PlaceholderPage'
+import { NotFoundPage } from '@/docs/pages/NotFoundPage'
 import { ColorsPage } from '@/docs/pages/ColorsPage'
 import { TypographyPage } from '@/docs/pages/TypographyPage'
 import { LayoutPage } from '@/docs/pages/LayoutPage'
@@ -18,6 +18,8 @@ import { MotionTextPage } from '@/docs/pages/MotionTextPage'
 import { NavigationPage } from '@/docs/pages/NavigationPage'
 import { FooterPage } from '@/docs/pages/FooterPage'
 import { OverlayPage } from '@/docs/pages/OverlayPage'
+import { BannerPage } from '@/docs/pages/BannerPage'
+import { RecipesPage } from '@/docs/pages/RecipesPage'
 
 export const router = createBrowserRouter([
   {
@@ -40,9 +42,9 @@ export const router = createBrowserRouter([
       { path: '/layout/navigation', element: <NavigationPage /> },
       { path: '/layout/footer', element: <FooterPage /> },
       { path: '/layout/overlay', element: <OverlayPage /> },
-      { path: '/banner', element: <PlaceholderPage title="efface Banner" /> },
-      { path: '/recipes', element: <PlaceholderPage title="Sections" /> },
-      { path: '*', element: <PlaceholderPage title="404" /> },
+      { path: '/banner', element: <BannerPage /> },
+      { path: '/recipes', element: <RecipesPage /> },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ])
