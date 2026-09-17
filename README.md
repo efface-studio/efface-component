@@ -38,8 +38,24 @@ src/
     layout/               # Nav(v2) · Header(v1) · Footer(v2 캔버스 워드마크) · SiteFooter(mom) · FooterV1 · FloatingCTA · Modal · LanguageToggle
     banner/               # EffaceBanner(1600×500 캐러셀) · EffaceBannerMobile
     three/                # glassScene · appIcon3d (v2 에서 이식)
-  docs/                   # 문서 사이트 셸 · 페이지
+  docs/                   # 문서 사이트 셸 · 페이지 · showcase.manifest.json
+scripts/capture-showcase.mjs  # 쇼케이스 스크린샷 캡처
+public/showcase/         # 프로젝트별 페이지 스크린샷
 ```
+
+## 쇼케이스 캡처
+
+`/showcase/*` 페이지의 스크린샷은 `scripts/capture-showcase.mjs` 가 만든다 (puppeteer-core + 로컬 Chrome + sharp).
+뷰포트 단위로 스크롤하며 찍어 세로로 이어 붙이므로 `100svh`·sticky 씬이 있는 페이지도 진행 순서대로 남는다.
+
+```bash
+node scripts/capture-showcase.mjs          # 전부 → public/showcase/*, src/docs/showcase.manifest.json
+node scripts/capture-showcase.mjs hinest   # 프로젝트 하나만 (manifest 는 해당 프로젝트만 갱신)
+```
+
+- efface.dev · v2.efface.dev 는 배포된 사이트를, HiNest 는 로컬 미리보기 모드(`http://localhost:1000/preview`)를 캡처한다.
+- HiNest 권한별 화면은 데모 사용자의 `/api/me` 목에 `sessionStorage['hinest:preview:role']` 을 반영하는 임시 패치가 HiNest 쪽에 있어야 한다 (캡처 후 되돌린다).
+- Chrome 경로가 다르면 `CHROME_PATH` 로 지정.
 
 ## 테마
 
