@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { DocsLayout } from '@/docs/layout/DocsLayout'
+import { RouteErrorPage } from '@/docs/pages/RouteErrorPage'
 import {
   OverviewPage,
   NotFoundPage,
@@ -26,6 +27,7 @@ import {
 export const router = createBrowserRouter([
   {
     element: <DocsLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
       { path: '/', element: <OverviewPage /> },
       { path: '/foundations/colors', element: <ColorsPage /> },
