@@ -45,9 +45,30 @@ export function NextPageBar() {
       }
       return false
     }
+
+    // 넘어온 직후에는 잠근다. 이전 페이지에서 세게 민 관성 휠이 계속 들어오는 동안은
+    // 절대 다시 차지 않게 — 휠 입력이 QUIET_MS 동안 끊기고, 도착 후 MIN_ARM_MS 가 지나야 푼다.
+    const QUIET_MS = 400
+    const MIN_ARM_MS = 800
+    const arrivedAt = performance.now()
+    let armed = false
+    let quiet = 0
     let idle = 0
+    const scheduleArm = () => {
+      window.clearTimeout(quiet)
+      quiet = window.setTimeout(() => {
+        if (performance.now() - arrivedAt >= MIN_ARM_MS) armed = true
+        else scheduleArm()
+      }, QUIET_MS)
+    }
+    scheduleArm()
+
     const bump = (dy: number, target: EventTarget | null) => {
       if (firedRef.current) return
+      if (!armed) {
+        scheduleArm() // 관성이 아직 흐르는 중 — 잠금 연장
+        return
+      }
       if (insideScroller(target)) return
       if (!atBottom() || dy <= 0) {
         if (pullRef.current !== 0) {
@@ -84,6 +105,7 @@ export function NextPageBar() {
     window.addEventListener('touchmove', onTouchMove, { passive: true })
     return () => {
       window.clearTimeout(idle)
+      window.clearTimeout(quiet)
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
       window.removeEventListener('touchmove', onTouchMove)
