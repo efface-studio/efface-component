@@ -102,5 +102,5 @@ npm run deploy         # build + wrangler deploy → https://component.efface.de
 
 ## 자료 출처
 
-- `public/space/*` 행성 텍스처 — NASA(Blue Marble · Black Marble, three.js 예제의 지구 법선·반사 맵) 및 [Solar System Scope](https://www.solarsystemscope.com/textures/) (CC BY 4.0). 화면용으로 1k–2k 로 줄여 담았다.
+- `public/space/*` 행성 텍스처 — NASA(Blue Marble · Black Marble, three.js 예제의 지구 법선·반사 맵) 및 [Solar System Scope](https://www.solarsystemscope.com/textures/) (CC BY 4.0). 화면용으로 1k–2k WebP 로 줄여 담았다(태양은 절차적 셰이더). 국경·나라 이름은 Natural Earth 50m 을 그려 넣었다.
 - `public/macos/*` 앱 아이콘 — 시연 영상 전용. 각 앱 소유자의 상표.

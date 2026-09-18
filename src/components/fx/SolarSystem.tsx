@@ -246,7 +246,7 @@ export function SolarSystem({ auto = true, className }: SolarSystemProps) {
       starGeo.setAttribute('position', new THREE.BufferAttribute(sp, 3))
       geos.push(starGeo)
       scene.add(new THREE.Points(starGeo, keep(new THREE.PointsMaterial({ color: 0xdfe6ff, size: 0.55, sizeAttenuation: true, transparent: true, opacity: 0.85, depthWrite: false }))))
-      load('milkyway.jpg')
+      load('milkyway.webp')
         .then((t) => {
           t.mapping = THREE.EquirectangularReflectionMapping
           scene.background = t
@@ -364,7 +364,7 @@ export function SolarSystem({ auto = true, className }: SolarSystemProps) {
           em.emissive = new THREE.Color('#ffd9a0')
           em.emissiveIntensity = 1.6
           em.normalScale = new THREE.Vector2(0.6, 0.6)
-          Promise.all([load('earth-night.jpg'), load('earth-normal.jpg', false), load('earth-spec.jpg', false)])
+          Promise.all([load('earth-night.webp'), load('earth-normal.webp', false), load('earth-spec.webp', false)])
             .then(([night, normal, spec]) => {
               em.emissiveMap = night
               em.normalMap = normal
@@ -377,7 +377,7 @@ export function SolarSystem({ auto = true, className }: SolarSystemProps) {
           borderMat = bm
           const borders = new THREE.Mesh(sphere(body.r * 1.004), bm)
           mesh.add(borders)
-          load('earth-borders.jpg', false)
+          load('earth-borders.webp', false)
             .then((t) => {
               bm.uniforms.map!.value = t
             })
@@ -387,7 +387,7 @@ export function SolarSystem({ auto = true, className }: SolarSystemProps) {
           const clouds = new THREE.Mesh(sphere(body.r * 1.016), cm)
           mesh.add(clouds)
           node.extras.push(clouds)
-          load('earth-clouds.jpg', false)
+          load('earth-clouds.webp', false)
             .then((t) => {
               cm.alphaMap = t
               cm.opacity = 0.9
