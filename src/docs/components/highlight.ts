@@ -270,3 +270,17 @@ export function tokenize(src: string, lang: string): Token[] {
   if (lang === 'html' || lang === 'svg' || lang === 'xml') return tokenizeHtml(src)
   return tokenizeTsx(src)
 }
+
+/** 토큰 종류 → 색 클래스 (CodeBlock · LiveCode 공용) */
+export const KIND_CLASS: Record<TokenKind, string> = {
+  comment: 'text-(--code-comment) italic',
+  string: 'text-(--code-string)',
+  keyword: 'text-(--code-keyword)',
+  tag: 'text-(--code-tag)',
+  attr: 'text-(--code-attr)',
+  number: 'text-(--code-number)',
+  punct: 'text-(--code-punct)',
+  prop: 'text-(--code-attr)',
+  selector: 'text-(--code-tag)',
+  plain: '',
+}

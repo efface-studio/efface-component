@@ -709,10 +709,13 @@
 .ghost-pointer.is-down .ghost-pointer__ring { animation: ghost-ring 0.45s ease-out; }
 @keyframes ghost-ring { 0% { opacity: 0.9; transform: scale(0.4); } 100% { opacity: 0; transform: scale(2.4); } }
 
-/* 스플릿 플랩 — 넘어갈 때 위아래로 접힌다 */
-.split-flap__char { display: inline-block; transform-origin: 50% 50%; }
-.split-flap__char.is-flip { animation: flap 0.11s linear; }
-@keyframes flap { 0% { transform: rotateX(0); } 50% { transform: rotateX(-88deg); opacity: 0.55; } 100% { transform: rotateX(0); } }
+/* 스플릿 플랩 — 위 반쪽이 앞으로 접히며 아래 반쪽이 드러난다 */
+.split-flap__char { display: inline-block; }
+.split-flap__top { transform-origin: 50% 100%; opacity: 0; }
+.split-flap.is-flip .split-flap__top { animation: flap-top 0.12s linear; }
+.split-flap.is-flip .split-flap__char { animation: flap-bottom 0.12s linear; }
+@keyframes flap-top { 0% { opacity: 1; transform: rotateX(0); } 100% { opacity: 1; transform: rotateX(-90deg); } }
+@keyframes flap-bottom { 0% { transform: translateY(0.08em); filter: brightness(0.7); } 100% { transform: translateY(0); filter: brightness(1); } }
 
 /* 스포트라이트 카드 — 포인터 자리(--sx/--sy)에서 테두리와 바탕이 빛난다 */
 .spot-card { --sx: -999px; --sy: -999px; }
@@ -737,4 +740,73 @@
   animation: shimmer-text 2.8s ease-in-out infinite;
 }
 @keyframes shimmer-text { 0% { background-position: 120% 0; } 100% { background-position: -130% 0; } }
-@media (prefers-reduced-motion: reduce) { .shimmer-text { animation: none; color: var(--fg); background: none; } .split-flap__char.is-flip { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .shimmer-text { animation: none; color: var(--fg); background: none; } .split-flap.is-flip .split-flap__top, .split-flap.is-flip .split-flap__char { animation: none; } }
+
+/* 리퀴드 글래스 — 뒤가 비쳐 흐려지고, 위 모서리엔 빛, 아래엔 그림자. 가장자리는 굴절처럼 밝은 테두리 */
+.liquid-glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12),
+    inset 1px 0 0 rgba(255, 255, 255, 0.18),
+    inset -1px 0 0 rgba(255, 255, 255, 0.18),
+    0 20px 50px -20px rgba(0, 0, 0, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.liquid-glass::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(120% 60% at 50% -10%, rgba(255, 255, 255, 0.35), transparent 60%);
+}
+.dock-tile { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0, 0, 0, 0.25), 0 6px 16px -6px rgba(0, 0, 0, 0.5); }
+
+/* 라이브 코드 캐럿 */
+.live-caret { display: inline-block; width: 2px; height: 1.1em; margin-left: 1px; vertical-align: -0.2em; background: var(--accent); animation: caret-blink 1s steps(2) infinite; }
+
+/* 글리치 — 채널 어긋남 + 가로 조각 */
+.glitch::before, .glitch::after { content: attr(data-text); position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.glitch::before { color: #ff2d55; transform: translate(-2px, 0); clip-path: inset(0 0 60% 0); animation: glitch-a 2.4s infinite steps(1); mix-blend-mode: screen; }
+.glitch::after { color: #2ea8ff; transform: translate(2px, 0); clip-path: inset(50% 0 0 0); animation: glitch-b 2.4s infinite steps(1); mix-blend-mode: screen; }
+.glitch:hover::before { animation-duration: 0.6s; } .glitch:hover::after { animation-duration: 0.6s; }
+@keyframes glitch-a {
+  0%, 82%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+  84% { clip-path: inset(10% 0 55% 0); transform: translate(-6px, -1px); }
+  87% { clip-path: inset(40% 0 30% 0); transform: translate(5px, 1px); }
+  90% { clip-path: inset(70% 0 5% 0); transform: translate(-3px, 0); }
+  93% { clip-path: inset(20% 0 65% 0); transform: translate(4px, 2px); }
+  96% { clip-path: inset(55% 0 20% 0); transform: translate(-5px, -2px); }
+}
+@keyframes glitch-b {
+  0%, 80%, 100% { clip-path: inset(100% 0 0 0); transform: translate(0); }
+  83% { clip-path: inset(60% 0 10% 0); transform: translate(6px, 1px); }
+  86% { clip-path: inset(15% 0 70% 0); transform: translate(-4px, -1px); }
+  89% { clip-path: inset(45% 0 35% 0); transform: translate(3px, 0); }
+  92% { clip-path: inset(5% 0 80% 0); transform: translate(-6px, 2px); }
+  95% { clip-path: inset(75% 0 8% 0); transform: translate(5px, -2px); }
+}
+@media (prefers-reduced-motion: reduce) { .glitch::before, .glitch::after { display: none; } .live-caret { animation: none; } }
+
+/* 테두리 빛줄기 */
+.border-beam { padding: 1.5px; background: conic-gradient(from var(--beam-angle, 0deg), transparent 0 70%, var(--accent) 85%, #fff 90%, transparent 100%); animation: beam-spin var(--beam-duration, 4s) linear infinite; }
+.border-beam:hover { animation-duration: calc(var(--beam-duration, 4s) / 2); }
+@property --beam-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes beam-spin { to { --beam-angle: 360deg; } }
+
+/* 유성 */
+.meteor { position: absolute; width: 2px; height: 2px; border-radius: 9999px; background: #fff; box-shadow: 0 0 6px 1px rgba(255,255,255,0.6); transform: rotate(215deg); animation: meteor linear infinite; opacity: 0; }
+.meteor::before { content: ''; position: absolute; top: 50%; left: 0; width: 140px; height: 1px; transform: translateY(-50%); background: linear-gradient(90deg, #fff, transparent); }
+@keyframes meteor { 0% { transform: rotate(215deg) translateX(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotate(215deg) translateX(-700px); opacity: 0; } }
+
+/* 와이프 글자 */
+.wipe-text__t { animation: wipe-t 4s cubic-bezier(0.22,1,0.36,1) infinite; }
+.wipe-text__bar { transform-origin: left; animation: wipe-bar 4s cubic-bezier(0.22,1,0.36,1) infinite; }
+@keyframes wipe-bar { 0% { transform: scaleX(0); transform-origin: left; } 30% { transform: scaleX(1); transform-origin: left; } 31% { transform-origin: right; } 55% { transform: scaleX(0); transform-origin: right; } 100% { transform: scaleX(0); } }
+@keyframes wipe-t { 0%, 30% { clip-path: inset(0 100% 0 0); } 55%, 80% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
+
+/* 네온 */
+.neon { color: #fff; text-shadow: 0 0 4px #fff, 0 0 10px var(--neon), 0 0 22px var(--neon), 0 0 44px var(--neon); animation: neon-on 2.2s ease-out both; }
+.neon__ch--flicker { animation: neon-flicker 6s infinite; }
+@keyframes neon-on { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; } 20%, 24%, 55% { opacity: 0.35; text-shadow: none; } }
+@keyframes neon-flicker { 0%, 88%, 100% { opacity: 1; } 89%, 91% { opacity: 0.25; text-shadow: none; } 90% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .border-beam, .meteor, .wipe-text__t, .wipe-text__bar, .neon, .neon__ch--flicker { animation: none; } .wipe-text__t { clip-path: none; } .wipe-text__bar { display: none; } }

@@ -73,15 +73,17 @@ export function OTPInput({ length = 6, value, onChange, onComplete, status = 'id
   }, [value])
 
   useEffect(() => {
-    if (autoFocus) inputRef.current?.focus()
+    if (autoFocus) inputRef.current?.focus({ preventScroll: true })
   }, [autoFocus])
 
   // 오류: 잠깐 보여준 뒤 비운다
   useEffect(() => {
     if (status !== 'error') return
+    const hadFocus = document.activeElement === inputRef.current
     const t = window.setTimeout(() => {
       onChange('')
-      inputRef.current?.focus()
+      // 원래 치고 있던 사람만 다시 포커스 — 자동 데모가 페이지를 끌어내리지 않게
+      if (hadFocus) inputRef.current?.focus({ preventScroll: true })
     }, 700)
     return () => window.clearTimeout(t)
   }, [status, onChange])

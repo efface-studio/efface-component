@@ -1,22 +1,20 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, Bell, Camera, Heart, MessageCircle, Pause, Play, Search, Settings, User } from 'lucide-react'
-import { DocPage, Note, Section } from '@/docs/components/Doc'
+import { DocPage, Note } from '@/docs/components/Doc'
 import { AutoplayContext, useAutoplay } from '@/docs/components/autoplay'
 import { GhostPointer } from '@/docs/components/GhostPointer'
+import { LogoParticleHero } from '@/docs/components/LogoParticleHero'
 import { cn } from '@/lib/cn'
-import { Aurora, CardDeck, CometTrail, ConfettiButton, Dock, DotWave, GooeyMenu, JellyText, Lava, LiquidButton, Odometer, ParticleText, ScrambleText, ShimmerText, SplitFlap, SpotCard, SpotlightGrid } from '@/components/fx'
+import {
+  Aurora, Blob, BorderBeam, CardDeck, Clock, CometTrail, ConfettiButton, Constellation, DepthScene, Dock, DotWave, ElasticTabs, Equalizer, Fireflies, FlipCard, FluidInk, Glitch, GooeyMenu, Halftone, HexPulse, Horizon, JellyCard, JellyText, KineticText, Lava, Lens, LiquidButton, LiquidGauge, LiveCode, LogoTilt3D, MatrixRain, Meteors, MorphCursor, MorphText, Neon, NotificationStack, Odometer, Orbit, ParticleMorph3D, ParticleText, PhysicsBalls, PressureText, PrismCard, Ribbon, RippleImage, RubberBand, Sand, ScrambleText, Shatter, ShimmerText, SplitFlap, SpotCard, SpotlightGrid, Swarm, Tentacle, ThemeReveal, TileFlip, Warp, WaveText, WipeText,
+} from '@/components/fx'
 import { Checkbox, EmailField, OTPInput, PasswordField, SentMail, SubmitButton, TextField, type OTPStatus, type SubmitStatus } from '@/components/form'
 import { LogoScene3D } from '@/components/brand/LogoScene3D'
 import { LogoMark } from '@/components/brand/LogoMark'
-import { AppIcon3D, APP_ICONS } from '@/components/brand'
-import { AppCard, APP_CARDS, Button } from '@/components/ui'
-import { LetterReveal, MagneticButton, Marquee, TiltCard } from '@/components/motion'
+import { Button } from '@/components/ui'
+import { LetterReveal, MagneticButton, Marquee } from '@/components/motion'
 import { Skeleton } from '@/components/ui/Skeleton'
-
-// APP_ICONS 항목엔 key 가 들어 있어 그대로 spread 하면 React 가 경고한다
-const { key: _hinestKey, ...HINEST_ICON } = APP_ICONS[1]
-void _hinestKey
 
 /* ───────────────────────── 카드 틀 ─────────────────────────
    자동 재생: 카드에 진짜 포인터가 들어오거나 안의 무언가에 포커스가 가면 멈추고,
@@ -46,10 +44,32 @@ function Card({
   bodyClassName?: string
 }) {
   const wrap = useRef<HTMLDivElement>(null)
+  const body = useRef<HTMLDivElement>(null)
   const [hover, setHover] = useState(false)
   const [focus, setFocus] = useState(false)
   const [manual, setManual] = useState(false)
-  const playing = !hover && !focus && !manual
+  // 화면 근처에 있을 때만 데모를 마운트한다 — 수십 개의 canvas 가 동시에 돌지 않게. 높이는 기억해 둬서 흔들리지 않는다
+  const [near, setNear] = useState(false)
+  const [keepH, setKeepH] = useState<number>()
+  const playing = !hover && !focus && !manual && near
+
+  useEffect(() => {
+    const el = wrap.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e) return
+        if (e.isIntersecting) setNear(true)
+        else {
+          if (body.current) setKeepH(body.current.offsetHeight)
+          setNear(false)
+        }
+      },
+      { rootMargin: '360px 0px' },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
 
   // 진짜 포인터만 — 가짜 커서는 mouseover 만 보내고 pointerenter 는 카드 바깥으로 안 올라온다
   useEffect(() => {
@@ -82,9 +102,9 @@ function Card({
 
   return (
     <div ref={wrap} className={cn('flex flex-col overflow-hidden rounded-xl border border-line bg-surface', className)}>
-      <div className={cn('relative flex min-h-[240px] flex-1 items-center justify-center overflow-hidden bg-bg', playing && ghost && 'is-ghost', bodyClassName)}>
-        <AutoplayContext.Provider value={playing}>{children}</AutoplayContext.Provider>
-        {ghost && <GhostPointer active={playing} click={click} />}
+      <div ref={body} className={cn('relative flex min-h-[240px] flex-1 items-center justify-center overflow-hidden bg-bg', playing && ghost && 'is-ghost', bodyClassName)} style={keepH ? { minHeight: keepH } : undefined}>
+        {near && <AutoplayContext.Provider value={playing}>{children}</AutoplayContext.Provider>}
+        {ghost && near && <GhostPointer active={playing} click={click} />}
       </div>
       <div className="flex items-start gap-3 border-t border-line px-4 py-3.5">
         <div className="min-w-0 flex-1">
@@ -154,13 +174,14 @@ function OdometerDemo() {
 function SplitFlapDemo() {
   const LINES = ['ERASE THE NOISE', 'LESS, BUT BETTER', 'EFFACE STUDIO', 'DESIGN SYSTEM']
   const [i, setI] = useState(0)
+  const [replay, setReplay] = useState(0)
   useAutoplay(async ({ sleep }) => {
     await sleep(3400)
     setI((v) => (v + 1) % LINES.length)
   })
   return (
-    <div className="flex flex-col items-center gap-4">
-      <SplitFlap text={LINES[i] ?? ''} length={16} className="text-[22px]" />
+    <div className="flex flex-col items-center gap-4" onPointerEnter={() => setReplay((v) => v + 1)}>
+      <SplitFlap key={replay} text={LINES[i] ?? ''} length={16} className="text-[22px]" />
       <div className="flex gap-1.5">
         {LINES.map((l, j) => (
           <button key={l} type="button" onClick={() => setI(j)} className={cn('h-1.5 w-6 rounded-full transition-colors', i === j ? 'bg-fg' : 'bg-line hover:bg-line-strong')} aria-label={l} />
@@ -443,45 +464,321 @@ function useAutoplayState() {
   })
 }
 
+function GaugeDemo() {
+  const [v, setV] = useState(62)
+  useAutoplay(async ({ sleep }) => {
+    await sleep(2600)
+    setV(Math.floor(15 + Math.random() * 80))
+  })
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <LiquidGauge value={v} />
+      <input type="range" min={0} max={100} value={v} onChange={(e) => setV(Number(e.target.value))} className="w-40 accent-(--accent)" aria-label="value" />
+    </div>
+  )
+}
+
+function TabsDemo() {
+  const TABS = ['Overview', 'Components', 'Motion', 'Live']
+  const [i, setI] = useState(0)
+  useAutoplay(async ({ sleep }) => {
+    await sleep(1600)
+    setI((v) => (v + 1) % TABS.length)
+  })
+  return <ElasticTabs tabs={TABS} value={i} onChange={setI} />
+}
+
+function ShatterDemo() {
+  const ref = useRef<HTMLDivElement>(null)
+  useAutoplay(async ({ sleep }) => {
+    await sleep(2400)
+    const host = ref.current?.firstElementChild as HTMLElement | null
+    if (host) {
+      const r = host.getBoundingClientRect()
+      host.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: r.left + r.width * (0.35 + Math.random() * 0.3), clientY: r.top + r.height * (0.35 + Math.random() * 0.3) }))
+    }
+    await sleep(2400)
+  })
+  return (
+    <div ref={ref} className="h-[300px] w-full">
+      <Shatter src="/logos/efface.svg" />
+    </div>
+  )
+}
+
+function NotifDemo() {
+  return (
+    <NotificationStack
+      items={[
+        { id: 'a', title: 'HiNest', body: '새 근무표가 올라왔어요', time: '지금' },
+        { id: 'b', title: 'efface', body: '견적서가 승인됐어요', time: '2분' },
+        { id: 'c', title: 'MURU', body: '오늘의 레시피: 김치볶음밥', time: '9분' },
+        { id: 'd', title: 'QTO', body: '결제가 완료됐어요', time: '1시간' },
+      ]}
+    />
+  )
+}
+
 /* ───────────────────────── 페이지 ───────────────────────── */
 
 export function ShowcasePage() {
-  const [heroPlaying, setHeroPlaying] = useState(true)
-  const hero = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = hero.current
-    if (!el) return
-    let t = 0
-    const enter = () => {
-      window.clearTimeout(t)
-      setHeroPlaying(false)
-    }
-    const leave = () => {
-      t = window.setTimeout(() => setHeroPlaying(true), 1500)
-    }
-    el.addEventListener('pointerenter', enter)
-    el.addEventListener('pointerleave', leave)
-    return () => {
-      el.removeEventListener('pointerenter', enter)
-      el.removeEventListener('pointerleave', leave)
-    }
-  }, [])
-
   return (
-    <DocPage eyebrow="motion" title="Showcase" lead="움직임만 모아 봤어요. 전부 스스로 돌아가고 — 가짜 커서가 떠다니거나 글자가 저절로 쳐져요 — 마우스를 올리면 멈추고 직접 해볼 수 있어요. 나가면 잠시 뒤 다시 돌아요.">
-      {/* 히어로 — 오로라 위에 입자 로고 */}
-      <div ref={hero} className="relative mb-16 h-[380px] overflow-hidden rounded-2xl border border-line bg-bg text-fg md:h-[460px]">
-        <Aurora colors={['#7c3aed', '#14b8b0', '#2563eb']} className="opacity-60" />
-        <ParticleText src="/logos/efface.svg" gap={5} radius={110} scale={0.78} />
-        <GhostPointer active={heroPlaying} click clickEvery={7} speed={0.6} />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between px-5 pb-4 font-mono text-[11px] tracking-wider text-fg-faint uppercase">
-          <span>ParticleText · src=/logos/efface.svg + Aurora</span>
-          <span>{heroPlaying ? '자동 재생 중 · 마우스를 올려 직접' : '직접 움직여 보고 · 눌러 보세요'}</span>
-        </div>
-      </div>
+    <DocPage eyebrow="motion" title="Showcase" lead="전부 스스로 돌아가요 — 가짜 커서가 떠다니거나 글자가 저절로 쳐져요. 마우스를 올리면 멈추고 직접 해볼 수 있고, 나가면 잠시 뒤 다시 돌아요.">
+      <LogoParticleHero className="mb-16" />
 
-      <Section title="새로 만든 것들" desc="이 디자인 시스템을 위해 새로 쓴 것들. canvas(입자 · 점 격자 · 오로라 · 혜성 · 색종이)는 컨테이너의 color 와 --accent 를 읽어서 어느 테마에서든 맞아요. 모두 prefers-reduced-motion 이면 정지 화면만 보여요.">
-        <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-5 md:grid-cols-2">
+          {/* ── 소름 ── */}
+          <Card title="Swarm" desc="새떼(보이드). 정렬·결집·분리 세 규칙으로 떼가 살아 움직여요. 포인터는 포식자, 누르면 몰려들어요." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Swarm />
+            </div>
+          </Card>
+          <Card title="Shatter" desc="로고가 누른 자리에서 유리처럼 산산조각 났다가 조각들이 되돌아와 다시 붙어요." tag="new">
+            <ShatterDemo />
+          </Card>
+          <Card title="Tentacle" desc="촉수. 마디들이 사슬처럼 이어져 머리가 포인터를 쫓고 몸통이 뒤따라요(역기구학)." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Tentacle />
+            </div>
+          </Card>
+          <Card title="Sand" desc="떨어지는 모래(셀 자동자). 포인터 자리에서 쏟아져 쌓이고 비탈을 타고 흘러요. 누르면 색이 바뀌어요." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Sand />
+            </div>
+          </Card>
+          <Card title="PressureText" desc="가변 글꼴의 굵기 축을 포인터가 눌러요 — 가까운 글자는 두꺼워지고 멀면 가늘어져요." tag="new" ghost>
+            <PressureText text="Pressure" className="text-6xl tracking-tight" />
+          </Card>
+          <Card title="Constellation" desc="별들이 떠다니며 가까운 별끼리 실처럼 이어져요. 포인터는 큰 별, 누르면 밀려나요." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Constellation />
+            </div>
+          </Card>
+          <Card title="Halftone" desc="로고를 하프톤 점으로. 포인터가 빛이 되어 가까운 점은 커지고 액센트로 물들어요." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Halftone src="/logos/efface.svg" />
+            </div>
+          </Card>
+          <Card title="Orbit" desc="중력. 행성들이 별을 돌며 꼬리를 남겨요. 포인터도 별이라 궤도가 휘고, 누르면 새 행성이 태어나요." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Orbit />
+            </div>
+          </Card>
+          <Card title="Fireflies" desc="반딧불이. 숨 쉬듯 밝아졌다 어두워지고, 포인터 가까이로 몰려와요. 누르면 흩어져요." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Fireflies />
+            </div>
+          </Card>
+          <Card title="Ribbon" desc="비단 띠. 3D 로 꼬이며 흐르고 앞뒤 면의 밝기가 달라요. 포인터가 띠를 들어 올려요." tag="new" ghost>
+            <div className="h-[300px] w-full">
+              <Ribbon />
+            </div>
+          </Card>
+          <Card title="Lens" desc="돋보기. 포인터 자리를 둥근 렌즈가 확대하고 가장자리가 굴절처럼 휘어요." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Lens />
+            </div>
+          </Card>
+          <Card title="Blob" desc="살아 있는 덩이. 포인터 쪽으로 늘어나고 누르면 움찔해요." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Blob />
+            </div>
+          </Card>
+          <Card title="HexPulse" desc="육각 벌집. 포인터 주변이 부풀며 켜지고, 누르면 파문이 벌집을 타고 퍼져요." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <HexPulse />
+            </div>
+          </Card>
+          <Card title="Horizon" desc="신스웨이브 지평선. 원근 격자가 흘러오고 포인터가 지평선을 기울여요." tag="new" ghost>
+            <div className="h-[300px] w-full">
+              <Horizon />
+            </div>
+          </Card>
+          <Card title="MatrixRain" desc="디지털 비. 포인터 주변 줄기가 빨라지고 액센트로 밝아져요." tag="new" ghost>
+            <div className="h-[300px] w-full">
+              <MatrixRain />
+            </div>
+          </Card>
+          <Card title="Equalizer" desc="이퀄라이저. 봉우리가 천천히 떨어지고, 포인터가 지나는 자리가 솟구쳐요. 누르면 전부 튀어요." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[300px] w-full px-4 pt-6">
+              <Equalizer />
+            </div>
+          </Card>
+          <Card title="RubberBand" desc="고무줄. 잡아당겼다 놓으면 튕기며 진동하다 잦아들어요. 스쳐도 살짝 흔들려요." tag="new" ghost>
+            <div className="h-[220px] w-full">
+              <RubberBand />
+            </div>
+          </Card>
+          <Card title="DepthScene" desc="깊이가 다른 층들이 서로 다른 속도로 움직여요(패럴랙스). 먼 층은 느리고 흐릿해요." tag="new" ghost>
+            <div className="h-[300px] w-full">
+              <DepthScene />
+            </div>
+          </Card>
+          <Card title="TileFlip" desc="모자이크 타일이 왼쪽 위부터 물결처럼 뒤집히며 다른 면을 드러내요." tag="new">
+            <div className="h-[220px] w-full p-4">
+              <TileFlip front="EFFACE" back="STUDIO" />
+            </div>
+          </Card>
+          <Card title="ThemeReveal" desc="포인터 주위 원 안으로 반대 테마가 들여다보여요 — 다크 위를 라이트 손전등으로." tag="new" ghost>
+            <div className="h-[300px] w-full">
+              <ThemeReveal>
+                <div className="flex h-full flex-col justify-center px-10">
+                  <p className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">// theme</p>
+                  <p className="mt-3 text-3xl font-semibold tracking-tight">Same component,<br />two themes.</p>
+                  <div className="mt-5 flex gap-2">
+                    <span className="rounded-md bg-fg px-3 py-1.5 text-[13px] font-medium text-bg">Primary</span>
+                    <span className="rounded-md border border-line px-3 py-1.5 text-[13px] font-medium">Secondary</span>
+                  </div>
+                </div>
+              </ThemeReveal>
+            </div>
+          </Card>
+          <Card title="LiveCode" desc="코드가 스스로 쳐져요 — 구문 색이 실시간으로 입혀지고 캐럿이 깜빡여요." tag="new" bodyClassName="items-stretch p-4">
+            <LiveCode
+              className="w-full"
+              code={`import { EmailField, SubmitButton } from '@/components/form'
+
+export function Login() {
+  const [email, setEmail] = useState('')
+  return (
+    <form onSubmit={login}>
+      <EmailField label="이메일" floating value={email} onChange={setEmail} />
+      <SubmitButton status={status}>로그인</SubmitButton>
+    </form>
+  )
+}`}
+            />
+          </Card>
+          <Card title="Glitch" desc="채널이 어긋나고 가로 조각이 튀어요. 호버하면 더 심해져요." tag="new" ghost>
+            <Glitch text="EFFACE" className="text-6xl" />
+          </Card>
+          <Card title="Neon" desc="네온 사인. 켜질 때 깜빡이다 안정되고, 이따금 한 글자가 툭 꺼졌다 켜져요." tag="new" bodyClassName="bg-[#0a0812]">
+            <Replay every={6000}>
+              <Neon text="OPEN 24H" className="text-5xl" />
+            </Replay>
+          </Card>
+          <Card title="Meteors · BorderBeam" desc="유성우가 떨어지고, 카드 테두리를 빛줄기가 돌아요." tag="new" bodyClassName="bg-[#05060a]">
+            <div className="relative flex h-[300px] w-full items-center justify-center">
+              <Meteors />
+              <BorderBeam>
+                <div className="w-[260px] p-5">
+                  <p className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">// efface</p>
+                  <p className="mt-2 text-xl font-semibold tracking-tight">Border beam</p>
+                  <p className="mt-1 text-[13px] text-fg-dim">conic-gradient 가 돌아요.</p>
+                </div>
+              </BorderBeam>
+            </div>
+          </Card>
+          <Card title="ElasticTabs" desc="인디케이터가 고무처럼 늘어났다 줄어들며 옮겨가요." tag="new">
+            <TabsDemo />
+          </Card>
+          <Card title="NotificationStack" desc="iOS 알림 뭉치. 올리면 펼쳐지며 각자 자리로 흩어져요." tag="new" ghost>
+            <NotifDemo />
+          </Card>
+          <Card title="LiquidGauge" desc="원 안의 물이 출렁이고, 값이 바뀌면 수면이 스프링처럼 오르내려요." tag="new">
+            <GaugeDemo />
+          </Card>
+          <Card title="FlipCard" desc="호버하면 Y 축으로 돌아 뒷면이 나와요 — 살짝 들리고 그림자가 길어져요." tag="new" ghost>
+            <FlipCard
+              front={
+                <div className="flex h-full flex-col justify-between">
+                  <p className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">// front</p>
+                  <p className="text-2xl font-semibold tracking-tight">efface studio</p>
+                </div>
+              }
+              back={
+                <div className="flex h-full flex-col justify-between">
+                  <p className="font-mono text-[10.5px] tracking-wider opacity-60 uppercase">// back</p>
+                  <p className="text-[14px] leading-relaxed">복잡함은 지우고,<br />효과만 남깁니다.</p>
+                </div>
+              }
+            />
+          </Card>
+          <Card title="JellyCard" desc="커서 쪽으로 눌리며 찌그러지고, 나가면 출렁이며 돌아와요. 누르면 더 깊게." tag="new" ghost click>
+            <JellyCard>
+              <p className="font-mono text-[10.5px] tracking-wider uppercase opacity-70">// jelly</p>
+              <p className="mt-3 text-2xl font-semibold tracking-tight">Squish me</p>
+              <p className="mt-1 text-[13px] opacity-80">stiffness 260 · damping 9</p>
+            </JellyCard>
+          </Card>
+          <Card title="WipeText" desc="액센트 막대가 훑고 지나가면 글자가 남고, 돌아오며 지워요." tag="new">
+            <WipeText text="Less, but better." className="text-5xl" />
+          </Card>
+          <Card title="Clock" desc="초침이 미끄러지듯 흐르고, 바늘 그림자가 빛(포인터) 방향에 따라 떨어져요." tag="new" ghost bodyClassName="text-fg">
+            <Clock />
+          </Card>
+          <Card title="FluidInk" desc="GPU 유체 시뮬레이션. 끌면 잉크가 소용돌이치며 번지고, 누르면 사방으로 터져요." tag="new" ghost click className="md:col-span-2">
+            <div className="h-[380px] w-full">
+              <FluidInk />
+            </div>
+          </Card>
+          <Card title="ParticleMorph3D" desc="6,000개의 점이 구 → efface 마크 → 토러스 → 은하로 형태를 바꿔요. 포인터를 따라 돌고, 누르면 다음 모양." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[320px] w-full">
+              <ParticleMorph3D />
+            </div>
+          </Card>
+          <Card title="LogoTilt3D" desc="CSS 3D 로 두껍게 쌓은 efface 마크. 두 판이 다른 높이에 떠서 기울고, 빛과 그림자가 따라 움직여요." tag="new" ghost bodyClassName="bg-[#0b0c10]">
+            <div className="h-[320px] w-full">
+              <LogoTilt3D size={200} />
+            </div>
+          </Card>
+          <Card title="MorphCursor" desc="원형 커서가 버튼 위에선 그 모양으로 늘어나 감싸요 (Linear 식). 벗어나면 다시 원으로." tag="new" ghost>
+            <MorphCursor>
+              <div className="flex h-[280px] w-full flex-wrap items-center justify-center gap-4 px-8">
+                {['Products', 'Studio', 'Journal', 'Contact'].map((t) => (
+                  <button key={t} type="button" data-cursor className="rounded-full border border-line px-5 py-2.5 text-[14px] font-medium text-fg-dim transition-colors hover:text-fg">
+                    {t}
+                  </button>
+                ))}
+                <button type="button" data-cursor className="rounded-md bg-fg px-5 py-2.5 text-[14px] font-medium text-bg">
+                  Start a project
+                </button>
+              </div>
+            </MorphCursor>
+          </Card>
+          <Card title="MorphText" desc="단어가 다음 단어로 녹아내리듯 바뀌어요 — 획이 액체처럼 이어졌다 갈라져요." tag="new">
+            <MorphText words={['Erase', 'Design', 'Build', 'Ship', 'efface']} className="text-6xl font-bold tracking-tight" />
+          </Card>
+          <Card title="KineticText" desc="같은 글자 줄이 여러 겹 쌓여 3D 로 물결쳐요. 포인터 쪽으로 기울어요." tag="new" ghost>
+            <div className="h-[320px] w-full">
+              <KineticText text="EFFACE" rows={6} />
+            </div>
+          </Card>
+          <Card title="RippleImage" desc="셰이더 굴절. 포인터가 지나가면 로고에 물결이 일고 색이 살짝 갈라져요(색수차)." tag="new" ghost>
+            <div className="h-[300px] w-full">
+              <RippleImage src="/logos/efface.svg" />
+            </div>
+          </Card>
+          <Card title="Warp" desc="워프 터널. 포인터가 소실점을 끌고, 누르고 있으면 속도가 붙어요." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Warp />
+            </div>
+          </Card>
+          <Card title="PhysicsBalls" desc="태그들이 공이 되어 떨어지고 부딪히며 쌓여요. 잡아서 던지고, 빈 곳을 누르면 전부 튀어요." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <PhysicsBalls labels={['Next.js', 'React', 'TypeScript', 'Tailwind', 'Motion', 'Three.js', 'Cloudflare', 'Supabase', 'Vite', 'Figma', 'Swift', 'Kotlin']} />
+            </div>
+          </Card>
+          <Card title="WaveText" desc="글자가 출렁이는 물결을 따라 흘러가요. 포인터가 물결을 높여요." tag="new" ghost>
+            <div className="h-[220px] w-full px-4">
+              <WaveText text="Erase the complexity" />
+            </div>
+          </Card>
+          <Card title="PrismCard" desc="프리즘 유리 카드. 기울면 무지개 굴절광이 흐르고 테두리는 빛 쪽만 밝아져요." tag="new" ghost>
+            <div className="relative flex h-[320px] w-full items-center justify-center">
+              <Aurora colors={['#2563eb', '#7c3aed', '#14b8b0']} className="opacity-70" />
+              <PrismCard>
+                <p className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">// efface</p>
+                <p className="mt-3 text-2xl font-semibold tracking-tight">Less, but better.</p>
+                <p className="mt-2 text-[13px] leading-relaxed text-fg-dim">One language shared by every efface product.</p>
+                <div className="mt-5 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-accent" />
+                  <span className="font-mono text-[11px] text-fg-dim">v1.0 · 2026</span>
+                </div>
+              </PrismCard>
+            </div>
+          </Card>
+
           <Card title="ParticleText" desc="입자가 흩어져 있다가 글자로 모여요. 포인터가 밀어내고, 누르면 폭발했다가 돌아와요. src 를 주면 로고도 돼요." tag="new" ghost click className="md:col-span-2">
             <div className="h-[300px] w-full text-fg">
               <ParticleText text="Erase the noise" gap={4} radius={80} scale={0.6} />
@@ -490,18 +787,21 @@ export function ShowcasePage() {
           <Card title="SplitFlap" desc="공항 안내판. 칸마다 글자가 탁탁 넘어가다 제자리에서 멈춰요." tag="new">
             <SplitFlapDemo />
           </Card>
-          <Card title="Dock" desc="macOS 독. 포인터와의 거리로 아이콘이 커지고 이웃도 따라 커져요." tag="new" ghost>
-            <Dock
-              items={[
-                { id: 'efface', label: 'efface', icon: <img src="/logos/efface.svg" alt="" /> },
-                { id: 'hinest', label: 'HiNest', icon: <img src="/logos/hinest.svg" alt="" /> },
-                { id: 'muru', label: 'MURU', icon: <img src="/logos/muru.svg" alt="" /> },
-                { id: 'qto', label: 'QTO', icon: <img src="/logos/qto.svg" alt="" /> },
-                { id: 'goms', label: 'GOMS', icon: <img src="/logos/goms.svg" alt="" /> },
-                { id: 'search', label: 'Search', icon: <Search className="text-fg" /> },
-                { id: 'settings', label: 'Settings', icon: <Settings className="text-fg" /> },
-              ]}
-            />
+          <Card title="Dock" desc="리퀴드 글래스 독. 뒤가 비쳐 흐려지고 위 모서리에 빛이 맺혀요. 포인터와의 거리로 아이콘이 커지고, 누르면 튀어요." tag="new" ghost click>
+            <div className="relative flex h-[300px] w-full items-end justify-center pb-6">
+              <Aurora colors={['#ff7a59', '#7c3aed', '#14b8b0', '#2563eb']} attract={0.1} className="opacity-90" />
+              <Dock
+                items={[
+                  { id: 'efface', label: 'efface', icon: <img src="/logos/efface.svg" alt="" />, tile: 'linear-gradient(160deg, #2a2d36, #0f1014)', running: true },
+                  { id: 'hinest', label: 'HiNest', icon: <img src="/logos/hinest.svg" alt="" />, tile: 'linear-gradient(160deg, #6f8cff, #2b4fe0)', running: true },
+                  { id: 'muru', label: 'MURU', icon: <img src="/logos/muru.svg" alt="" />, tile: 'linear-gradient(160deg, #fff4dc, #ffd28a)' },
+                  { id: 'qto', label: 'QTO', icon: <img src="/logos/qto.svg" alt="" />, tile: 'linear-gradient(160deg, #ff8a78, #e8503c)' },
+                  { id: 'goms', label: 'GOMS', icon: <img src="/logos/goms.svg" alt="" />, tile: 'linear-gradient(160deg, #ffc266, #ff9500)' },
+                  { id: 'search', label: 'Search', icon: <Search className="text-white" />, tile: 'linear-gradient(160deg, #8e8e93, #48484a)' },
+                  { id: 'settings', label: 'Settings', icon: <Settings className="text-white" />, tile: 'linear-gradient(160deg, #a0a0a6, #5c5c61)', running: true },
+                ]}
+              />
+            </div>
           </Card>
           <Card title="DotWave" desc="점 격자가 포인터 주위로 부풀며 액센트로 물들고, 누르면 파문이 퍼져요." tag="new" ghost click>
             <div className="h-[280px] w-full text-fg">
@@ -562,11 +862,7 @@ export function ShowcasePage() {
               </div>
             </div>
           </Card>
-        </div>
-      </Section>
 
-      <Section title="우리 컴포넌트에서 고른 것들" desc="이미 시스템 안에 있는 움직임 중 볼만한 것. 카드 오른쪽 화살표로 그 문서로 갈 수 있어요.">
-        <div className="grid gap-5 md:grid-cols-2">
           <Card title="OTP 검증" desc="빛 줄기가 셀을 훑고, 성공하면 셀들이 액센트로 차오른 뒤 가운데로 모여 체크가 돼요. 실패면 빨갛게 흔들리고 숫자가 떨어져요." to="/components/inputs" tag="ours">
             <OTPAuto />
           </Card>
@@ -591,11 +887,6 @@ export function ShowcasePage() {
             <div className="h-[280px] w-full">
               <LogoScene3D transparent centered follow scale={0.6} />
             </div>
-          </Card>
-          <Card title="TiltCard" desc="커서로 3D 기울기 + 하이라이트 (v2 앱 카드)." to="/components/cards" tag="ours" ghost bodyClassName="py-8">
-            <TiltCard tiltX={7} tiltY={11} glare={false}>
-              <AppCard title="HiNest" sub="A new start for team ops" gradient={APP_CARDS[0].gradient} sheen={0.16} icon={<AppIcon3D {...HINEST_ICON} size={200} />} />
-            </TiltCard>
           </Card>
           <Card title="LetterReveal" desc="글자가 흩어졌다가 자리를 찾아요 (v2 히어로)." to="/motion/text" tag="ours">
             <Replay every={4600}>
@@ -623,7 +914,8 @@ export function ShowcasePage() {
           <Card title="Skeleton" desc="빛이 훑는 자리표시자 → 실제 콘텐츠로. 눌러서 바꿔 볼 수도." to="/components/skeleton" tag="ours">
             <SkeletonAuto />
           </Card>
-        </div>
+      </div>
+      <div className="mt-8">
         <Note>
           페이지 전환(아래로 이어지는 슬라이드), 사이드바 인디케이터, 헤더 테마 토글 같은 문서 셸의 움직임은 이 페이지 자체에서 보고 있어요. 스크롤 인터랙션은{' '}
           <Link to="/motion/scroll" className="link-underline text-fg">
@@ -635,7 +927,7 @@ export function ShowcasePage() {
           </Link>
           에.
         </Note>
-      </Section>
+      </div>
     </DocPage>
   )
 }

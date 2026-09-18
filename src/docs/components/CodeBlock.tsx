@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { cn } from '@/lib/cn'
-import { tokenize, type TokenKind } from './highlight'
+import { KIND_CLASS, tokenize } from './highlight'
 
 export interface CodeBlockProps {
   code: string
@@ -9,18 +9,6 @@ export interface CodeBlockProps {
   className?: string
 }
 
-const KIND_CLASS: Record<TokenKind, string> = {
-  comment: 'text-(--code-comment) italic',
-  string: 'text-(--code-string)',
-  keyword: 'text-(--code-keyword)',
-  tag: 'text-(--code-tag)',
-  attr: 'text-(--code-attr)',
-  number: 'text-(--code-number)',
-  punct: 'text-(--code-punct)',
-  prop: 'text-(--code-attr)',
-  selector: 'text-(--code-tag)',
-  plain: '',
-}
 
 /** 복사 버튼이 달린 코드 블록. 경량 토크나이저로 하이라이트한다. */
 export function CodeBlock({ code, lang = 'tsx', className }: CodeBlockProps) {

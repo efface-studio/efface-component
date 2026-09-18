@@ -65,9 +65,13 @@ export function SplitFlap({ text, length, step = 55, className }: SplitFlapProps
   return (
     <div className={cn('inline-flex gap-1', className)} aria-label={text} role="img">
       {shown.map((ch, i) => (
-        <span key={i} className="split-flap relative inline-flex h-[1.5em] w-[1.05em] items-center justify-center overflow-hidden rounded-[0.18em] bg-fg font-mono text-[1em] font-semibold text-bg" aria-hidden>
-          <span className={cn('split-flap__char', flipping[i] && 'is-flip')}>{ch}</span>
-          <span className="pointer-events-none absolute inset-x-0 top-1/2 h-px bg-bg/40" />
+        <span key={i} className={cn('split-flap relative inline-flex h-[1.5em] w-[1.05em] items-center justify-center overflow-hidden rounded-[0.18em] bg-fg font-mono text-[1em] font-semibold text-bg', flipping[i] && 'is-flip')} aria-hidden style={{ perspective: '2em' }}>
+          <span className="split-flap__char">{ch}</span>
+          {/* 위 반쪽 — 넘어갈 때 앞으로 접힌다 */}
+          <span className="split-flap__top absolute inset-0 flex items-center justify-center bg-fg" style={{ clipPath: 'inset(0 0 50% 0)' }}>
+            {ch}
+          </span>
+          <span className="pointer-events-none absolute inset-x-0 top-1/2 h-px bg-bg/50" />
         </span>
       ))}
     </div>
