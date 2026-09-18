@@ -17,6 +17,18 @@ npm run dev        # http://localhost:5190
 ## 검증
 
 ```bash
+npm run typecheck   # tsc -b (app · worker · node · tests)
+npm run lint        # oxlint src worker tests
+npm test            # node --test tests/*.test.ts — 의존성 없이 Node 내장 러너 (타입 스트리핑)
+npm run build       # sitemap.xml 생성 포함
+```
+
+테스트는 순수 함수(이메일 도메인 완성 · 비밀번호 규칙 · 코드 토크나이저 · cn · canonical · 색 파싱)와
+Worker 라우팅(404 · 301 · 보안 헤더 · 프록시 robots · Origin 게이트 · 테마 스크립트 CSP 해시)을 다룬다.
+`tests/worker.test.ts` 는 Cloudflare 전역 타입이 DOM 과 충돌해 tsc 검사에서 빼고 node 가 그대로 돌린다.
+
+
+```bash
 npm run typecheck
 npm run lint
 npm run build
@@ -61,6 +73,16 @@ public/inspect.js         # Figma 식 요소 검사 오버레이
 - 문서 헤더의 **Dev** 버튼은 같은 스크립트를 문서 페이지 자체에 로드해 모든 컴포넌트 프리뷰를 잴 수 있게 한다.
 - HiNest 는 `/preview`(미리보기 데모)로 들어간다. 권한별 화면은 `/preview?role=manager|admin|super|platform` 파라미터를
   HiNest 쪽이 지원해야 보인다 (HiNest-Client PR 참고).
+
+## SEO · 보안 · 성능
+
+- 라우트별 `<title>` · description · canonical · Open Graph · robots · JSON-LD 는 `src/docs/components/Seo.tsx` 가 `<head>` 에 써 넣는다
+  (`DocPage` 가 `title`/`lead` 로 자동 호출). 링크 미리보기 봇용 정적 값과 `og.png` 는 `index.html` — 이미지는 `npm run og` 로 다시 만든다.
+- `robots.txt` 는 `public/`, `sitemap.xml` 은 빌드 시 `vite.config.ts` 의 플러그인이 `src/docs/nav.ts` 에서 만든다 (Live 페이지 제외).
+- Worker: 모르는 경로는 404 상태로 index.html, 끝 슬래시 301, HTTP→HTTPS 301, 문서 호스트에 CSP/HSTS/nosniff/Referrer/Permissions 헤더,
+  `/assets/*` 는 immutable 캐시. live-* 프록시는 `X-Robots-Tag: noindex` + `frame-ancestors`(문서 호스트만) + 비-GET 은 신뢰 출처만.
+- `index.html` 의 인라인 테마 스크립트는 CSP 해시로 허용된다 — 내용을 바꾸면 `worker/index.ts` 의 `THEME_SCRIPT_HASH` 도 바꿔야 하고, 테스트가 이를 검사한다.
+- 디스플레이 폰트(Space Grotesk · Archivo Black)는 첫 화면에 없어 `src/lib/fonts.ts` 로 필요한 컴포넌트에서 지연 로드한다.
 
 ## 테마
 
