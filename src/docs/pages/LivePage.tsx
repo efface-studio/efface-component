@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
-import { ArrowUpRight, Code2, Grid3x3, Maximize2, Minimize2, PanelLeft, PanelRight, RotateCw, ZoomIn } from 'lucide-react'
+import { Activity, ArrowUpRight, Code2, Grid3x3, Maximize2, Minimize2, PanelLeft, PanelRight, RotateCw, ZoomIn } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { DocPage, Note } from '@/docs/components/Doc'
 import { InspectPanel } from '@/docs/components/InspectPanel'
+import { NetworkPanel } from '@/docs/components/NetworkPanel'
 import { LIVE_PROJECTS, VIEWPORTS, type LivePage as LivePageDef, type ViewportId } from '@/docs/live.data'
-import { isInspectMessage, sendToFrame, type InspectDistance, type InspectInfo } from '@/lib/inspectBridge'
+import { isInspectMessage, sendToFrame, type InspectDistance, type InspectInfo, type NetEntry } from '@/lib/inspectBridge'
 import { TrafficLights } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 
@@ -25,6 +26,8 @@ export function LivePage() {
   const [hovered, setHovered] = useState<InspectInfo | null>(null)
   const [distances, setDistances] = useState<InspectDistance[] | null>(null)
   const [route, setRoute] = useState('')
+  const [tab, setTab] = useState<'inspect' | 'network'>('inspect')
+  const [net, setNet] = useState<NetEntry[]>([])
   const [stageW, setStageW] = useState(0)
   const [reloadKey, setReloadKey] = useState(0)
   const [seen, setSeen] = useState(proj?.id)
@@ -79,6 +82,22 @@ export function LivePage() {
         pendingRef.current = null
         if (inspect) sendToFrame(frameRef.current, { cmd: 'enable' })
         if (grid) sendToFrame(frameRef.current, { cmd: 'grid', value: true })
+        // 패널이 나중에 붙어도 놓친 요청이 없게 — 프레임이 들고 있는 버퍼를 받아온다
+        sendToFrame(frameRef.current, { cmd: 'net:replay' })
+      } else if (m.type === 'net') {
+        const entry = m.entry
+        setNet((list) => {
+          const i = list.findIndex((x) => x.id === entry.id)
+          if (i < 0) return [...list.slice(-399), entry]
+          const next = list.slice()
+          next[i] = entry
+          return next
+        })
+      } else if (m.type === 'net:batch') {
+        setNet((list) => {
+          const known = new Set(list.map((x) => x.id))
+          return [...list, ...m.entries.filter((x) => !known.has(x.id))].slice(-400)
+        })
       } else if (m.type === 'route') setRoute(m.path)
       else if (m.type === 'hover') {
         setHovered(m.info)
@@ -92,6 +111,15 @@ export function LivePage() {
     window.addEventListener('message', onMsg)
     return () => window.removeEventListener('message', onMsg)
   }, [inspect, grid])
+
+  const frameHost = useMemo(() => {
+    try {
+      return proj ? new URL(proj.liveOrigin).host : ''
+    } catch {
+      return ''
+    }
+  }, [proj])
+  const netErrors = useMemo(() => net.filter((e) => (e.kind === 'console' && e.level === 'error') || !!e.error || (typeof e.status === 'number' && e.status >= 400)).length, [net])
 
   // Mobile/Tablet 은 터치 기기처럼 보이게 한다 — 입력 장치로 셸을 고르는 앱(HiNest)이 모바일 UI 를 내도록
   const touch = viewport === 'mobile' || viewport === 'tablet'
@@ -175,6 +203,22 @@ export function LivePage() {
       </button>
       <button
         type="button"
+        onClick={() => {
+          if (panel && tab === 'network') setPanel(false)
+          else {
+            setTab('network')
+            setPanel(true)
+          }
+        }}
+        aria-pressed={panel && tab === 'network'}
+        className={cn('relative inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] transition-colors', panel && tab === 'network' ? 'border-fg bg-fg text-bg' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
+        title="프레임 안의 요청 · 상태코드 · 라우트 이동 · 콘솔 오류"
+      >
+        <Activity size={13} /> 활동
+        {netErrors > 0 && <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 font-mono text-[9.5px] text-white">{netErrors}</span>}
+      </button>
+      <button
+        type="button"
         onClick={() => setPanel((v) => !v)}
         aria-pressed={panel}
         className={cn('inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] transition-colors', panel ? 'border-fg bg-fg text-bg' : 'border-line text-fg-dim hover:border-line-strong hover:text-fg')}
@@ -191,7 +235,13 @@ export function LivePage() {
           {panelSide === 'right' ? '◨ → ◧' : '◧ → ◨'}
         </button>
       )}
-      <button type="button" onClick={() => setReloadKey((k) => k + 1)} className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-line text-fg-dim hover:border-line-strong hover:text-fg" aria-label="다시 불러오기">
+      <button
+        type="button"
+        onClick={() => {
+          setNet([])
+          setReloadKey((k) => k + 1)
+        }}
+        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-line text-fg-dim hover:border-line-strong hover:text-fg" aria-label="다시 불러오기">
         <RotateCw size={13} />
       </button>
       <span className="ml-auto hidden font-mono text-[11px] text-fg-faint md:inline">
@@ -212,14 +262,38 @@ export function LivePage() {
   )
 
   const dock = (
-    <aside data-ef-ignore className={cn('flex w-[320px] shrink-0 flex-col overflow-y-auto bg-surface p-4', panelSide === 'right' ? 'border-l border-line' : 'border-r border-line')}>
-      <div className="mb-3 flex items-center justify-between">
-        <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">dev mode</span>
-        <button type="button" onClick={() => setPanel(false)} className="rounded px-1.5 py-0.5 font-mono text-[10.5px] text-fg-dim hover:bg-line/40 hover:text-fg">
+    <aside data-ef-ignore className={cn('flex shrink-0 flex-col bg-surface p-4', tab === 'network' ? 'w-[420px] overflow-hidden' : 'w-[320px] overflow-y-auto', panelSide === 'right' ? 'border-l border-line' : 'border-r border-line')}>
+      <div className="mb-3 flex items-center gap-1">
+        {(
+          [
+            { id: 'inspect', label: 'Inspect', Icon: Code2 },
+            { id: 'network', label: '활동', Icon: Activity },
+          ] as const
+        ).map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setTab(t.id)}
+            className={cn('inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 font-mono text-[11px] tracking-wider uppercase transition-colors', tab === t.id ? 'bg-fg text-bg' : 'text-fg-dim hover:bg-line/40 hover:text-fg')}
+          >
+            <t.Icon size={12} /> {t.label}
+            {t.id === 'network' && net.length > 0 && <span className={cn('tabular-nums', tab === t.id ? 'opacity-60' : netErrors > 0 ? 'text-red-500' : 'text-fg-faint')}>{netErrors > 0 ? netErrors : net.length}</span>}
+          </button>
+        ))}
+        <button type="button" onClick={() => setPanel(false)} className="ml-auto rounded px-1.5 py-0.5 font-mono text-[10.5px] text-fg-dim hover:bg-line/40 hover:text-fg">
           닫기
         </button>
       </div>
-      {!inspect ? (
+      {tab === 'network' ? (
+        <NetworkPanel
+          entries={net}
+          frameHost={frameHost}
+          onClear={() => {
+            setNet([])
+            sendToFrame(frameRef.current, { cmd: 'net:clear' })
+          }}
+        />
+      ) : !inspect ? (
         <div className="rounded-lg border border-line bg-bg-soft p-4">
           <p className="text-[13px] font-medium">Dev 모드가 꺼져 있어요</p>
           <p className="mt-1.5 text-[12.5px] leading-relaxed text-fg-dim">켜면 프레임 안의 요소에 마우스를 올려 크기·여백을 보고, 눌러서 고정한 뒤 다른 요소까지의 거리를 잴 수 있어요.</p>

@@ -59,9 +59,19 @@ export default {
     const target = new URL(url.pathname + url.search, upstream)
     const headers = new Headers(request.headers)
     headers.delete('host')
-    headers.delete('cookie')
     headers.set('accept-encoding', 'identity')
     headers.set('x-forwarded-host', url.host)
+    // 업스트림 API 가 Origin 허용 목록을 보는 경우(HiNest "origin not allowed") — 우리 호스트 대신 원래 호스트로
+    if (headers.has('origin')) headers.set('origin', upstream)
+    const referer = headers.get('referer')
+    if (referer) {
+      try {
+        const r = new URL(referer)
+        if (r.host === url.host) headers.set('referer', new URL(r.pathname + r.search, upstream).toString())
+      } catch {
+        /* 이상한 referer — 그대로 */
+      }
+    }
 
     const res = await fetch(target.toString(), {
       method: request.method,
@@ -74,12 +84,19 @@ export default {
     for (const h of STRIP_HEADERS) out.delete(h)
     const loc = res.headers.get('location')
     if (loc) out.set('location', rewriteLocation(loc, upstream, url))
-    // iframe 안에서 세션(예: HiNest 미리보기 플래그)이 유지되도록 쿠키 도메인 제거
+    // iframe 안에서 세션(로그인 · HiNest 미리보기 플래그)이 유지되도록 쿠키 도메인을 떼고,
+    // 서드파티 컨텍스트(iframe)에서도 저장되게 SameSite=None; Secure 로 맞춘다
     const cookies = res.headers.getSetCookie?.() ?? []
     if (cookies.length) {
       out.delete('set-cookie')
-      for (const c of cookies) out.append('set-cookie', c.replace(/;\s*domain=[^;]+/i, ''))
+      for (const c of cookies) {
+        let v = c.replace(/;\s*domain=[^;]+/i, '').replace(/;\s*samesite=[^;]+/i, '')
+        if (!/;\s*secure/i.test(v)) v += '; Secure'
+        out.append('set-cookie', v + '; SameSite=None')
+      }
     }
+    // 부모(문서 사이트)가 상태를 읽을 수 있게 업스트림 상태를 헤더로도 남긴다
+    out.set('x-ef-upstream-status', String(res.status))
 
     const type = res.headers.get('content-type') ?? ''
     if (!type.includes('text/html')) {

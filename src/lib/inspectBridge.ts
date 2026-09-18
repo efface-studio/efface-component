@@ -49,8 +49,32 @@ export interface InspectDistance {
   dir: 'top' | 'bottom' | 'left' | 'right' | 'v' | 'h'
 }
 
+/** 프레임 안에서 일어난 일 한 건 — 요청(fetch/xhr/asset/document) · 라우트 이동 · 콘솔 오류 */
+export interface NetEntry {
+  id: number
+  ts: number
+  kind: 'fetch' | 'xhr' | 'asset' | 'document' | 'route' | 'console'
+  method?: string
+  url?: string
+  path?: string
+  status?: number | null
+  statusText?: string
+  ok?: boolean | null
+  ms?: number | null
+  size?: number | null
+  type?: string | null
+  req?: string | null
+  res?: string | null
+  error?: string
+  pending?: boolean
+  level?: 'error' | 'warn'
+  text?: string
+}
+
 export type InspectMessage =
   | { source: 'ef-inspect'; type: 'ready'; path: string; title: string; inspect: boolean }
+  | { source: 'ef-inspect'; type: 'net'; entry: NetEntry }
+  | { source: 'ef-inspect'; type: 'net:batch'; entries: NetEntry[] }
   | { source: 'ef-inspect'; type: 'route'; path: string; title: string }
   | { source: 'ef-inspect'; type: 'state'; on: boolean; grid: boolean }
   | { source: 'ef-inspect'; type: 'hover'; info: InspectInfo | null; distances: InspectDistance[] | null }
@@ -64,6 +88,8 @@ export type InspectCommand =
   | { cmd: 'goto'; path: string }
   | { cmd: 'clear' }
   | { cmd: 'ping' }
+  | { cmd: 'net:replay' }
+  | { cmd: 'net:clear' }
 
 export function isInspectMessage(data: unknown): data is InspectMessage {
   return !!data && typeof data === 'object' && (data as { source?: string }).source === 'ef-inspect'

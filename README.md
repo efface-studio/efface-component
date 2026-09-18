@@ -53,7 +53,12 @@ public/inspect.js         # Figma 식 요소 검사 오버레이
   `public/inspect.js` 를 `<head>` 에 인라인 주입한다. 그 외 호스트는 dist 정적 자산(문서 사이트).
 - `public/inspect.js` — 검사 오버레이. 마우스를 올리면 content · padding · margin 박스와 크기, 누르면 고정(선택),
   선택한 채로 다른 요소에 올리면 둘 사이 거리. 8px 그리드. iframe 밖과는 `postMessage`, 같은 창에서는 `CustomEvent('ef-inspect')`.
-- 문서 헤더의 **검사** 버튼은 같은 스크립트를 문서 페이지 자체에 로드해 모든 컴포넌트 프리뷰를 잴 수 있게 한다.
+- **활동** 탭 — `inspect.js` 가 프레임 안의 `fetch`/XHR 을 감싸 메서드 · 상태코드 · 소요시간 · 크기 · 요청/응답 본문(4KB)을
+  기록하고, 정적 자산은 `PerformanceObserver(resource)`(교차 출처는 상태를 모르므로 `—`), 라우트 이동과 `console.error/warn`
+  도 함께 보낸다. 최근 300건을 프레임이 버퍼로 들고 있어 패널을 나중에 열어도 `net:replay` 로 받아온다.
+- 프록시는 `Origin`/`Referer` 를 업스트림 호스트로 바꿔 보낸다(업스트림 API 의 origin 허용 목록 통과) 그리고
+  `Set-Cookie` 의 `Domain` 을 떼고 `SameSite=None; Secure` 로 맞춰 iframe 안에서도 로그인 세션이 유지된다.
+- 문서 헤더의 **Dev** 버튼은 같은 스크립트를 문서 페이지 자체에 로드해 모든 컴포넌트 프리뷰를 잴 수 있게 한다.
 - HiNest 는 `/preview`(미리보기 데모)로 들어간다. 권한별 화면은 `/preview?role=manager|admin|super|platform` 파라미터를
   HiNest 쪽이 지원해야 보인다 (HiNest-Client PR 참고).
 

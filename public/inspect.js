@@ -393,8 +393,125 @@
   window.addEventListener('scroll', redraw, true)
   window.addEventListener('resize', resize)
 
+
+  /* ── 네트워크 · 활동 기록 ───────────────────────────────────
+     fetch / XHR 을 감싸 메서드·상태코드·소요시간·크기·응답 미리보기를 남기고,
+     정적 자산은 PerformanceObserver(resource) 로, 라우트 이동과 console.error/warn 도 함께 보낸다.
+     부모 패널이 나중에 붙어도 볼 수 있게 최근 300건을 버퍼에 들고 있다가 `net:replay` 로 다시 보낸다. */
+  const NET_MAX = 300
+  const net = { buf: [], seq: 0 }
+  const PREVIEW_MAX = 4096
+  function netPush(entry) {
+    entry.id = ++net.seq
+    entry.ts = entry.ts || Date.now()
+    net.buf.push(entry)
+    if (net.buf.length > NET_MAX) net.buf.shift()
+    emit('net', { entry })
+    return entry
+  }
+  function netUpdate(entry, patch) {
+    Object.assign(entry, patch)
+    emit('net', { entry })
+  }
+  const absUrl = (u) => { try { return new URL(String(u), location.href).toString() } catch { return String(u) } }
+  const previewOf = (text, type) => {
+    if (typeof text !== 'string') return null
+    const t = text.length > PREVIEW_MAX ? text.slice(0, PREVIEW_MAX) + '\n…' : text
+    if (/json/i.test(type || '')) { try { return JSON.stringify(JSON.parse(text), null, 2).slice(0, PREVIEW_MAX) } catch {} }
+    return t
+  }
+  const bodyPreview = (body) => {
+    if (body == null) return null
+    if (typeof body === 'string') return body.slice(0, PREVIEW_MAX)
+    if (body instanceof URLSearchParams) return body.toString().slice(0, PREVIEW_MAX)
+    if (body instanceof FormData) { const o = {}; body.forEach((v, k) => { o[k] = typeof v === 'string' ? v : `[file ${v.name || ''}]` }); return JSON.stringify(o, null, 2).slice(0, PREVIEW_MAX) }
+    if (body instanceof Blob) return `[blob ${body.size}B ${body.type}]`
+    if (body instanceof ArrayBuffer) return `[buffer ${body.byteLength}B]`
+    return null
+  }
+  const isTextual = (type) => /json|text|xml|javascript|x-www-form-urlencoded/i.test(type || '')
+
+  /* fetch */
+  const _fetch = window.fetch
+  if (typeof _fetch === 'function') {
+    window.fetch = function (input, init) {
+      const req = input instanceof Request ? input : null
+      const url = absUrl(req ? req.url : input)
+      const method = String((init && init.method) || (req && req.method) || 'GET').toUpperCase()
+      const t0 = performance.now()
+      const entry = netPush({ kind: 'fetch', method, url, status: 0, ok: null, ms: null, size: null, type: null, req: bodyPreview(init && init.body), res: null, pending: true })
+      return _fetch.call(this, input, init).then((r) => {
+        const type = r.headers.get('content-type') || ''
+        const len = r.headers.get('content-length')
+        netUpdate(entry, { status: r.status, statusText: r.statusText, ok: r.ok, ms: Math.round(performance.now() - t0), type, size: len ? +len : null, pending: false })
+        if (isTextual(type)) {
+          try {
+            r.clone().text().then((text) => netUpdate(entry, { res: previewOf(text, type), size: entry.size ?? text.length })).catch(() => {})
+          } catch {}
+        }
+        return r
+      }, (err) => {
+        netUpdate(entry, { status: 0, ok: false, ms: Math.round(performance.now() - t0), error: String(err && err.message || err), pending: false })
+        throw err
+      })
+    }
+  }
+
+  /* XHR */
+  const XO = XMLHttpRequest.prototype.open, XS = XMLHttpRequest.prototype.send
+  XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+    this.__ef = { method: String(method || 'GET').toUpperCase(), url: absUrl(url) }
+    return XO.call(this, method, url, ...rest)
+  }
+  XMLHttpRequest.prototype.send = function (body) {
+    const meta = this.__ef
+    if (meta) {
+      const t0 = performance.now()
+      const entry = netPush({ kind: 'xhr', method: meta.method, url: meta.url, status: 0, ok: null, ms: null, size: null, type: null, req: bodyPreview(body), res: null, pending: true })
+      this.addEventListener('loadend', () => {
+        const type = this.getResponseHeader ? (this.getResponseHeader('content-type') || '') : ''
+        let res = null
+        try { if (this.responseType === '' || this.responseType === 'text') res = previewOf(this.responseText, type) } catch {}
+        netUpdate(entry, { status: this.status, statusText: this.statusText, ok: this.status >= 200 && this.status < 400, ms: Math.round(performance.now() - t0), type, size: res ? res.length : null, res, error: this.status === 0 ? 'network error' : undefined, pending: false })
+      })
+    }
+    return XS.call(this, body)
+  }
+
+  /* 정적 자산 · 문서 */
+  try {
+    const seen = new Set()
+    const onEntries = (list) => {
+      for (const e of list) {
+        if (e.initiatorType === 'fetch' || e.initiatorType === 'xmlhttprequest' || e.initiatorType === 'beacon') continue
+        if (seen.has(e.name + e.startTime)) continue
+        seen.add(e.name + e.startTime)
+        const st = typeof e.responseStatus === 'number' && e.responseStatus > 0 ? e.responseStatus : null // 교차 출처(Timing-Allow-Origin 없음)는 0 → 모름
+        netPush({ kind: e.entryType === 'navigation' ? 'document' : 'asset', method: 'GET', url: e.name, status: st, ok: st == null ? null : st < 400, ms: e.duration ? Math.round(e.duration) : null, size: e.transferSize || e.encodedBodySize || null, type: e.initiatorType || e.entryType, ts: Date.now() - Math.max(0, performance.now() - e.startTime) })
+      }
+    }
+    onEntries(performance.getEntriesByType('navigation'))
+    onEntries(performance.getEntriesByType('resource'))
+    const po = new PerformanceObserver((l) => onEntries(l.getEntries()))
+    po.observe({ entryTypes: ['resource', 'navigation'] })
+  } catch {}
+
+  /* 콘솔 오류 · 경고 · 예외 */
+  for (const level of ['error', 'warn']) {
+    const orig = console[level]
+    console[level] = function (...args) {
+      try { netPush({ kind: 'console', level, text: args.map((a) => (typeof a === 'string' ? a : a instanceof Error ? a.stack || a.message : (() => { try { return JSON.stringify(a) } catch { return String(a) } })())).join(' ').slice(0, PREVIEW_MAX) }) } catch {}
+      return orig.apply(this, args)
+    }
+  }
+  window.addEventListener('error', (e) => netPush({ kind: 'console', level: 'error', text: `${e.message} (${e.filename}:${e.lineno})` }))
+  window.addEventListener('unhandledrejection', (e) => netPush({ kind: 'console', level: 'error', text: `Unhandled rejection: ${String(e.reason && e.reason.message || e.reason)}` }))
+
   /* ── 라우트 알림 (SPA) ───────────────────────────────────── */
-  const notifyRoute = () => emit('route', { path: location.pathname + location.search, title: document.title })
+  const notifyRoute = () => {
+    emit('route', { path: location.pathname + location.search, title: document.title })
+    netPush({ kind: 'route', url: location.href, path: location.pathname + location.search })
+  }
   const _push = history.pushState.bind(history)
   history.pushState = function (...a) { _push(...a); setTimeout(notifyRoute, 0) }
   const _replace = history.replaceState.bind(history)
@@ -412,6 +529,8 @@
       case 'goto': if (typeof msg.path === 'string') location.assign(msg.path); break
       case 'clear': state.pinned = null; draw(); emit('select', { info: null }); break
       case 'ping': emit('ready', { path: location.pathname + location.search, title: document.title, inspect: state.on }); break
+      case 'net:replay': emit('net:batch', { entries: net.buf.slice() }); break
+      case 'net:clear': net.buf.length = 0; break
     }
   }
   window.addEventListener('message', (e) => command(e.data))
