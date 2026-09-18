@@ -13,6 +13,10 @@ import { LogoMark } from '@/components/brand/LogoMark'
 import { AppIcon3D } from '@/components/brand/AppIcon3D'
 import { APP_ICONS } from '@/components/brand/appIcons'
 
+// APP_ICONS 항목엔 key 가 들어 있어 그대로 spread 하면 React 가 경고한다
+const { key: _hinestKey, ...HINEST_ICON } = APP_ICONS[1]
+void _hinestKey
+
 const SERVICES = [
   { icon: Globe, title: 'Landing page', desc: 'Launches, campaigns, hiring pages', period: '1–2 wks', from: '₩350K' },
   { icon: Building2, title: 'Brand site', desc: 'Company, portfolio, careers', period: '2–3 wks', from: '₩600K' },
@@ -268,7 +272,7 @@ import { TiltCard } from '@/components/motion'
         >
           <div className="flex flex-wrap justify-center gap-8">
             <TiltCard tiltX={7} tiltY={11} glare={false}>
-              <AppCard title="HiNest" sub="A new start for team ops" gradient={APP_CARDS[0].gradient} sheen={0.16} icon={<AppIcon3D {...APP_ICONS[1]} size={240} />} />
+              <AppCard title="HiNest" sub="A new start for team ops" gradient={APP_CARDS[0].gradient} sheen={0.16} icon={<AppIcon3D {...HINEST_ICON} size={240} />} />
             </TiltCard>
             <TiltCard tiltX={7} tiltY={11} glare={false} className="hidden lg:block">
               <AppCard title="efface" sub="Erase the complexity" gradient={APP_CARDS[2].gradient} sheen={0.1} icon={<LogoMark className="h-40 w-40 text-white" />} />

@@ -39,6 +39,7 @@ export const DOC_NAV: DocGroup[] = [
   {
     title: 'Motion',
     links: [
+      { label: 'Showcase', to: '/motion/showcase' },
       { label: 'Reveal', to: '/motion/reveal', src: ['v1', 'v2', 'mom'] },
       { label: 'Scroll', to: '/motion/scroll', src: ['v1', 'v2'] },
       { label: 'Cursor', to: '/motion/cursor', src: ['v1', 'v2'] },

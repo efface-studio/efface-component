@@ -26,3 +26,4 @@ export const LivePage = lazy(withChunkRecovery(() => import('@/docs/pages/LivePa
 export const SkeletonPage = lazy(withChunkRecovery(() => import('@/docs/pages/SkeletonPage').then((m) => ({ default: m.SkeletonPage }))))
 export const InputsPage = lazy(withChunkRecovery(() => import('@/docs/pages/InputsPage').then((m) => ({ default: m.InputsPage }))))
 export const AuthPage = lazy(withChunkRecovery(() => import('@/docs/pages/AuthPage').then((m) => ({ default: m.AuthPage }))))
+export const ShowcasePage = lazy(withChunkRecovery(() => import('@/docs/pages/ShowcasePage').then((m) => ({ default: m.ShowcasePage }))))

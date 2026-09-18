@@ -700,3 +700,41 @@
   }
 }
 
+/* 쇼케이스 가짜 커서 — 누를 때 링이 퍼진다 */
+.ghost-pointer { transition: opacity 0.3s; }
+.ghost-pointer__ring {
+  position: absolute; left: 4px; top: 2px; width: 14px; height: 14px; border-radius: 9999px;
+  border: 2px solid var(--accent); opacity: 0; transform: scale(0.4); pointer-events: none;
+}
+.ghost-pointer.is-down .ghost-pointer__ring { animation: ghost-ring 0.45s ease-out; }
+@keyframes ghost-ring { 0% { opacity: 0.9; transform: scale(0.4); } 100% { opacity: 0; transform: scale(2.4); } }
+
+/* 스플릿 플랩 — 넘어갈 때 위아래로 접힌다 */
+.split-flap__char { display: inline-block; transform-origin: 50% 50%; }
+.split-flap__char.is-flip { animation: flap 0.11s linear; }
+@keyframes flap { 0% { transform: rotateX(0); } 50% { transform: rotateX(-88deg); opacity: 0.55; } 100% { transform: rotateX(0); } }
+
+/* 스포트라이트 카드 — 포인터 자리(--sx/--sy)에서 테두리와 바탕이 빛난다 */
+.spot-card { --sx: -999px; --sy: -999px; }
+.spot-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(240px circle at var(--sx) var(--sy), color-mix(in oklab, var(--accent) 16%, transparent), transparent 60%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.spot-card::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1px;
+  background: radial-gradient(200px circle at var(--sx) var(--sy), var(--accent), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity 0.3s;
+}
+.group\/spot:hover .spot-card::before, .group\/spot:hover .spot-card::after, .group\/spot.is-ghost .spot-card::before, .group\/spot.is-ghost .spot-card::after { opacity: 1; }
+
+/* 글자 위로 빛이 훑는다 */
+.shimmer-text {
+  background: linear-gradient(110deg, var(--fg) 0%, var(--fg) 40%, var(--accent) 50%, var(--fg) 60%, var(--fg) 100%);
+  background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shimmer-text 2.8s ease-in-out infinite;
+}
+@keyframes shimmer-text { 0% { background-position: 120% 0; } 100% { background-position: -130% 0; } }
+@media (prefers-reduced-motion: reduce) { .shimmer-text { animation: none; color: var(--fg); background: none; } .split-flap__char.is-flip { animation: none; } }
