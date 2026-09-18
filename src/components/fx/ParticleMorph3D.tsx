@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { isCoarsePointer } from '@/lib/device'
 
 export interface ParticleMorph3DProps {
   /** 점 개수 */
@@ -73,9 +74,10 @@ const SHAPES: { name: string; fn: Shape }[] = [
  * 수천 개의 점이 구 → efface 마크 → 토러스 → 은하로 형태를 바꾼다(three.js Points).
  * 포인터를 따라 천천히 돌고, 누르면 다음 모양으로 넘어간다.
  */
-export function ParticleMorph3D({ count = 6000, every = 3800, className }: ParticleMorph3DProps) {
+export function ParticleMorph3D({ count: countProp, every = 3800, className }: ParticleMorph3DProps) {
   const ref = useRef<HTMLCanvasElement>(null)
   const reduce = useReducedMotion()
+  const count = countProp ?? (isCoarsePointer() ? 3000 : 6000)
 
   useEffect(() => {
     const canvas = ref.current

@@ -23,6 +23,8 @@ export default defineConfig({
           groups: [
             { name: 'react-vendor', test: /node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/, priority: 30 },
             { name: 'motion-vendor', test: /node_modules[\\/](motion|motion-dom|motion-utils|framer-motion)[\\/]/, priority: 20 },
+            // 아이콘이 100~200B 청크 수십 개로 쪼개져 요청만 늘어난다 — 한 파일로
+            { name: 'icons', test: /node_modules[\\/]lucide-react[\\/]/, priority: 25 },
           ],
         },
       },

@@ -68,7 +68,8 @@ function withDocsHeaders(res: Response, url: URL): Response {
     h.set('content-security-policy', DOCS_CSP)
     h.set('x-frame-options', 'DENY')
   }
-  void url
+  // 해시 자산이 Worker 를 거쳐 온 경우(폴백)에도 같은 캐시 정책
+  if (url.pathname.startsWith('/assets/') && res.ok) h.set('cache-control', 'public, max-age=31536000, immutable')
   return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h })
 }
 

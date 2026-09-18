@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { useDisplayFonts } from '@/hooks/useDisplayFonts'
 
 export interface WaveTextProps {
   text: string
@@ -12,6 +13,7 @@ export interface WaveTextProps {
  * 글자는 경로를 따라 끝없이 흐른다. 포인터가 물결을 높인다.
  */
 export function WaveText({ text, className }: WaveTextProps) {
+  useDisplayFonts()
   const id = useId().replace(/:/g, '')
   const path = useRef<SVGPathElement>(null)
   const tp = useRef<SVGTextPathElement>(null)

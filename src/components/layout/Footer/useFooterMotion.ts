@@ -1,6 +1,7 @@
 import { useEffect, useRef, type RefObject } from 'react'
 import { clamp, easeOutCubic } from '@/lib/motion'
 import { createWordmarkPainter, type PointerSample } from './wordmarkCanvas'
+import { loadDisplayFonts } from '@/lib/fonts'
 
 /** 진입 시퀀스가 앞으로 걸리는 초, 그리고 나갈 때 되감기는 초. */
 const SEQ_IN = 1.6
@@ -58,8 +59,8 @@ export function useFooterMotion(): FooterRefs {
     window.addEventListener('resize', onResize)
 
     // 워드마크는 텍스트로 그리므로 디스플레이 서체가 실제로 로드된 뒤에야 측정할 수 있다.
-    const fontsReady = document.fonts?.ready ?? Promise.resolve()
-    fontsReady.then(() => painter.setup())
+    // 워드마크는 Space Grotesk 를 캔버스에 그린다 — 지연 로드한 폰트가 준비된 뒤 세팅
+    loadDisplayFonts().then(() => painter.setup())
 
     const tick = () => {
       raf = requestAnimationFrame(tick)

@@ -1,6 +1,7 @@
 import { useRef, type MouseEvent, type ReactNode } from 'react'
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { useDisplayFonts } from '@/hooks/useDisplayFonts'
 
 export interface SpotlightTextProps {
   /** 겹쳐 그릴 줄들. 짝수 줄은 왼쪽, 홀수 줄은 오른쪽으로 3% 어긋난다. */
@@ -27,6 +28,7 @@ export function SpotlightText({
   children,
   className,
 }: SpotlightTextProps) {
+  useDisplayFonts()
   const ref = useRef<HTMLDivElement>(null)
   const px = useMotionValue(50)
   const py = useMotionValue(50)

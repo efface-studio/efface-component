@@ -8,8 +8,9 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    // 정적 자산보다 Worker 를 먼저 태운다 — live-* 호스트를 프록시로 돌리기 위해
-    "run_worker_first": true
+    // live-* 호스트를 프록시로 돌리기 위해 Worker 를 먼저 태우되, 해시가 붙은 /assets/* 는 자산 라우터가 바로 서빙한다
+    // (Worker 호출 수 절감 + public/_headers 의 immutable 캐시 적용). 자산이 없으면 Worker 로 넘어와 live-* 의 /assets 도 그대로 프록시된다.
+    "run_worker_first": ["/*", "!/assets/*"]
   },
   // 커스텀 도메인: efface.dev 존이 같은 계정에 있어 배포 시 DNS 까지 자동 연결된다.
   // live-* 는 실제 서비스를 프록시하며 검사 스크립트를 주입하는 호스트.

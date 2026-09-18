@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { isCoarsePointer } from '@/lib/device'
 
 export interface PhysarumProps {
   agents?: number
@@ -11,9 +12,10 @@ export interface PhysarumProps {
  * 점균(피사룸). 수천 마리가 페로몬 자국을 남기고, 앞·좌·우 세 감지점 중 자국이 진한 쪽으로 돈다 —
  * 그것만으로 혈관 같은 그물이 스스로 짜인다. 포인터는 먹이(자국을 뿌림), 누르면 흩어진다.
  */
-export function Physarum({ agents = 4000, className }: PhysarumProps) {
+export function Physarum({ agents: agentsProp, className }: PhysarumProps) {
   const ref = useRef<HTMLCanvasElement>(null)
   const reduce = useReducedMotion()
+  const agents = agentsProp ?? (isCoarsePointer() ? 1800 : 4000)
   useEffect(() => {
     const canvas = ref.current
     if (!canvas) return

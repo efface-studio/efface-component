@@ -211,14 +211,16 @@ export function ParticleText({ text = '', src, gap = 5, radius = 90, scale = 0.8
       wake()
     }
 
+    let alive = true
     const ro = new ResizeObserver(resize)
     ro.observe(host)
     resize()
     wake()
-    // 웹폰트/이미지가 늦게 오면 다시 표본화한다 — 그 전엔 대체 글꼴 모양
+    // 웹폰트/이미지가 늦게 오면 다시 표본화한다 — 그 전엔 대체 글꼴 모양. 언마운트 뒤엔 무시
     if (src) {
       const im = new Image()
       im.onload = () => {
+        if (!alive) return
         img = im
         resize()
         wake()
@@ -226,6 +228,7 @@ export function ParticleText({ text = '', src, gap = 5, radius = 90, scale = 0.8
       im.src = src
     } else {
       document.fonts?.load(fontAt(64)).then(() => {
+        if (!alive) return
         resize()
         wake()
       }).catch(() => {})
@@ -237,6 +240,7 @@ export function ParticleText({ text = '', src, gap = 5, radius = 90, scale = 0.8
     const mo = new MutationObserver(resize)
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
     return () => {
+      alive = false
       cancelAnimationFrame(raf)
       ro.disconnect()
       mo.disconnect()

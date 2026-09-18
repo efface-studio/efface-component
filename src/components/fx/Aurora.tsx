@@ -24,7 +24,9 @@ interface Blob {
  * 부드러운 빛덩이 서너 개가 천천히 흐르며 섞인다(오로라 · 메시 그라데이션).
  * 포인터에 가장 가까운 덩이가 살며시 따라온다. 히어로 배경용.
  */
-export function Aurora({ colors = ['#2563eb', '#14b8b0', '#7c3aed', '#3b62e5'], attract = 0.06, className }: AuroraProps) {
+const DEFAULT_COLORS = ['#2563eb', '#14b8b0', '#7c3aed', '#3b62e5']
+
+export function Aurora({ colors = DEFAULT_COLORS, attract = 0.06, className }: AuroraProps) {
   const ref = useRef<HTMLCanvasElement>(null)
   const reduce = useReducedMotion()
 

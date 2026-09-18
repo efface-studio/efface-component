@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { useDisplayFonts } from '@/hooks/useDisplayFonts'
 
 export interface TileFlipProps {
   cols?: number
@@ -17,6 +18,7 @@ export interface TileFlipProps {
  * 앞면은 글자 큰 타이포, 뒷면은 액센트 — 주기적으로 오간다. 타일에 마우스를 올리면 그 칸만 먼저 뒤집힌다.
  */
 export function TileFlip({ cols = 10, rows = 5, front, back, every = 3200, className }: TileFlipProps) {
+  useDisplayFonts()
   const [flipped, setFlipped] = useState(false)
   const reduce = useReducedMotion()
   useEffect(() => {

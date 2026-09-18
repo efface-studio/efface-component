@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { isCoarsePointer } from '@/lib/device'
 
 export interface ReactionDiffusionProps {
   className?: string
@@ -113,6 +114,7 @@ export function ReactionDiffusion({ className }: ReactionDiffusionProps) {
     let bg: [number, number, number] = [0.04, 0.04, 0.05]
     let fg: [number, number, number] = [0.95, 0.95, 0.96]
     let raf = 0
+    const STEPS = isCoarsePointer() ? 5 : 10 // 프레임당 반복 — 모바일은 절반
     const makeTex = () => {
       const t = gl.createTexture()
       const f = gl.createFramebuffer()
@@ -180,7 +182,7 @@ export function ReactionDiffusion({ className }: ReactionDiffusionProps) {
       const pr = PRESETS[preset % PRESETS.length]!
       gl.useProgram(P.step.p)
       gl.viewport(0, 0, w, h)
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < STEPS; i++) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, fbs[1 - cur]!)
         gl.activeTexture(gl.TEXTURE0)
         gl.bindTexture(gl.TEXTURE_2D, texs[cur]!)
@@ -230,6 +232,9 @@ export function ReactionDiffusion({ className }: ReactionDiffusionProps) {
     return () => {
       cancelAnimationFrame(raf)
       ro.disconnect()
+      window.setTimeout(() => {
+        if (!canvas.isConnected) gl.getExtension('WEBGL_lose_context')?.loseContext()
+      }, 0)
       host.removeEventListener('pointermove', onMove)
       host.removeEventListener('pointerleave', onLeave)
       host.removeEventListener('pointerdown', onDown)

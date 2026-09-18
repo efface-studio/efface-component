@@ -2,7 +2,6 @@ import { lazy } from 'react'
 import { withChunkRecovery } from '@/lib/chunkRecovery'
 
 /* 문서 페이지는 라우트 단위로 코드 분할한다. 배포 뒤 옛 청크를 요청하면 한 번 새로고침한다. */
-export const OverviewPage = lazy(withChunkRecovery(() => import('@/docs/pages/OverviewPage').then((m) => ({ default: m.OverviewPage }))))
 export const NotFoundPage = lazy(withChunkRecovery(() => import('@/docs/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))))
 export const ColorsPage = lazy(withChunkRecovery(() => import('@/docs/pages/ColorsPage').then((m) => ({ default: m.ColorsPage }))))
 export const TypographyPage = lazy(withChunkRecovery(() => import('@/docs/pages/TypographyPage').then((m) => ({ default: m.TypographyPage }))))

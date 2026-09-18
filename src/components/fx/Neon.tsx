@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn'
+import { useDisplayFonts } from '@/hooks/useDisplayFonts'
 
 export interface NeonProps {
   text: string
@@ -10,6 +11,7 @@ export interface NeonProps {
  * 네온 사인. 켜질 때 몇 번 깜빡이다 안정되고, 이따금 한 글자가 툭 꺼졌다 켜진다. 빛은 여러 겹의 text-shadow.
  */
 export function Neon({ text, color = '#ff2d95', className }: NeonProps) {
+  useDisplayFonts()
   return (
     <span className={cn('neon font-display font-bold tracking-wide', className)} style={{ '--neon': color } as never} aria-label={text}>
       {text.split('').map((ch, i) => (

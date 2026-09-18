@@ -1,8 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { DocsLayout } from '@/docs/layout/DocsLayout'
 import { RouteErrorPage } from '@/docs/pages/RouteErrorPage'
+// 첫 화면(/) 은 지연 없이 — 청크 왕복 하나를 줄이고 Suspense 빈 화면도 없앤다
+import { OverviewPage } from '@/docs/pages/OverviewPage'
 import {
-  OverviewPage,
   NotFoundPage,
   ColorsPage,
   TypographyPage,

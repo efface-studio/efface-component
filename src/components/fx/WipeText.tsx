@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn'
+import { useDisplayFonts } from '@/hooks/useDisplayFonts'
 
 export interface WipeTextProps {
   text: string
@@ -10,6 +11,7 @@ export interface WipeTextProps {
  * 뒤에 글자가 남고, 되돌아오며 지운다. CSS 키프레임.
  */
 export function WipeText({ text, className }: WipeTextProps) {
+  useDisplayFonts()
   return (
     <span className={cn('wipe-text relative inline-block overflow-hidden font-display font-bold tracking-tight', className)} aria-label={text}>
       <span className="wipe-text__t inline-block" aria-hidden>

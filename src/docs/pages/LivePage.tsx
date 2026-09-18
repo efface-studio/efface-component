@@ -143,7 +143,7 @@ export function LivePage() {
       setSelected(null)
       setHovered(null)
     }
-  }, [inspect])
+  }, [inspect, liveOrigin])
   const toggleGrid = useCallback(() => {
     const next = !grid
     setGrid(next)

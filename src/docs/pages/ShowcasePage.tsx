@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { useReducedMotion } from 'motion/react'
 import { ArrowUpRight, Bell, Camera, Heart, MessageCircle, Pause, Play, Search, Settings, User } from 'lucide-react'
 import { DocPage, Note } from '@/docs/components/Doc'
 import { AutoplayContext, useAutoplay } from '@/docs/components/autoplay'
@@ -51,7 +52,8 @@ function Card({
   // 화면 근처에 있을 때만 데모를 마운트한다 — 수십 개의 canvas 가 동시에 돌지 않게. 높이는 기억해 둬서 흔들리지 않는다
   const [near, setNear] = useState(false)
   const [keepH, setKeepH] = useState<number>()
-  const playing = !hover && !focus && !manual && near
+  const reduce = useReducedMotion()
+  const playing = !hover && !focus && !manual && near && !reduce
 
   useEffect(() => {
     const el = wrap.current

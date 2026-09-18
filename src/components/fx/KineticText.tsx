@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { useDisplayFonts } from '@/hooks/useDisplayFonts'
 
 export interface KineticTextProps {
   text: string
@@ -13,6 +14,7 @@ export interface KineticTextProps {
  * 포인터 쪽으로 기운다. 큰 타이포 히어로용.
  */
 export function KineticText({ text, rows = 5, className }: KineticTextProps) {
+  useDisplayFonts()
   const host = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
   useEffect(() => {

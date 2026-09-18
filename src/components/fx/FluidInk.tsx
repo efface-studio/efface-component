@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { isCoarsePointer } from '@/lib/device'
 
 export interface FluidInkProps {
   /** 잉크 색 후보 — 기본은 앱 카드 토큰 */
@@ -58,7 +59,9 @@ function hexToRgb(hex: string): [number, number, number] {
  * 잉크 유체. 포인터를 끌면 색 잉크가 소용돌이치며 번지고 서서히 옅어진다.
  * GPU 에서 도는 안정 유체 시뮬레이션(WebGL) — half-float 를 못 쓰는 기기면 조용히 빈 캔버스.
  */
-export function FluidInk({ colors = ['#2563eb', '#14b8b0', '#7c3aed', '#f59e0b', '#3b62e5'], className }: FluidInkProps) {
+const DEFAULT_COLORS = ['#2563eb', '#14b8b0', '#7c3aed', '#f59e0b', '#3b62e5']
+
+export function FluidInk({ colors = DEFAULT_COLORS, className }: FluidInkProps) {
   const ref = useRef<HTMLCanvasElement>(null)
   const reduce = useReducedMotion()
 
@@ -185,8 +188,9 @@ export function FluidInk({ colors = ['#2563eb', '#14b8b0', '#7c3aed', '#f59e0b',
       canvas.style.width = `${r.width}px`
       canvas.style.height = `${r.height}px`
       const aspect = canvas.width / canvas.height
-      const sim = 112
-      const dyeRes = 384
+      const coarse = isCoarsePointer()
+      const sim = coarse ? 80 : 112
+      const dyeRes = coarse ? 256 : 384
       simW = aspect > 1 ? Math.round(sim * aspect) : sim
       simH = aspect > 1 ? sim : Math.round(sim / aspect)
       dyeW = aspect > 1 ? Math.round(dyeRes * aspect) : dyeRes
@@ -335,6 +339,9 @@ export function FluidInk({ colors = ['#2563eb', '#14b8b0', '#7c3aed', '#f59e0b',
     return () => {
       cancelAnimationFrame(raf)
       ro.disconnect()
+      window.setTimeout(() => {
+        if (!canvas.isConnected) gl.getExtension('WEBGL_lose_context')?.loseContext()
+      }, 0)
       host.removeEventListener('pointermove', onMove)
       host.removeEventListener('pointerleave', onLeave)
       host.removeEventListener('pointerdown', onDown)

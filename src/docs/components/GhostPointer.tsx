@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
 
 export interface GhostPointerProps {
@@ -28,8 +29,11 @@ function chain(from: Element | null, host: Element): Element[] {
  * pointermove / mousemove / mouseover·out / pointerenter·leave (· 가끔 pointerdown·up) 을 보낸다.
  * 진짜 포인터가 들어오면 카드가 active 를 끄고, 이 커서는 사라진다.
  */
-export function GhostPointer({ active, click = false, clickEvery, speed = 1, className }: GhostPointerProps) {
+export function GhostPointer({ active: activeProp, click = false, clickEvery, speed = 1, className }: GhostPointerProps) {
   const ref = useRef<HTMLDivElement>(null)
+  // 애니메이션 줄이기면 가짜 커서도 쉰다 — 사용자가 직접 움직이는 건 그대로
+  const reduce = useReducedMotion()
+  const active = activeProp && !reduce
 
   useEffect(() => {
     const el = ref.current
@@ -39,6 +43,14 @@ export function GhostPointer({ active, click = false, clickEvery, speed = 1, cla
     let t = Math.random() * 20
     let last: Element | null = null
     let nextClick = t + 1.5
+    const timers = new Set<number>()
+    const later = (fn: () => void, ms: number) => {
+      const id = window.setTimeout(() => {
+        timers.delete(id)
+        fn()
+      }, ms)
+      timers.add(id)
+    }
     const init = { clientX: 0, clientY: 0, bubbles: true, pointerType: 'mouse', isPrimary: true, pointerId: 1 }
 
     const send = (target: Element, type: string, x: number, y: number, extra: Partial<PointerEventInit> = {}) => {
@@ -82,10 +94,10 @@ export function GhostPointer({ active, click = false, clickEvery, speed = 1, cla
       if (click && target && host.contains(target) && t > nextClick) {
         nextClick = t + (clickEvery ?? 2.2 + Math.random() * 2)
         el.classList.add('is-down')
-        window.setTimeout(() => el.classList.remove('is-down'), 180)
+        later(() => el.classList.remove('is-down'), 180)
         send(target, 'pointerdown', x, y)
         send(target, 'mousedown', x, y)
-        window.setTimeout(() => {
+        later(() => {
           send(target, 'pointerup', x, y)
           send(target, 'mouseup', x, y)
         }, 90)
@@ -95,6 +107,7 @@ export function GhostPointer({ active, click = false, clickEvery, speed = 1, cla
     raf = requestAnimationFrame(tick)
     return () => {
       cancelAnimationFrame(raf)
+      timers.forEach((id) => window.clearTimeout(id))
       // 떠날 때 마지막 요소에 leave 를 보내 상태를 되돌린다
       const r = host.getBoundingClientRect()
       move(null, r.left - 50, r.top - 50)

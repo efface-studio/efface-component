@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { NavLink, useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Code2, Menu, Moon, Sun, X } from 'lucide-react'
@@ -9,11 +9,13 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import { DocsThemeContext, type DocsTheme } from '@/docs/theme'
 import { NextPageBar } from '@/docs/components/NextPageBar'
 import { EASE_OUT_EXPO } from '@/lib/motion'
-import { InspectPanel } from '@/docs/components/InspectPanel'
+import { withChunkRecovery } from '@/lib/chunkRecovery'
 import { isInspectMessage, loadInspectScript, type InspectDistance, type InspectInfo } from '@/lib/inspectBridge'
 
 type Theme = DocsTheme
 const STORAGE_KEY = 'efface-ds-theme'
+// Dev 모드를 켠 사람만 쓰는 패널 — 첫 로드에서 뺀다
+const InspectPanel = lazy(withChunkRecovery(() => import('@/docs/components/InspectPanel').then((m) => ({ default: m.InspectPanel }))))
 
 function readTheme(): Theme {
   try {
@@ -192,11 +194,12 @@ export function DocsLayout() {
           </div>
         )}
 
-        <main className="min-w-0 flex-1 px-5 py-10 md:px-10 md:py-14">
+        <main className="min-h-[calc(100dvh-3.5rem)] min-w-0 flex-1 px-5 py-10 md:px-10 md:py-14">
           {/* 나가는 페이지는 움직이지 않고 제자리에서 흐려지고, 새 페이지만 아래에서 올라온다 —
               옛 페이지까지 움직이면 위로 튀었다 내려오는 것처럼 읽힌다.
-              스크롤 리셋은 exit 가 끝난 뒤(이미 안 보일 때). */}
-          <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo({ top: 0 })}>
+              스크롤 리셋은 exit 가 끝난 뒤(이미 안 보일 때) — smooth 면 올라가는 게 보이니 즉시.
+              main 의 최소 높이는 페이지 청크를 기다리는 동안 푸터가 첫 화면에 들어와 튀는 걸 막는다. */}
+          <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <motion.div
               key={pathname}
               initial={reduce ? false : { opacity: 0, y: 28 }}
@@ -204,8 +207,11 @@ export function DocsLayout() {
               exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.18, ease: 'easeOut' } }}
               transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
             >
-              <Suspense fallback={null}>{outlet}</Suspense>
-              <NextPageBar />
+              {/* NextPageBar 는 페이지가 준비된 뒤에 — 먼저 그리면 그 마진이 래퍼로 접혀 콘텐츠가 96px 아래에서 시작했다 튄다(CLS 0.79) */}
+              <Suspense fallback={<div aria-hidden className="min-h-[50dvh]" />}>
+                {outlet}
+                <NextPageBar />
+              </Suspense>
             </motion.div>
           </AnimatePresence>
           {inspect && (
@@ -216,7 +222,9 @@ export function DocsLayout() {
                   <X size={13} />
                 </button>
               </div>
-              <InspectPanel selected={selected} hovered={hovered} distances={distances} />
+              <Suspense fallback={null}>
+                <InspectPanel selected={selected} hovered={hovered} distances={distances} />
+              </Suspense>
             </div>
           )}
           <footer className="mx-auto mt-24 max-w-[1280px] border-t border-line pt-6 text-xs text-fg-faint">

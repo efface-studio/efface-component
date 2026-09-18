@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { useDisplayFonts } from '@/hooks/useDisplayFonts'
 
 export interface DepthSceneProps {
   className?: string
@@ -18,6 +19,7 @@ const LAYERS = [
  * 먼 층일수록 느리고 흐릿하며, 가까운 층은 크게 움직인다. 가운데 글자는 가장 앞.
  */
 export function DepthScene({ className }: DepthSceneProps) {
+  useDisplayFonts()
   const host = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
   useEffect(() => {

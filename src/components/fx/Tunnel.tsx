@@ -117,6 +117,9 @@ export function Tunnel({ className }: TunnelProps) {
     return () => {
       cancelAnimationFrame(raf)
       ro.disconnect()
+      window.setTimeout(() => {
+        if (!canvas.isConnected) gl.getExtension('WEBGL_lose_context')?.loseContext()
+      }, 0)
       host.removeEventListener('pointermove', onMove)
       host.removeEventListener('pointerleave', onLeave)
       host.removeEventListener('pointerdown', onDown)
