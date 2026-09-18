@@ -2,7 +2,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
-import worker, { KNOWN_ROUTES, rewriteLocation, rewriteSetCookie, THEME_SCRIPT_HASH } from '../worker/index.ts'
+import worker from '../worker/index.ts'
+import { KNOWN_ROUTES, rewriteLocation, rewriteSetCookie, THEME_SCRIPT_HASH } from '../worker/lib.ts'
 
 type Env = { ASSETS: { fetch: (r: Request) => Promise<Response> } }
 const html = (status = 200) => new Response('<!doctype html><title>x</title>', { status, headers: { 'content-type': 'text/html; charset=utf-8' } })
