@@ -410,6 +410,17 @@
   transform-origin: left;
 }
 
+/* v1 TechChip — 회색 아이콘이 호버 시 브랜드색으로. 검정 계열 브랜드는 다크에서 흰색(--brand-dark) */
+.tech-chip__icon {
+  fill: #8a8a93;
+}
+.tech-chip:hover .tech-chip__icon {
+  fill: var(--brand);
+}
+[data-theme='dark'] .tech-chip:hover .tech-chip__icon {
+  fill: var(--brand-dark, var(--brand));
+}
+
 /* v2 Capabilities — 점 하나 달린 도구 칩 (`--dot`은 항목별로 지정) */
 .cap-chip {
   display: inline-flex;
