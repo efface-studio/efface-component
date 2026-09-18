@@ -9,8 +9,8 @@ import { Label } from '@/components/ui/Label'
 import { Marquee } from '@/components/motion/Marquee'
 
 const TOOLS = ['Claude', 'OpenAI', 'Vercel AI SDK', 'pgvector', 'Next.js', 'React', 'TypeScript', 'Tailwind CSS']
-const ROW1 = ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Radix UI', 'shadcn/ui', 'Storybook', 'Figma', 'React Hook Form', 'Vite']
-const ROW2 = ['Vercel', 'Supabase', 'PostgreSQL', 'Prisma', 'Drizzle', 'Cloudflare', 'Stripe', 'Resend', 'Sentry', 'GitHub Actions', 'Anthropic', 'Claude', 'OpenAI']
+const ROW1 = ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Radix UI', 'shadcn/ui', 'Storybook', 'Figma', 'Zod', 'React Hook Form', 'Vite']
+const ROW2 = ['Vercel', 'Supabase', 'PostgreSQL', 'Prisma', 'Drizzle', 'Cloudflare', 'Stripe', 'Toss Payments', 'Resend', 'Sentry', 'GitHub Actions', 'Anthropic', 'Claude', 'OpenAI']
 const CATS = ['All', 'Half-day', 'Leave', 'Field', 'Cover', 'Other']
 
 export function ChipsPage() {
@@ -30,7 +30,8 @@ export function ChipsPage() {
 {/* 이름만 넘기면 TECH 표에서 simple-icons 경로 · 브랜드색 · 링크를 찾는다 */}
 <TechChip name="React" />
 <TechChip name="TypeScript" />
-<TechChip name="Zod" href="https://zod.dev" />   {/* 표에 없으면 첫 글자 타일 */}
+<TechChip name="Zod" />
+<TechChip name="Unknown tool" />   {/* 표에 없으면 첫 글자 타일 */}
 {/* 직접 지정 */}
 <TechChip name="Custom" iconPath="M12 2 …" color="#F59E0B" />`}
         >
@@ -38,8 +39,10 @@ export function ChipsPage() {
             <TechChip name="React" />
             <TechChip name="TypeScript" />
             <TechChip name="Claude" />
-            <TechChip name="Zod" href="https://zod.dev" />
+            <TechChip name="Zod" />
             <TechChip name="Toss Payments" />
+            <TechChip name="KakaoTalk" />
+            <TechChip name="Unknown tool" />
           </div>
         </Preview>
         <Preview
