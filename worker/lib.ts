@@ -46,11 +46,12 @@ export const FRAME_ANCESTORS = `frame-ancestors 'self' ${[...DOCS_ORIGINS].join(
 export const THEME_SCRIPT_HASH = 'sha256-Mh7GIM5q6yB1OPepcOsDkUxzh2f6hMmdi6VWBSlUSNA='
 export const DOCS_CSP = [
   "default-src 'self'",
-  `script-src 'self' '${THEME_SCRIPT_HASH}'`,
+  // Cloudflare 가 존(zone) 설정으로 자동 삽입하는 Web Analytics 비콘 — 막히면 콘솔 오류만 남는다
+  `script-src 'self' '${THEME_SCRIPT_HASH}' https://static.cloudflareinsights.com`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob:",
-  "connect-src 'self'",
+  "connect-src 'self' https://cloudflareinsights.com",
   "frame-src https://live-efface.efface.dev https://live-v2.efface.dev https://live-hinest.efface.dev",
   "worker-src 'self' blob:",
   "object-src 'none'",
@@ -76,6 +77,8 @@ export async function serveDocs(env: Env, request: Request, url: URL): Promise<R
 }
 
 /** 정적 자산 응답(불변)에 보안 헤더를 얹는다. 모르는 경로의 SPA 폴백은 404 로 */
+const STATIC_FILE = /\.(?:webp|png|jpe?g|gif|svg|ico|woff2?|mp4|webm|json|txt|xml)$/i
+
 export function withDocsHeaders(res: Response, url: URL): Response {
   const h = new Headers(res.headers)
   for (const [k, v] of Object.entries(SECURITY_HEADERS)) h.set(k, v)
@@ -86,8 +89,9 @@ export function withDocsHeaders(res: Response, url: URL): Response {
     h.set('x-frame-options', 'DENY')
     if (status === 200 && !KNOWN_ROUTES.has(url.pathname.toLowerCase())) status = 404
   }
-  // 해시 자산이 Worker 를 거쳐 온 경우(폴백)에도 같은 캐시 정책
+  // 해시 자산이 Worker 를 거쳐 온 경우(폴백)에도 같은 캐시 정책. 해시 없는 정적 파일(행성 텍스처·아이콘·폰트)은 하루 캐시 + 재검증
   if (url.pathname.startsWith('/assets/') && res.ok) h.set('cache-control', 'public, max-age=31536000, immutable')
+  else if (res.ok && !html && STATIC_FILE.test(url.pathname)) h.set('cache-control', 'public, max-age=86400, stale-while-revalidate=604800')
   return new Response(res.body, { status, statusText: status === 404 ? 'Not Found' : res.statusText, headers: h })
 }
 

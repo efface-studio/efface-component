@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import worker from '../worker/index.ts'
-import { KNOWN_ROUTES, rewriteLocation, rewriteSetCookie, THEME_SCRIPT_HASH } from '../worker/lib.ts'
+import { KNOWN_ROUTES, rewriteLocation, rewriteSetCookie, THEME_SCRIPT_HASH, withDocsHeaders } from '../worker/lib.ts'
 
 type Env = { ASSETS: { fetch: (r: Request) => Promise<Response> } }
 const html = (status = 200) => new Response('<!doctype html><title>x</title>', { status, headers: { 'content-type': 'text/html; charset=utf-8' } })
@@ -67,4 +67,12 @@ test('프록시 호스트 — robots 차단 · sitemap 404 · 다른 출처의 P
   assert.equal((await run('https://live-hinest.efface.dev/sitemap.xml')).status, 404)
   const evil = await run('https://live-hinest.efface.dev/api/x', { method: 'POST', headers: { origin: 'https://evil.example' } })
   assert.equal(evil.status, 403)
+})
+
+test('해시 없는 정적 파일은 하루 캐시, HTML 은 그대로', () => {
+  const img = withDocsHeaders(new Response('x', { headers: { 'content-type': 'image/webp' } }), new URL('https://component.efface.dev/space/earth-day.webp'))
+  assert.equal(img.headers.get('cache-control'), 'public, max-age=86400, stale-while-revalidate=604800')
+  const html = withDocsHeaders(new Response('<html>', { headers: { 'content-type': 'text/html' } }), new URL('https://component.efface.dev/'))
+  assert.equal(html.headers.get('cache-control'), null)
+  assert.match(html.headers.get('content-security-policy') ?? '', /static\.cloudflareinsights\.com/)
 })
