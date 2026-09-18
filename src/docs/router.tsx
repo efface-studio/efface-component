@@ -24,6 +24,8 @@ import {
   RecipesPage,
   LivePage,
   SkeletonPage,
+  InputsPage,
+  AuthPage,
 } from '@/docs/pages/lazy'
 
 export const router = createBrowserRouter([
@@ -42,6 +44,7 @@ export const router = createBrowserRouter([
       { path: '/components/cards', element: <CardsPage /> },
       { path: '/components/lists', element: <ListsPage /> },
       { path: '/components/skeleton', element: <SkeletonPage /> },
+      { path: '/components/inputs', element: <InputsPage /> },
       { path: '/motion/reveal', element: <MotionRevealPage /> },
       { path: '/motion/scroll', element: <MotionScrollPage /> },
       { path: '/motion/cursor', element: <MotionCursorPage /> },
@@ -51,6 +54,7 @@ export const router = createBrowserRouter([
       { path: '/layout/overlay', element: <OverlayPage /> },
       { path: '/banner', element: <BannerPage /> },
       { path: '/recipes', element: <RecipesPage /> },
+      { path: '/recipes/auth', element: <AuthPage /> },
       { path: '/live/:project', element: <LivePage /> },
       { path: '/live', element: <LivePage /> },
       { path: '*', element: <NotFoundPage /> },

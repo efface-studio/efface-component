@@ -33,6 +33,7 @@ export const DOC_NAV: DocGroup[] = [
       { label: 'Cards', to: '/components/cards', src: ['v1', 'v2'] },
       { label: 'Lists & Data', to: '/components/lists', src: ['v1', 'v2'] },
       { label: 'Skeleton', to: '/components/skeleton' },
+      { label: 'Inputs', to: '/components/inputs' },
     ],
   },
   {
@@ -58,7 +59,10 @@ export const DOC_NAV: DocGroup[] = [
   },
   {
     title: 'Recipes',
-    links: [{ label: 'Sections', to: '/recipes', src: ['v1', 'v2'] }],
+    links: [
+      { label: 'Sections', to: '/recipes', src: ['v1', 'v2'] },
+      { label: 'Auth', to: '/recipes/auth' },
+    ],
   },
   {
     title: 'Live',
