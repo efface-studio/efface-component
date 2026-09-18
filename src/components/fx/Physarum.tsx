@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { cssColorToRgb } from '@/lib/color'
 import { isCoarsePointer } from '@/lib/device'
 
 export interface PhysarumProps {
@@ -38,15 +39,6 @@ export function Physarum({ agents: agentsProp, className }: PhysarumProps) {
     const aa = new Float32Array(agents)
     let accent: [number, number, number] = [59, 98, 229]
     let fg: [number, number, number] = [240, 240, 245]
-    const rgb = (color: string): [number, number, number] => {
-      const m = color.match(/[\d.]+/g)
-      if (m && m.length >= 3 && !color.startsWith('#')) return [Number(m[0]), Number(m[1]), Number(m[2])]
-      const c = document.createElement('canvas').getContext('2d')
-      if (!c) return [0, 0, 0]
-      c.fillStyle = color
-      const v = c.fillStyle
-      return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)]
-    }
     const scatter = () => {
       for (let i = 0; i < agents; i++) {
         const a = Math.random() * Math.PI * 2
@@ -73,8 +65,8 @@ export function Physarum({ agents: agentsProp, className }: PhysarumProps) {
       off.height = lh
       img = off.getContext('2d')?.createImageData(lw, lh) ?? null
       const cs = getComputedStyle(host)
-      accent = rgb(cs.getPropertyValue('--accent').trim() || '#3b62e5')
-      fg = rgb(cs.color)
+      accent = cssColorToRgb(cs.getPropertyValue('--accent').trim() || '#3b62e5')
+      fg = cssColorToRgb(cs.color)
       scatter()
     }
     const sense = (x: number, y: number) => {

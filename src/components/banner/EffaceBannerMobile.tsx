@@ -158,7 +158,7 @@ export function EffaceBannerMobile({ animate = true, cycleSeconds = 12 }: { anim
     if (i !== index) setIndex(i)
   }
 
-  const vars = { '--dur': `${cycleSeconds}s`, '--play': animate ? 'running' : 'paused' } as CSSProperties
+  const vars = { '--dur': `${cycleSeconds}s`, '--play': animate ? 'running' : 'paused' }
 
   return (
     <section aria-roledescription="carousel" aria-label="About efface" className="-mx-2" style={vars} onPointerDown={() => setPaused(true)} onFocusCapture={() => setPaused(true)}>

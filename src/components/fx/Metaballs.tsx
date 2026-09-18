@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { cssColorToRgb } from '@/lib/color'
 
 export interface MetaballsProps {
   count?: number
@@ -41,13 +42,6 @@ export function Metaballs({ count = 7, className }: MetaballsProps) {
     let accent: [number, number, number] = [59, 98, 229]
     let bg: [number, number, number] = [11, 12, 16]
     const balls: Ball[] = []
-    const rgb = (color: string): [number, number, number] => {
-      const c = document.createElement('canvas').getContext('2d')
-      if (!c) return [0, 0, 0]
-      c.fillStyle = color
-      const v = c.fillStyle
-      return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)]
-    }
     const resize = () => {
       const r = host.getBoundingClientRect()
       w = Math.max(1, Math.floor(r.width))
@@ -63,7 +57,7 @@ export function Metaballs({ count = 7, className }: MetaballsProps) {
       off.height = lh
       img = off.getContext('2d')?.createImageData(lw, lh) ?? null
       const cs = getComputedStyle(host)
-      accent = rgb(cs.getPropertyValue('--accent').trim() || '#2563eb')
+      accent = cssColorToRgb(cs.getPropertyValue('--accent').trim() || '#2563eb')
       const m = cs.backgroundColor.match(/[\d.]+/g)
       if (m && m.length >= 3) bg = [Number(m[0]), Number(m[1]), Number(m[2])]
       if (!balls.length) for (let i = 0; i < count; i++) balls.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 1.6, vy: (Math.random() - 0.5) * 1.6, r: 26 + Math.random() * 30 })

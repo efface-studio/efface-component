@@ -1,6 +1,7 @@
 import { forwardRef, useId, useState, type ChangeEvent, type InputHTMLAttributes, type ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'className'> {
   label?: ReactNode
@@ -38,10 +39,10 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
         <motion.span
           className={cn('absolute inset-0 rounded-[5px] border transition-[border-color,box-shadow] duration-200 peer-focus-visible:border-accent peer-focus-visible:shadow-[0_0_0_2px_var(--bg),0_0_0_4px_var(--accent)] group-hover:border-fg-faint', on ? 'border-accent bg-accent' : 'border-line-strong bg-surface')}
           animate={on && !reduce ? { scale: [1, 1.25, 1] } : { scale: 1 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
         />
         <svg viewBox="0 0 16 16" className="relative h-3 w-3 text-white" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-          <motion.path d="M3.5 8.5 6.5 11.5 12.5 4.5" initial={false} animate={{ pathLength: on ? 1 : 0, opacity: on ? 1 : 0 }} transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1], delay: on ? 0.08 : 0 }} />
+          <motion.path d="M3.5 8.5 6.5 11.5 12.5 4.5" initial={false} animate={{ pathLength: on ? 1 : 0, opacity: on ? 1 : 0 }} transition={{ duration: 0.25, ease: EASE_OUT_EXPO, delay: on ? 0.08 : 0 }} />
         </svg>
         {/* 입자 — 체크될 때 한 번 */}
         <AnimatePresence>

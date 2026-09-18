@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type CSSProperties } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { cn } from '@/lib/cn'
 import { clamp, easeOutCubic } from '@/lib/motion'
 import { parseSentence, SENTENCE_TIMELINE } from './parseSentence'
@@ -96,7 +96,7 @@ export function EffaceSentence({ sentence, progress, className }: EffaceSentence
                 verticalAlign: '-0.06em',
                 margin: '0 0.1em',
                 transform: 'scale(0)',
-              } as CSSProperties
+              }
             }
           />
         ) : (

@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useId, useState, type ChangeEvent, type FocusEvent, type InputHTMLAttributes, type ReactNode } from 'react'
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'className'> {
   label?: string
@@ -147,7 +148,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
               <motion.span key="ok" className="relative flex shrink-0 items-center text-emerald-500" initial={{ scale: 0.4, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.4, opacity: 0 }} transition={SPRING}>
                 {!reduce && <motion.span aria-hidden className="absolute inset-0 rounded-full" initial={{ boxShadow: '0 0 0 0px rgba(16,185,129,0.45)' }} animate={{ boxShadow: '0 0 0 14px rgba(16,185,129,0)' }} transition={{ duration: 0.7, ease: 'easeOut' }} />}
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  <motion.path d="M5 12.5 10 17.5 19 7" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} />
+                  <motion.path d="M5 12.5 10 17.5 19 7" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.35, ease: EASE_OUT_EXPO }} />
                 </svg>
               </motion.span>
             )}
@@ -166,7 +167,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
             initial={{ opacity: 0, y: -4, x: error ? -6 : 0 }}
             animate={{ opacity: 1, y: 0, x: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.22, ease: EASE_OUT_EXPO }}
           >
             {error ?? hint}
           </motion.p>

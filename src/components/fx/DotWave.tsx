@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { cssColorToRgb } from '@/lib/color'
 
 export interface DotWaveProps {
   /** 점 간격(px) */
@@ -40,13 +41,6 @@ export function DotWave({ gap = 22, radius = 140, className }: DotWaveProps) {
     let accent = '#2563eb'
     const ripples: Ripple[] = []
 
-    const rgb = (color: string) => {
-      const c = document.createElement('canvas').getContext('2d')
-      if (!c) return [0, 0, 0]
-      c.fillStyle = color
-      const v = c.fillStyle // #rrggbb 로 정규화
-      return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)]
-    }
     let fgRgb = [0, 0, 0]
     let acRgb = [37, 99, 235]
 
@@ -62,8 +56,8 @@ export function DotWave({ gap = 22, radius = 140, className }: DotWaveProps) {
       const cs = getComputedStyle(host)
       fg = cs.color
       accent = cs.getPropertyValue('--accent').trim() || accent
-      fgRgb = rgb(fg)
-      acRgb = rgb(accent)
+      fgRgb = cssColorToRgb(fg)
+      acRgb = cssColorToRgb(accent)
       draw()
     }
 

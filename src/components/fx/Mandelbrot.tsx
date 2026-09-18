@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { hexToRgb01 } from '@/lib/color'
 import { MANDELBROT_PLANETS } from './mandelbrot.planets'
 
 export interface MandelbrotProps {
@@ -64,11 +65,6 @@ interface View {
   zoom: number
 }
 
-function hex(h: string): [number, number, number] {
-  const m = h.replace('#', '')
-  if (m.length !== 6) return [0.23, 0.38, 0.9]
-  return [parseInt(m.slice(0, 2), 16) / 255, parseInt(m.slice(2, 4), 16) / 255, parseInt(m.slice(4, 6), 16) / 255]
-}
 
 /**
  * 만델브로트 우주. 끌어서 이동, 휠·핀치·더블클릭으로 확대, 화살표·+/- 키. 행성 칩을 누르면 그곳으로 비행한다.
@@ -172,7 +168,7 @@ export function Mandelbrot({ auto = true, className }: MandelbrotProps) {
       canvas.style.width = `${r.width}px`
       canvas.style.height = `${r.height}px`
       gl.viewport(0, 0, canvas.width, canvas.height)
-      accent = hex(getComputedStyle(el).getPropertyValue('--accent').trim() || '#3b62e5')
+      accent = hexToRgb01(getComputedStyle(el).getPropertyValue('--accent').trim() || '#3b62e5')
       dirty.v = true
     }
     const clampZoom = (z: number) => Math.min(ZOOM_MAX, Math.max(isDeep ? ZOOM_MIN : 1e-5, z))

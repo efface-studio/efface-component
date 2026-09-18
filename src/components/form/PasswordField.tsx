@@ -4,6 +4,7 @@ import { Eye, EyeOff, Lock } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { TextField, type TextFieldProps } from './TextField'
 import { passwordScore, PASSWORD_RULES } from './passwordScore'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 export interface PasswordFieldProps extends Omit<TextFieldProps, 'type' | 'trailing' | 'value' | 'onChange' | 'inputClassName'> {
   value: string
@@ -130,7 +131,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(fu
                 </span>
                 <motion.span className={cn('relative', ok ? 'text-fg-dim' : 'text-fg-faint')} animate={{ x: ok ? [0, 2, 0] : 0 }} transition={{ duration: 0.25 }}>
                   {r.label}
-                  <motion.span aria-hidden className="absolute top-1/2 left-0 h-px w-full bg-fg-faint" initial={false} animate={{ scaleX: ok ? 1 : 0 }} style={{ transformOrigin: 'left' }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} />
+                  <motion.span aria-hidden className="absolute top-1/2 left-0 h-px w-full bg-fg-faint" initial={false} animate={{ scaleX: ok ? 1 : 0 }} style={{ transformOrigin: 'left' }} transition={{ duration: 0.3, ease: EASE_OUT_EXPO }} />
                 </motion.span>
               </li>
             )

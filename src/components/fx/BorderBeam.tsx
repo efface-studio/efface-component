@@ -14,7 +14,7 @@ export interface BorderBeamProps {
  */
 export function BorderBeam({ children, className, duration = 4 }: BorderBeamProps) {
   return (
-    <div className={cn('border-beam group relative rounded-2xl', className)} style={{ '--beam-duration': `${duration}s` } as never}>
+    <div className={cn('border-beam group relative rounded-2xl', className)} style={{ '--beam-duration': `${duration}s` }}>
       <div className="relative rounded-2xl bg-surface">{children}</div>
     </div>
   )

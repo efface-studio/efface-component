@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState, type ClipboardEvent, type KeyboardEvent } from 'react'
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 export type OTPStatus = 'idle' | 'verifying' | 'success' | 'error'
 
@@ -23,7 +24,7 @@ const SPRING = { type: 'spring', stiffness: 520, damping: 32, mass: 0.6 } as con
 const GAP = 8
 /** 빛 줄기가 한 번 훑는 시간 */
 const SWEEP = 1.1
-const EASE = [0.22, 1, 0.36, 1] as const
+const EASE = EASE_OUT_EXPO
 
 /**
  * 인증코드 입력.

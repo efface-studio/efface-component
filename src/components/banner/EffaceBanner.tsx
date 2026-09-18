@@ -139,7 +139,7 @@ export function EffaceBanner({
     "--dur": `${cycleSeconds}s`,
     "--play": animate ? "running" : "paused",
     "--ef-accent": accent,
-  } as CSSProperties;
+  };
 
   const btn: CSSProperties = {
     fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",

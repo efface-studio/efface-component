@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { cssColorToRgb } from '@/lib/color'
 
 export interface InterferenceProps {
   className?: string
@@ -32,15 +33,6 @@ export function Interference({ className }: InterferenceProps) {
     let pointer: { x: number; y: number } | null = null
     let accent: [number, number, number] = [59, 98, 229]
     let bg: [number, number, number] = [11, 12, 16]
-    const rgb = (color: string): [number, number, number] => {
-      const m = color.match(/[\d.]+/g)
-      if (m && m.length >= 3 && !color.startsWith('#')) return [Number(m[0]), Number(m[1]), Number(m[2])]
-      const c = document.createElement('canvas').getContext('2d')
-      if (!c) return [0, 0, 0]
-      c.fillStyle = color
-      const v = c.fillStyle
-      return [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)]
-    }
     const resize = () => {
       const r = host.getBoundingClientRect()
       w = Math.max(1, Math.floor(r.width))
@@ -56,8 +48,8 @@ export function Interference({ className }: InterferenceProps) {
       off.height = lh
       img = off.getContext('2d')?.createImageData(lw, lh) ?? null
       const cs = getComputedStyle(host)
-      accent = rgb(cs.getPropertyValue('--accent').trim() || '#3b62e5')
-      bg = rgb(cs.backgroundColor)
+      accent = cssColorToRgb(cs.getPropertyValue('--accent').trim() || '#3b62e5')
+      bg = cssColorToRgb(cs.backgroundColor)
       if (!sources.length) sources.push({ x: 0.32, y: 0.5 }, { x: 0.68, y: 0.5 })
     }
     const draw = () => {

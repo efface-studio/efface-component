@@ -1,6 +1,7 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useEffectEvent, useRef, useState, type ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 export interface CardDeckProps {
   cards: { id: string; content: ReactNode }[]
@@ -17,21 +18,24 @@ export function CardDeck({ cards, auto = 0, className }: CardDeckProps) {
   const [order, setOrder] = useState(cards.map((c) => c.id))
   const [fling, setFling] = useState<{ id: string; dir: 1 | -1 } | null>(null)
   const reduce = useReducedMotion()
+  const settle = useRef(0)
   const next = (dir: 1 | -1) => {
     const top = order[0]
     if (!top || fling) return
     setFling({ id: top, dir })
-    window.setTimeout(() => {
+    settle.current = window.setTimeout(() => {
       setOrder((o) => [...o.slice(1), o[0] ?? ''])
       setFling(null)
     }, 320)
   }
+  // 최신 order/fling 을 보되 interval 은 auto 가 바뀔 때만 다시 건다
+  const advance = useEffectEvent((dir: 1 | -1) => next(dir))
   useEffect(() => {
     if (!auto) return
-    const t = window.setInterval(() => next(Math.random() > 0.5 ? 1 : -1), auto)
+    const t = window.setInterval(() => advance(Math.random() > 0.5 ? 1 : -1), auto)
     return () => window.clearInterval(t)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auto, order, fling])
+  }, [auto])
+  useEffect(() => () => window.clearTimeout(settle.current), [])
 
   return (
     <div className={cn('relative h-[220px] w-[180px]', className)}>
@@ -55,7 +59,7 @@ export function CardDeck({ cards, auto = 0, className }: CardDeckProps) {
               initial={{ scale: 0.86, y: 36, opacity: 0 }}
               animate={
                 flung
-                  ? { x: 340 * fling.dir, rotate: 22 * fling.dir, opacity: 0, transition: reduce ? { duration: 0 } : { duration: 0.32, ease: [0.22, 1, 0.36, 1] } }
+                  ? { x: 340 * fling.dir, rotate: 22 * fling.dir, opacity: 0, transition: reduce ? { duration: 0 } : { duration: 0.32, ease: EASE_OUT_EXPO } }
                   : { x: 0, rotate: 0, scale: 1 - i * 0.05, y: i * 12, opacity: 1 - i * 0.18, transition: reduce ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 24 } }
               }
               exit={{ opacity: 0 }}

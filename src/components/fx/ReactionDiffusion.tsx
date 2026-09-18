@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { hexToRgb01 } from '@/lib/color'
 import { isCoarsePointer } from '@/lib/device'
 
 export interface ReactionDiffusionProps {
@@ -36,11 +37,6 @@ void main(){
   gl_FragColor = vec4(col, 1.);
 }`
 
-function hex(h: string): [number, number, number] {
-  const m = h.replace('#', '')
-  if (m.length !== 6) return [0.23, 0.38, 0.9]
-  return [parseInt(m.slice(0, 2), 16) / 255, parseInt(m.slice(2, 4), 16) / 255, parseInt(m.slice(4, 6), 16) / 255]
-}
 
 /**
  * 반응·확산(그레이-스콧). 두 화학물질이 퍼지고 반응하며 산호·지문 같은 튜링 무늬가 스스로 자라난다.
@@ -171,7 +167,7 @@ export function ReactionDiffusion({ className }: ReactionDiffusionProps) {
       }
       if (!gl2) seedWebGL1()
       const cs = getComputedStyle(host)
-      accent = hex(cs.getPropertyValue('--accent').trim() || '#3b62e5')
+      accent = hexToRgb01(cs.getPropertyValue('--accent').trim() || '#3b62e5')
       const m = cs.backgroundColor.match(/[\d.]+/g)
       if (m && m.length >= 3) bg = [Number(m[0]) / 255, Number(m[1]) / 255, Number(m[2]) / 255]
       const fm = cs.color.match(/[\d.]+/g)

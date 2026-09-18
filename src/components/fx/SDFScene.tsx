@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { hexToRgb01 } from '@/lib/color'
 
 export interface SDFSceneProps {
   className?: string
@@ -46,11 +47,6 @@ void main(){
   gl_FragColor = vec4(col, 1.);
 }`
 
-function hex(h: string): [number, number, number] {
-  const m = h.replace('#', '')
-  const n = parseInt(m.length === 3 ? m.split('').map((c) => c + c).join('') : m, 16)
-  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
-}
 
 /**
  * 레이마칭. 삼각형 하나 없이 거리 함수(SDF)로 3D 를 그린다 — efface 마크 판 두 장과 구들이
@@ -101,7 +97,7 @@ export function SDFScene({ className }: SDFSceneProps) {
       canvas.style.height = `${r.height}px`
       gl.viewport(0, 0, canvas.width, canvas.height)
       const cs = getComputedStyle(host)
-      accent = hex(cs.getPropertyValue('--accent').trim() || '#3b62e5')
+      accent = hexToRgb01(cs.getPropertyValue('--accent').trim() || '#3b62e5')
       const mm = cs.backgroundColor.match(/[\d.]+/g)
       if (mm && mm.length >= 3) bg = [Number(mm[0]) / 255, Number(mm[1]) / 255, Number(mm[2]) / 255]
     }

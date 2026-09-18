@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 import { ICON_PATHS, TECH } from '@/lib/iconPaths'
 
@@ -40,7 +40,7 @@ export function TechChip({ name, href, iconPath, color, className }: TechChipPro
         'tech-chip group relative flex h-12 items-center gap-2.5 rounded-full border border-line bg-surface px-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:border-fg hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]',
         className,
       )}
-      style={{ '--brand': brand, '--brand-dark': darkSafe(brand) } as CSSProperties}
+      style={{ '--brand': brand, '--brand-dark': darkSafe(brand) }}
     >
       {path ? (
         <svg role="img" aria-label={name} viewBox="0 0 24 24" width={20} height={20} className="tech-chip__icon shrink-0 transition-colors duration-300">
@@ -71,7 +71,7 @@ export interface DotChipProps {
 /** 점 하나 달린 도구 이름 (v2). 크롬 없이 목록처럼 읽힌다. */
 export function DotChip({ children, dot, className }: DotChipProps) {
   return (
-    <span className={cn('cap-chip', className)} style={dot ? ({ '--dot': dot } as CSSProperties) : undefined}>
+    <span className={cn('cap-chip', className)} style={dot ? { '--dot': dot } : undefined}>
       {children}
     </span>
   )

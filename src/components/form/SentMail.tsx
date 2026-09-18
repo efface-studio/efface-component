@@ -1,7 +1,8 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
-const EASE = [0.22, 1, 0.36, 1] as const
+const EASE = EASE_OUT_EXPO
 const SPRING = { type: 'spring', stiffness: 380, damping: 26 } as const
 
 /**

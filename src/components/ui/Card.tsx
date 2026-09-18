@@ -1,4 +1,4 @@
-import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/cn'
 import { EASE_OUT_EXPO } from '@/lib/motion'
@@ -316,7 +316,7 @@ export interface CapabilityCardProps {
 export function CapabilityCard({ no, title, items, tools, column = 0, className }: CapabilityCardProps) {
   const accent = CAPABILITY_ACCENTS[column]
   return (
-    <div className={cn('relative border-t border-line pt-8', className)} style={{ '--acc': accent.hex } as CSSProperties}>
+    <div className={cn('relative border-t border-line pt-8', className)} style={{ '--acc': accent.hex }}>
       <div className="flex items-baseline gap-4">
         <span className="font-mono text-sm" style={{ color: accent.hex }}>
           {no}
@@ -333,7 +333,7 @@ export function CapabilityCard({ no, title, items, tools, column = 0, className 
       </ul>
       <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
         {tools.map((tool, ti) => (
-          <li key={tool} className="cap-chip" style={{ '--dot': DOT_COLORS[ti % DOT_COLORS.length] } as CSSProperties}>
+          <li key={tool} className="cap-chip" style={{ '--dot': DOT_COLORS[ti % DOT_COLORS.length] }}>
             {tool}
           </li>
         ))}
@@ -361,7 +361,7 @@ export interface AppCardProps {
  */
 export function AppCard({ title, sub, gradient, sheen = 0.16, icon, className }: AppCardProps) {
   return (
-    <div className={cn('app-card', className)} style={{ background: gradient, '--sheen': String(sheen) } as CSSProperties}>
+    <div className={cn('app-card', className)} style={{ background: gradient, '--sheen': String(sheen) }}>
       <div className="text-[17px] font-medium tracking-[-0.01em] text-white/92">{sub}</div>
       <div className="mt-1.5 text-5xl font-extrabold tracking-[-0.02em] text-white">{title}</div>
       <div className="flex w-full flex-1 items-center justify-center">{icon}</div>

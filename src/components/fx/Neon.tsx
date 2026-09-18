@@ -13,7 +13,7 @@ export interface NeonProps {
 export function Neon({ text, color = '#ff2d95', className }: NeonProps) {
   useDisplayFonts()
   return (
-    <span className={cn('neon font-display font-bold tracking-wide', className)} style={{ '--neon': color } as never} aria-label={text}>
+    <span className={cn('neon font-display font-bold tracking-wide', className)} style={{ '--neon': color }} aria-label={text}>
       {text.split('').map((ch, i) => (
         <span key={i} aria-hidden className={cn('neon__ch inline-block whitespace-pre', i % 7 === 3 && 'neon__ch--flicker')} style={{ animationDelay: `${i * 0.07}s` }}>
           {ch}

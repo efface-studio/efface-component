@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { cssColorToRgb, hexToRgb01 } from '@/lib/color'
 import { isCoarsePointer } from '@/lib/device'
 
 export interface FluidInkProps {
@@ -49,11 +50,6 @@ interface DoubleFBO {
   swap: () => void
 }
 
-function hexToRgb(hex: string): [number, number, number] {
-  const m = hex.replace('#', '')
-  const n = parseInt(m.length === 3 ? m.split('').map((c) => c + c).join('') : m, 16)
-  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
-}
 
 /**
  * 잉크 유체. 포인터를 끌면 색 잉크가 소용돌이치며 번지고 서서히 옅어진다.
@@ -92,7 +88,7 @@ export function FluidInk({ colors = DEFAULT_COLORS, className }: FluidInkProps) 
       HALF = half.HALF_FLOAT_OES
       INTERNAL = gl.RGBA
     }
-    const palette = colors.map(hexToRgb)
+    const palette = colors.map((c) => hexToRgb01(c))
 
     const compile = (type: number, src: string) => {
       const sh = gl.createShader(type)
@@ -206,16 +202,7 @@ export function FluidInk({ colors = DEFAULT_COLORS, className }: FluidInkProps) 
         return
       }
       const cs = getComputedStyle(host)
-      const c = document.createElement('canvas').getContext('2d')
-      if (c) {
-        c.fillStyle = cs.backgroundColor
-        const v = c.fillStyle
-        if (v.startsWith('#')) bg = hexToRgb(v)
-        else {
-          const m = v.match(/[\d.]+/g)
-          if (m && m.length >= 3) bg = [Number(m[0]) / 255, Number(m[1]) / 255, Number(m[2]) / 255]
-        }
-      }
+      bg = cssColorToRgb(cs.backgroundColor).map((v) => v / 255) as [number, number, number]
     }
 
     const splat = (x: number, y: number, dx: number, dy: number, color: [number, number, number]) => {

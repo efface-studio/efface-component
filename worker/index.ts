@@ -4,15 +4,15 @@
  *  - live-*.efface.dev: 실제 서비스를 같은 경로로 프록시하면서 검사 스크립트(inspect.js)를 주입한다.
  *    iframe 에 넣을 수 있게 X-Frame-Options / CSP 는 떼고, 리다이렉트는 우리 호스트로 되돌린다.
  */
-import { DOC_NAV } from '../src/docs/nav'
-import { LIVE_PROJECTS } from '../src/docs/live.data'
+import { DOC_NAV } from '../src/docs/nav.ts'
+import { LIVE_PROJECTS } from '../src/docs/live.data.ts'
 
 export interface Env {
   ASSETS: Fetcher
 }
 
 /** SPA 가 그릴 수 있는 경로 — 그 밖의 HTML 응답은 404 로 내려 soft-404 를 막는다 */
-const KNOWN_ROUTES = new Set<string>([...DOC_NAV.flatMap((g) => g.links.map((l) => l.to)), '/live', ...LIVE_PROJECTS.map((p) => `/live/${p.id}`)])
+export const KNOWN_ROUTES = new Set<string>([...DOC_NAV.flatMap((g) => g.links.map((l) => l.to)), '/live', ...LIVE_PROJECTS.map((p) => `/live/${p.id}`)])
 
 const UPSTREAMS: Record<string, string> = {
   'live-efface.efface.dev': 'https://efface.dev',
@@ -42,7 +42,7 @@ const DOCS_ORIGINS = new Set(['https://component.efface.dev', 'http://localhost:
 const FRAME_ANCESTORS = `frame-ancestors 'self' ${[...DOCS_ORIGINS].join(' ')}`
 
 /** 문서 호스트 CSP — 인라인 스크립트는 index.html 의 테마 부트스트랩 하나뿐(해시). 바꾸면 해시도 갱신할 것 */
-const THEME_SCRIPT_HASH = 'sha256-Mh7GIM5q6yB1OPepcOsDkUxzh2f6hMmdi6VWBSlUSNA='
+export const THEME_SCRIPT_HASH = 'sha256-Mh7GIM5q6yB1OPepcOsDkUxzh2f6hMmdi6VWBSlUSNA='
 const DOCS_CSP = [
   "default-src 'self'",
   `script-src 'self' '${THEME_SCRIPT_HASH}'`,
@@ -99,7 +99,14 @@ async function inspectScript(env: Env, origin: string): Promise<string> {
   return inspectSrc
 }
 
-function rewriteLocation(loc: string, upstream: string, self: URL): string {
+/** 업스트림 Set-Cookie 를 프록시 호스트용으로 — Domain 제거, Secure 보장, SameSite 는 그대로 */
+export function rewriteSetCookie(c: string): string {
+  let v = c.replace(/;\s*domain=[^;]+/i, '')
+  if (!/;\s*secure/i.test(v)) v += '; Secure'
+  return v
+}
+
+export function rewriteLocation(loc: string, upstream: string, self: URL): string {
   try {
     const u = new URL(loc, upstream)
     if (u.origin === upstream) {
@@ -191,11 +198,7 @@ export default {
     const cookies = res.headers.getSetCookie?.() ?? []
     if (cookies.length) {
       out.delete('set-cookie')
-      for (const c of cookies) {
-        let v = c.replace(/;\s*domain=[^;]+/i, '')
-        if (!/;\s*secure/i.test(v)) v += '; Secure'
-        out.append('set-cookie', v)
-      }
+      for (const c of cookies) out.append('set-cookie', rewriteSetCookie(c))
     }
     // 부모(문서 사이트)가 상태를 읽을 수 있게 업스트림 상태를 헤더로도 남긴다
     out.set('x-ef-upstream-status', String(res.status))

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 export type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 
@@ -49,7 +50,7 @@ export function SubmitButton({ status = 'idle', children, loadingLabel = '확인
           initial={{ y: 10, opacity: 0, filter: 'blur(4px)' }}
           animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
           exit={{ y: -10, opacity: 0, filter: 'blur(4px)' }}
-          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
         >
           {status === 'loading' && (
             <>
@@ -64,7 +65,7 @@ export function SubmitButton({ status = 'idle', children, loadingLabel = '확인
           {status === 'success' && (
             <>
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <motion.path d="M5 12.5 10 17.5 19 7" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} />
+                <motion.path d="M5 12.5 10 17.5 19 7" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4, ease: EASE_OUT_EXPO }} />
               </svg>
               {successLabel}
             </>

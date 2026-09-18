@@ -3,6 +3,7 @@ import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
 import { cn } from '@/lib/cn'
 import { AppleIcon, GitHubIcon, GoogleIcon, KakaoIcon, NaverIcon } from './socialIcons'
 import { SOCIAL_PROVIDERS, type SocialProvider } from './social.constants'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 export type SocialVariant = 'neutral' | 'brand'
 
@@ -76,7 +77,7 @@ export const SocialButton = forwardRef<HTMLButtonElement, SocialButtonProps>(fun
       disabled={disabled}
       whileHover={reduce || disabled ? undefined : 'hover'}
       whileTap={reduce || disabled ? undefined : { scale: 0.97 }}
-      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
       className={cn(
         'relative inline-flex select-none items-center justify-center gap-2.5 font-medium tracking-tight transition-[background-color,opacity,filter,border-color,box-shadow] duration-200',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
