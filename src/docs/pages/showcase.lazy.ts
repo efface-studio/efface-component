@@ -82,3 +82,4 @@ export const Warp = lazy(withChunkRecovery(() => import('@/components/fx/Warp').
 export const WaterRipple = lazy(withChunkRecovery(() => import('@/components/fx/WaterRipple').then((m) => ({ default: m.WaterRipple }))))
 export const WaveText = lazy(withChunkRecovery(() => import('@/components/fx/WaveText').then((m) => ({ default: m.WaveText }))))
 export const WipeText = lazy(withChunkRecovery(() => import('@/components/fx/WipeText').then((m) => ({ default: m.WipeText }))))
+export const AuthMovie = lazy(withChunkRecovery(() => import('@/docs/components/AuthMovie').then((m) => ({ default: m.AuthMovie }))))

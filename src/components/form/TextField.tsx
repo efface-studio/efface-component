@@ -21,6 +21,8 @@ export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   below?: ReactNode
   /** 입력 글자 위에 겹치는 슬롯 — 고스트 자동완성 등. 입력과 같은 좌표계 */
   overlay?: ReactNode
+  /** 실제 포커스 없이 포커스 모양을 켠다 — 자동 시연처럼 사용자 포커스를 뺏으면 안 될 때 */
+  active?: boolean
 }
 
 const SPRING = { type: 'spring', stiffness: 480, damping: 32 } as const
@@ -32,7 +34,7 @@ const SPRING = { type: 'spring', stiffness: 480, damping: 32 } as const
  *  - valid: 체크가 그려지고 초록 링이 퍼진다. error: 흔들리고 문구가 미끄러져 들어온다.
  */
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
-  { label, floating = false, hint, error, valid, leading, trailing, size = 'md', className, inputClassName, below, overlay, id, disabled, value, defaultValue, onChange, onFocus, onBlur, placeholder, ...rest },
+  { label, floating = false, hint, error, valid, leading, trailing, size = 'md', className, inputClassName, below, overlay, active = false, id, disabled, value, defaultValue, onChange, onFocus, onBlur, placeholder, ...rest },
   ref,
 ) {
   const auto = useId()
@@ -40,7 +42,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   const descId = `${inputId}-desc`
   const invalid = !!error
   const reduce = useReducedMotion()
-  const [focused, setFocused] = useState(false)
+  const [focusedState, setFocused] = useState(false)
+  const focused = focusedState || active
   const [innerHas, setInnerHas] = useState(!!defaultValue)
   const hasValue = value !== undefined ? String(value).length > 0 : innerHas
   const lifted = !floating || focused || hasValue

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { useReducedMotion } from 'motion/react'
 import { ArrowUpRight, Bell, Camera, Heart, Maximize2, MessageCircle, Pause, Play, Search, Settings, User, X } from 'lucide-react'
-import { DocPage, Note } from '@/docs/components/Doc'
+import { DocPage, Note, Section } from '@/docs/components/Doc'
 import { AutoplayContext, useAutoplay } from '@/docs/components/autoplay'
 import { GhostPointer } from '@/docs/components/GhostPointer'
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
@@ -11,6 +11,7 @@ import { LogoParticleHero } from '@/docs/components/LogoParticleHero'
 import { cn } from '@/lib/cn'
 import {
   Aurora, BorderBeam, CardDeck, CirclePacking, Clock, CometTrail, ConfettiButton, Constellation, DepthScene, Dock, DotWave, ElasticTabs, Equalizer, Fireflies, FlipCard, FlowField, FluidInk, FractalTree, Glitch, GooeyMenu, Halftone, Harmonograph, HexPulse, Interference, JellyCard, JellyText, Kaleidoscope, KineticText, Lava, Lens, Life, Lightning, LiquidButton, LiquidGauge, LiveCode, LogoTilt3D, MagneticField, Mandelbrot, MatrixRain, Metaballs, Meteors, MorphCursor, MorphText, Neon, NotificationStack, Odometer, Orbit, ParticleMorph3D, ParticleText, Pendulum, Physarum, PhysicsBalls, Plasma, PressureText, PrismCard, ReactionDiffusion, RippleImage, Rope, RubberBand, SDFScene, Sand, ScrambleText, Shatter, ShimmerText, Silk, SplitFlap, SpotCard, SpotlightGrid, Swarm, Tentacle, Terrain, ThemeReveal, TileFlip, Topography, Tunnel, Voronoi, Warp, WaterRipple, WaveText, WipeText,
+  AuthMovie,
 } from './showcase.lazy'
 import { Checkbox, EmailField, OTPInput, PasswordField, SentMail, SubmitButton, TextField, type OTPStatus, type SubmitStatus } from '@/components/form'
 import { LogoScene3D } from '@/components/brand/LogoScene3D'
@@ -618,6 +619,14 @@ export function ShowcasePage() {
   return (
     <DocPage eyebrow="showcase" title="Showcase" lead="전부 스스로 돌아가요 — 가짜 커서가 떠다니거나 글자가 저절로 쳐져요. 마우스를 올리면 멈추고 직접 해볼 수 있고, 나가면 잠시 뒤 다시 돌아요.">
       <LogoParticleHero className="mb-16" />
+
+      <Section title="Video">
+        <Card title="Sign-up 시연" desc="macOS 26 데스크톱에서 독의 앱 → efface 를 열고, 커서가 사람처럼 회원가입 → 인증코드 → 로그인을 해내요. Recipes › Auth 의 실제 화면과 폼 컴포넌트가 그대로 움직여요(값만 스크립트가 넣고, 사용자 포커스는 안 뺏어요). 오른쪽 위 버튼으로 크게 볼 수 있어요." tag="new" className="mb-16">
+          <div className="h-[460px] w-full md:h-[860px]">
+            <AuthMovie />
+          </div>
+        </Card>
+      </Section>
 
       <div className="grid gap-5 md:grid-cols-2">
           {/* ── 소름 ── */}
