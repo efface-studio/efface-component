@@ -29,6 +29,15 @@
   --line-soft: #f0f0f0;
   --line-strong: #d4d4d4;
 
+  /* 소셜 로그인 — 각 회사 브랜드 가이드의 라이트 버전 */
+  --social-google-bg: #ffffff;
+  --social-google-fg: #1f1f1f;
+  --social-google-line: #dadce0;
+  --social-apple-bg: #000000;
+  --social-apple-fg: #ffffff;
+  --social-github-bg: #24292f;
+  --social-github-fg: #ffffff;
+
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
   --accent-soft: rgba(37, 99, 235, 0.08);
@@ -68,6 +77,15 @@
   --line: rgba(255, 255, 255, 0.09);
   --line-soft: rgba(255, 255, 255, 0.05);
   --line-strong: rgba(255, 255, 255, 0.16);
+
+  /* 소셜 로그인 — 다크 버전(구글 다크 테마 버튼 · 애플/깃허브는 반전) */
+  --social-google-bg: #131314;
+  --social-google-fg: #e3e3e3;
+  --social-google-line: #8e918f;
+  --social-apple-bg: #ffffff;
+  --social-apple-fg: #000000;
+  --social-github-bg: #f6f8fa;
+  --social-github-fg: #24292f;
 
   --accent: #3b62e5;
   --accent-hover: #6183ff;
@@ -129,6 +147,16 @@
   /* 카카오 */
   --color-kakao: #fee500;
   --color-kakao-fg: #191919;
+  /* 소셜 로그인 (테마별 값은 위 [data-theme] 블록) */
+  --color-google: var(--social-google-bg);
+  --color-google-fg: var(--social-google-fg);
+  --color-google-line: var(--social-google-line);
+  --color-apple: var(--social-apple-bg);
+  --color-apple-fg: var(--social-apple-fg);
+  --color-github: var(--social-github-bg);
+  --color-github-fg: var(--social-github-fg);
+  --color-naver: #03c75a;
+  --color-naver-fg: #ffffff;
 
   --font-sans:
     'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI',
@@ -671,3 +699,4 @@
     transition: none;
   }
 }
+
