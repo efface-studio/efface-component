@@ -8,6 +8,15 @@ export interface InspectFont {
   letterSpacing: string
 }
 
+/** 스타일시트에서 찾은 상태별 규칙 한 줄 */
+export interface InspectStateRule {
+  state: 'hover' | 'focus' | 'focus-visible' | 'focus-within' | 'active' | 'disabled' | 'checked' | 'open'
+  css: string
+  selector: string
+  /** 조상 상태(group-hover 등)에 걸리는 규칙 */
+  group: boolean
+}
+
 export interface InspectInfo {
   tag: string
   id: string
@@ -29,6 +38,9 @@ export interface InspectInfo {
   shadow: string
   opacity: string
   text: string
+  /** 선택(클릭)했을 때만 채워진다 */
+  states: InspectStateRule[]
+  css: string
 }
 
 /** 두 요소 사이 거리 한 줄. dir: 안쪽 요소 기준 바깥 변(top/bottom/left/right) 또는 떨어진 요소 사이 v/h */

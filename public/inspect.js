@@ -7,6 +7,34 @@
 ;(() => {
   if (window.__efInspect) return
   const IN_FRAME = window.parent && window.parent !== window
+
+  /* ── 터치 기기 에뮬레이션 ──────────────────────────────────────
+     앱들이 폭이 아니라 입력 장치(hover/pointer)로 모바일 셸을 고르는 경우가 있다(HiNest 등).
+     부모가 Mobile/Tablet 뷰포트로 띄울 때 URL 에 `__ef=touch` 를 붙이면, 앱 스크립트보다 먼저
+     matchMedia 를 손봐 터치 기기처럼 보이게 한다. 세션에 남겨 앱 안에서 페이지를 옮겨도 유지. */
+  try {
+    const ef = new URLSearchParams(location.search).get('__ef')
+    if (ef === 'touch') sessionStorage.setItem('ef:touch', '1')
+    else if (ef === 'mouse') sessionStorage.removeItem('ef:touch')
+    if (sessionStorage.getItem('ef:touch') === '1') {
+      const orig = window.matchMedia.bind(window)
+      const forcedFor = (q) => {
+        if (/hover:\s*hover|pointer:\s*fine|any-hover:\s*hover|any-pointer:\s*fine/.test(q)) return false
+        if (/hover:\s*none|pointer:\s*coarse|any-pointer:\s*coarse/.test(q)) return true
+        return null
+      }
+      window.matchMedia = (q) => {
+        const s = String(q)
+        const forced = forcedFor(s)
+        if (forced === null) return orig(q)
+        return {
+          media: s, matches: forced, onchange: null,
+          addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent() { return false },
+        }
+      }
+      try { Object.defineProperty(navigator, 'maxTouchPoints', { get: () => 5, configurable: true }) } catch {}
+    }
+  } catch {}
   const DPR = () => Math.min(2, window.devicePixelRatio || 1)
 
   /* ── 오버레이 ───────────────────────────────────────────── */
@@ -46,14 +74,79 @@
     return a !== undefined && a < 1 ? `${hex} ${Math.round(a * 100)}%` : hex
   }
 
-  function info(el) {
+  /* ── 상태별 CSS (:hover/:focus/:active/:disabled …) — 스타일시트를 훑어 이 요소에 걸리는 규칙만 ── */
+  const STATE_RE = /:(hover|focus-visible|focus-within|focus|active|disabled|checked|open)\b/
+  const STATE_STRIP = /:(hover|focus-visible|focus-within|focus|active|disabled|checked|open)\b/g
+  function stateRules(el) {
+    const out = []
+    const seen = new Set()
+    const visit = (rules) => {
+      for (const r of rules) {
+        if (r.cssRules && !(r instanceof CSSStyleRule)) {
+          try { visit(r.cssRules) } catch {}
+          continue
+        }
+        if (!(r instanceof CSSStyleRule)) continue
+        const sel = r.selectorText || ''
+        if (!STATE_RE.test(sel)) continue
+        for (const part of sel.split(',')) {
+          const m = part.match(STATE_RE)
+          if (!m) continue
+          const base = part.replace(STATE_STRIP, '').replace(/:not\(\)/g, '').trim()
+          let hit = false
+          try { hit = !!base && el.matches(base) } catch {}
+          if (!hit) continue
+          const css = r.style.cssText.trim()
+          const key = m[1] + '|' + css
+          if (!css || seen.has(key)) continue
+          seen.add(key)
+          // group-hover 처럼 조상 상태에 걸리는 규칙은 표시
+          const viaAncestor = !/^\s*\.[^\s>+~]*$/.test(part.trim()) && part.trim().indexOf(' ') > 0
+          out.push({ state: m[1], css, selector: part.trim(), group: viaAncestor })
+          if (out.length >= 40) return
+        }
+      }
+    }
+    for (const sheet of document.styleSheets) {
+      try { visit(sheet.cssRules) } catch {}
+      if (out.length >= 40) break
+    }
+    return out
+  }
+
+  /* ── 복사용 CSS 스니펫 — 기본값이 아닌 것만 ── */
+  function cssSnippet(el) {
+    const cs = getComputedStyle(el)
+    const lines = []
+    const add = (prop, val, skip) => { if (val && val !== skip) lines.push(`${prop}: ${val};`) }
+    add('display', cs.display, 'inline')
+    if (cs.display.includes('flex')) { add('flex-direction', cs.flexDirection, 'row'); add('align-items', cs.alignItems, 'normal'); add('justify-content', cs.justifyContent, 'normal') }
+    if (cs.display.includes('grid')) add('grid-template-columns', cs.gridTemplateColumns, 'none')
+    if (cs.display.includes('flex') || cs.display.includes('grid')) add('gap', cs.gap, 'normal')
+    add('width', r1(el.getBoundingClientRect().width) + 'px')
+    add('height', r1(el.getBoundingClientRect().height) + 'px')
+    add('padding', cs.padding, '0px')
+    add('margin', cs.margin, '0px')
+    add('border', cs.borderTopWidth !== '0px' ? `${cs.borderTopWidth} ${cs.borderTopStyle} ${rgbToHex(cs.borderTopColor)}` : '', '')
+    add('border-radius', cs.borderRadius, '0px')
+    add('background', cs.backgroundColor !== 'rgba(0, 0, 0, 0)' ? rgbToHex(cs.backgroundColor) : '', '')
+    add('color', rgbToHex(cs.color))
+    add('font', `${cs.fontWeight} ${cs.fontSize}/${cs.lineHeight} ${cs.fontFamily.split(',')[0]}`)
+    add('letter-spacing', cs.letterSpacing, 'normal')
+    add('box-shadow', cs.boxShadow, 'none')
+    add('opacity', cs.opacity, '1')
+    add('transition', cs.transitionProperty !== 'all' || cs.transitionDuration !== '0s' ? `${cs.transitionProperty} ${cs.transitionDuration} ${cs.transitionTimingFunction}` : '', '')
+    return lines.join('\n')
+  }
+
+  function info(el, deep) {
     const cs = getComputedStyle(el)
     const r = el.getBoundingClientRect()
     const text = (el.childNodes.length && [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) ? el.textContent.trim().slice(0, 60) : ''
     return {
       tag: el.tagName.toLowerCase(),
       id: el.id || '',
-      classes: typeof el.className === 'string' ? el.className.split(/\s+/).filter(Boolean).slice(0, 12) : [],
+      classes: typeof el.className === 'string' ? el.className.split(/\s+/).filter(Boolean) : [],
       rect: { x: r1(r.left + window.scrollX), y: r1(r.top + window.scrollY), w: r1(r.width), h: r1(r.height) },
       margin: [px(cs.marginTop), px(cs.marginRight), px(cs.marginBottom), px(cs.marginLeft)],
       padding: [px(cs.paddingTop), px(cs.paddingRight), px(cs.paddingBottom), px(cs.paddingLeft)],
@@ -71,6 +164,9 @@
       shadow: cs.boxShadow !== 'none' ? cs.boxShadow : '',
       opacity: cs.opacity,
       text,
+      // 선택(클릭)했을 때만 — 스타일시트 전체를 훑으므로 호버마다 하지 않는다
+      states: deep ? stateRules(el) : [],
+      css: deep ? cssSnippet(el) : '',
     }
   }
 
@@ -270,7 +366,7 @@
     const el = pick(e.clientX, e.clientY)
     state.pinned = el === state.pinned ? null : el
     draw()
-    emit('select', { info: state.pinned ? info(state.pinned) : null })
+    emit('select', { info: state.pinned ? info(state.pinned, true) : null })
   }
   function onKey(e) {
     if (!state.on) return

@@ -1,9 +1,17 @@
 import { useState, type ReactNode } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { cn } from '@/lib/cn'
-import type { InspectDistance, InspectInfo } from '@/lib/inspectBridge'
+import type { InspectDistance, InspectInfo, InspectStateRule } from '@/lib/inspectBridge'
 
 const PINK = '#ff3d71'
+
+/** 같은 상태끼리 묶는다. hover → focus → active → disabled 순 */
+const STATE_ORDER: InspectStateRule['state'][] = ['hover', 'focus', 'focus-visible', 'focus-within', 'active', 'disabled', 'checked', 'open']
+function groupStates(rules: InspectStateRule[]): [string, InspectStateRule[]][] {
+  const map = new Map<string, InspectStateRule[]>()
+  for (const r of rules) map.set(r.state, [...(map.get(r.state) ?? []), r])
+  return [...map.entries()].sort((a, b) => STATE_ORDER.indexOf(a[0] as InspectStateRule['state']) - STATE_ORDER.indexOf(b[0] as InspectStateRule['state']))
+}
 const DIR_GLYPH: Record<InspectDistance['dir'], string> = { top: '⊤', bottom: '⊥', left: '⊣', right: '⊢', v: '↕', h: '↔' }
 
 function useCopy() {
@@ -235,6 +243,53 @@ export function InspectPanel({ selected, hovered, distances, className }: Inspec
             {info.shadow && <Field label="Shadow" value={info.shadow} onCopy={copy} copied={done === info.shadow} />}
             {info.opacity !== '1' && <Field label="Opacity" value={info.opacity} onCopy={copy} copied={done === info.opacity} />}
           </section>
+
+          {/* 상태별 CSS — 선택했을 때만 */}
+          {isSel && (
+            <section>
+              <Heading>states</Heading>
+              {info.states.length === 0 ? (
+                <p className="px-2 text-[12px] text-fg-faint">이 요소에 걸리는 :hover / :focus / :active / :disabled 규칙이 없어요.</p>
+              ) : (
+                <div className="space-y-1.5">
+                  {groupStates(info.states).map(([state, rules]) => (
+                    <div key={state} className="rounded-lg border border-line bg-bg">
+                      <div className="flex items-center justify-between border-b border-line px-3 py-1.5">
+                        <span className="font-mono text-[11px] text-fg">
+                          <span className="text-accent">:</span>
+                          {state}
+                        </span>
+                        <button type="button" onClick={() => copy(rules.map((r) => r.css).join('\n'))} className="rounded px-1.5 py-0.5 font-mono text-[10px] text-fg-faint hover:bg-line/40 hover:text-fg">
+                          복사
+                        </button>
+                      </div>
+                      <ul className="px-3 py-2">
+                        {rules.map((r, i) => (
+                          <li key={i} className="font-mono text-[11px] leading-relaxed break-words text-fg-dim">
+                            {r.group && <span className="mr-1 rounded bg-surface-2 px-1 text-[9px] text-fg-faint uppercase">group</span>}
+                            {r.css}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* CSS 스니펫 — 선택했을 때만 */}
+          {isSel && info.css && (
+            <section>
+              <div className="mb-1 flex items-center justify-between px-2">
+                <span className="font-mono text-[10px] tracking-[0.18em] text-fg-faint uppercase">css</span>
+                <button type="button" onClick={() => copy(info.css)} className="rounded px-1.5 py-0.5 font-mono text-[10px] text-fg-faint hover:bg-line/40 hover:text-fg">
+                  {done === info.css ? '복사됨' : '복사'}
+                </button>
+              </div>
+              <pre className="overflow-x-auto rounded-lg border border-line bg-bg px-3 py-2.5 font-mono text-[11px] leading-relaxed text-fg-dim">{info.css}</pre>
+            </section>
+          )}
         </>
       )}
     </aside>

@@ -85,7 +85,7 @@ export function LivePage() {
         // 캐시된 옛 스크립트가 숫자만 보내는 경우도 받아준다
         setDistances(m.distances ? m.distances.map((d) => (typeof d === 'number' ? { d, dir: 'v' as const } : d)) : null)
       } else if (m.type === 'select') {
-        setSelected(m.info)
+        setSelected(m.info ? { ...m.info, states: m.info.states ?? [], css: m.info.css ?? '' } : null)
         if (m.info) setPanel(true)
       } else if (m.type === 'state') setInspect(m.on)
     }
@@ -93,10 +93,13 @@ export function LivePage() {
     return () => window.removeEventListener('message', onMsg)
   }, [inspect, grid])
 
+  // Mobile/Tablet 은 터치 기기처럼 보이게 한다 — 입력 장치로 셸을 고르는 앱(HiNest)이 모바일 UI 를 내도록
+  const touch = viewport === 'mobile' || viewport === 'tablet'
   const src = useMemo(() => {
     if (!proj || !page) return ''
-    return `${proj.liveOrigin}${page.via ?? page.path}`
-  }, [proj, page])
+    const base = page.via ?? page.path
+    return `${proj.liveOrigin}${base}${base.includes('?') ? '&' : '?'}__ef=${touch ? 'touch' : 'mouse'}`
+  }, [proj, page, touch])
   useEffect(() => {
     pendingRef.current = page?.via ? page.path : null
   }, [page, reloadKey])
