@@ -95,9 +95,9 @@ export function isInspectMessage(data: unknown): data is InspectMessage {
   return !!data && typeof data === 'object' && (data as { source?: string }).source === 'ef-inspect'
 }
 
-/** iframe 안의 inspect.js 에 명령을 보낸다 */
-export function sendToFrame(frame: HTMLIFrameElement | null, cmd: InspectCommand) {
-  frame?.contentWindow?.postMessage({ source: 'ef-inspect-cmd', ...cmd }, '*')
+/** iframe 안의 inspect.js 에 명령을 보낸다 — 프레임의 출처를 지정해 다른 곳으로 이동한 프레임엔 닿지 않게 */
+export function sendToFrame(frame: HTMLIFrameElement | null, cmd: InspectCommand, targetOrigin: string) {
+  frame?.contentWindow?.postMessage({ source: 'ef-inspect-cmd', ...cmd }, targetOrigin)
 }
 
 declare global {

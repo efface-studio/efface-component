@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/Button'
 export function LivePage() {
   const { project } = useParams<{ project: string }>()
   const proj = LIVE_PROJECTS.find((p) => p.id === project)
+  const liveOrigin = proj?.liveOrigin ?? ''
   const [group, setGroup] = useState(0)
   const [page, setPage] = useState<LivePageDef | null>(proj?.groups[0]?.pages[0] ?? null)
   const [viewport, setViewport] = useState<ViewportId>('fit')
@@ -68,7 +69,8 @@ export function LivePage() {
   // iframe 에서 오는 메시지
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
-      if (e.source !== frameRef.current?.contentWindow) return
+      // 우리 프레임에서, 그 프로젝트의 프록시 출처에서 온 것만 — 프레임이 외부로 이동했을 때 위조를 막는다
+      if (e.source !== frameRef.current?.contentWindow || e.origin !== liveOrigin) return
       const m = e.data
       if (!isInspectMessage(m)) return
       if (m.type === 'ready') {
@@ -76,14 +78,14 @@ export function LivePage() {
         if (pendingRef.current && m.path.split('?')[0] !== pendingRef.current) {
           const to = pendingRef.current
           pendingRef.current = null
-          window.setTimeout(() => sendToFrame(frameRef.current, { cmd: 'goto', path: to }), 300)
+          window.setTimeout(() => sendToFrame(frameRef.current, { cmd: 'goto', path: to }, liveOrigin), 300)
           return
         }
         pendingRef.current = null
-        if (inspect) sendToFrame(frameRef.current, { cmd: 'enable' })
-        if (grid) sendToFrame(frameRef.current, { cmd: 'grid', value: true })
+        if (inspect) sendToFrame(frameRef.current, { cmd: 'enable' }, liveOrigin)
+        if (grid) sendToFrame(frameRef.current, { cmd: 'grid', value: true }, liveOrigin)
         // 패널이 나중에 붙어도 놓친 요청이 없게 — 프레임이 들고 있는 버퍼를 받아온다
-        sendToFrame(frameRef.current, { cmd: 'net:replay' })
+        sendToFrame(frameRef.current, { cmd: 'net:replay' }, liveOrigin)
       } else if (m.type === 'net') {
         const entry = m.entry
         setNet((list) => {
@@ -110,7 +112,7 @@ export function LivePage() {
     }
     window.addEventListener('message', onMsg)
     return () => window.removeEventListener('message', onMsg)
-  }, [inspect, grid])
+  }, [inspect, grid, liveOrigin])
 
   const frameHost = useMemo(() => {
     try {
@@ -135,7 +137,7 @@ export function LivePage() {
   const toggleInspect = useCallback(() => {
     const next = !inspect
     setInspect(next)
-    sendToFrame(frameRef.current, { cmd: next ? 'enable' : 'disable' })
+    sendToFrame(frameRef.current, { cmd: next ? 'enable' : 'disable' }, liveOrigin)
     if (next) setPanel(true)
     else {
       setSelected(null)
@@ -145,8 +147,8 @@ export function LivePage() {
   const toggleGrid = useCallback(() => {
     const next = !grid
     setGrid(next)
-    sendToFrame(frameRef.current, { cmd: 'grid', value: next })
-  }, [grid])
+    sendToFrame(frameRef.current, { cmd: 'grid', value: next }, liveOrigin)
+  }, [grid, liveOrigin])
   const toggleFullscreen = useCallback(() => {
     if (document.fullscreenElement) void document.exitFullscreen()
     else void wrapRef.current?.requestFullscreen?.()
@@ -290,7 +292,7 @@ export function LivePage() {
           frameHost={frameHost}
           onClear={() => {
             setNet([])
-            sendToFrame(frameRef.current, { cmd: 'net:clear' })
+            sendToFrame(frameRef.current, { cmd: 'net:clear' }, liveOrigin)
           }}
         />
       ) : !inspect ? (

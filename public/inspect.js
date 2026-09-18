@@ -7,6 +7,9 @@
 ;(() => {
   if (window.__efInspect) return
   const IN_FRAME = window.parent && window.parent !== window
+  /* 우리를 임베드할 수 있는 문서 호스트 — worker/index.ts 의 DOCS_ORIGINS 와 같아야 한다.
+     메시지는 이 출처의 부모 창에서 온 것만 듣고, 이 출처로만 보낸다(그 밖은 브라우저가 조용히 버린다). */
+  const PARENT_ORIGINS = ['https://component.efface.dev', 'http://localhost:5190', 'http://127.0.0.1:5190']
 
   /* ── 터치 기기 에뮬레이션 ──────────────────────────────────────
      앱들이 폭이 아니라 입력 장치(hover/pointer)로 모바일 셸을 고르는 경우가 있다(HiNest 등).
@@ -329,7 +332,7 @@
   /* ── 메시지 ─────────────────────────────────────────────── */
   function emit(type, detail) {
     const msg = { source: 'ef-inspect', type, ...detail }
-    if (IN_FRAME) window.parent.postMessage(msg, '*')
+    if (IN_FRAME) for (const o of PARENT_ORIGINS) window.parent.postMessage(msg, o)
     window.dispatchEvent(new CustomEvent('ef-inspect', { detail: msg }))
   }
 
@@ -414,17 +417,20 @@
     emit('net', { entry })
   }
   const absUrl = (u) => { try { return new URL(String(u), location.href).toString() } catch { return String(u) } }
+  /* 미리보기에서 가릴 키 — 토큰·비밀번호·세션류는 패널에 보일 이유가 없다 */
+  const SENSITIVE = /(authorization|cookie|token|secret|password|passwd|session|api[-_]?key|otp|card|ssn|주민)/i
+  const redact = (v) => Array.isArray(v) ? v.map(redact) : (v && typeof v === 'object') ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, SENSITIVE.test(k) ? '[redacted]' : redact(x)])) : v
   const previewOf = (text, type) => {
     if (typeof text !== 'string') return null
     const t = text.length > PREVIEW_MAX ? text.slice(0, PREVIEW_MAX) + '\n…' : text
-    if (/json/i.test(type || '')) { try { return JSON.stringify(JSON.parse(text), null, 2).slice(0, PREVIEW_MAX) } catch {} }
+    if (/json/i.test(type || '')) { try { return JSON.stringify(redact(JSON.parse(text)), null, 2).slice(0, PREVIEW_MAX) } catch {} }
     return t
   }
   const bodyPreview = (body) => {
     if (body == null) return null
-    if (typeof body === 'string') return body.slice(0, PREVIEW_MAX)
-    if (body instanceof URLSearchParams) return body.toString().slice(0, PREVIEW_MAX)
-    if (body instanceof FormData) { const o = {}; body.forEach((v, k) => { o[k] = typeof v === 'string' ? v : `[file ${v.name || ''}]` }); return JSON.stringify(o, null, 2).slice(0, PREVIEW_MAX) }
+    if (typeof body === 'string') { try { return JSON.stringify(redact(JSON.parse(body)), null, 2).slice(0, PREVIEW_MAX) } catch { return body.slice(0, PREVIEW_MAX) } }
+    if (body instanceof URLSearchParams) { const o = {}; body.forEach((v, k) => { o[k] = v }); return JSON.stringify(redact(o), null, 2).slice(0, PREVIEW_MAX) }
+    if (body instanceof FormData) { const o = {}; body.forEach((v, k) => { o[k] = typeof v === 'string' ? v : `[file ${v.name || ''}]` }); return JSON.stringify(redact(o), null, 2).slice(0, PREVIEW_MAX) }
     if (body instanceof Blob) return `[blob ${body.size}B ${body.type}]`
     if (body instanceof ArrayBuffer) return `[buffer ${body.byteLength}B]`
     return null
@@ -526,14 +532,26 @@
       case 'disable': setOn(false); break
       case 'toggle': setOn(!state.on); break
       case 'grid': setGrid(!!msg.value); break
-      case 'goto': if (typeof msg.path === 'string') location.assign(msg.path); break
+      case 'goto': {
+        // 같은 출처의 경로만 — javascript:/data:/절대 URL 은 세션 쿠키가 있는 이 출처에서 코드 실행으로 이어진다
+        if (typeof msg.path !== 'string' || msg.path[0] !== '/' || msg.path[1] === '/' || msg.path[1] === '\\') break
+        let u
+        try { u = new URL(msg.path, location.origin) } catch { break }
+        if (u.origin !== location.origin) break
+        location.assign(u.pathname + u.search + u.hash)
+        break
+      }
       case 'clear': state.pinned = null; draw(); emit('select', { info: null }); break
       case 'ping': emit('ready', { path: location.pathname + location.search, title: document.title, inspect: state.on }); break
       case 'net:replay': emit('net:batch', { entries: net.buf.slice() }); break
       case 'net:clear': net.buf.length = 0; break
     }
   }
-  window.addEventListener('message', (e) => command(e.data))
+  // 프레임 안에서, 부모 창에서, 허용된 출처에서 온 것만. 같은 창(문서 페이지)은 __efInspect.command 를 직접 쓴다.
+  if (IN_FRAME) window.addEventListener('message', (e) => {
+    if (e.source !== window.parent || !PARENT_ORIGINS.includes(e.origin)) return
+    command(e.data)
+  })
 
   window.__efInspect = {
     enable: () => setOn(true), disable: () => setOn(false), toggle: () => setOn(!state.on),
