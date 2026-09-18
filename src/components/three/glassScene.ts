@@ -17,6 +17,10 @@ export interface GlassSceneOptions {
   centered?: boolean;
   /** 마크의 가로 위치 — 캔버스 폭의 비율(0 왼쪽 … 1 오른쪽). 비율이 달라져도 화면상 같은 자리에 온다. */
   anchor?: number;
+  /** 포인터를 따라 마크가 입체적으로 기운다 (캔버스 위에서). */
+  follow?: boolean;
+  /** 마크 크기 배율. 기본 0.8 — 좁은 패널에서는 0.6 정도. */
+  scale?: number;
 }
 
 /** three's WebGLRenderer gained this knob late; treat it as optional. */
@@ -50,6 +54,10 @@ export function createGlassScene(
   const still = !!options?.still;
   const transparent = !!options?.transparent;
   const anchor = options?.centered ? 0.5 : (options?.anchor ?? HERO_ANCHOR);
+  const markScale = options?.scale ?? 0.8;
+  const follow = !!options?.follow;
+  // 포인터 추종 — 목표(-1..1)와 현재값을 따로 두고 프레임마다 보간한다
+  const tilt = { tx: 0, ty: 0, x: 0, y: 0 };
 
   const renderer: TransmissionAwareRenderer = new THREE.WebGLRenderer({
     canvas,
@@ -194,10 +202,17 @@ export function createGlassScene(
       mesh.rotation.set(cd.rx, cd.ry, cd.rz);
     }
     const pop = bell(0.123, 0.018, p); // impact accent when cards lock
-    pivot.scale.setScalar(0.8);
+    pivot.scale.setScalar(markScale);
     pivot.position.y = -0.05 + 0.05 * Math.sin(TAU * p); // gentle float (nudged down)
     pivot.rotation.z = 0.12 + 0.018 * Math.sin(TAU * 2 * p + 1.2); // gentle rock
     pivot.rotation.x = 0.05 * L.w * Math.sin(L.psi); // weave sway
+    if (follow) {
+      tilt.x += (tilt.tx - tilt.x) * 0.08;
+      tilt.y += (tilt.ty - tilt.y) * 0.08;
+      pivot.rotation.y = tilt.x * 0.45; // 좌우로 고개를 돌리듯
+      pivot.rotation.x += -tilt.y * 0.3; // 위아래로 끄덕이듯
+      pivot.position.z = Math.abs(tilt.x) * 0.6; // 돌아보는 쪽으로 살짝 다가온다
+    }
     renderer.toneMappingExposure = 1.05 + 0.1 * pop;
     camera.position.set(0, 0.6 + 0.15 * L.w, CAMERA_Z - 1.15 * L.w); // push in during the transform
     camera.lookAt(LOOK_X, -0.15, 0);
@@ -248,6 +263,21 @@ export function createGlassScene(
     if (!disposed) paused = document.hidden;
   };
   document.addEventListener("visibilitychange", onVis);
+  const onPointer = (e: PointerEvent) => {
+    const r = canvas.getBoundingClientRect();
+    tilt.tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+    tilt.ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+  };
+  const onLeave = () => {
+    tilt.tx = 0;
+    tilt.ty = 0;
+  };
+  // 캔버스 위에 다른 요소가 겹쳐 있어도 되게 부모에서 듣는다
+  const host = canvas.parentElement ?? canvas;
+  if (follow) {
+    host.addEventListener("pointermove", onPointer);
+    host.addEventListener("pointerleave", onLeave);
+  }
   // Stop rendering while the hero is scrolled out of view.
   const io = new IntersectionObserver(
     (entries) => {
@@ -266,6 +296,10 @@ export function createGlassScene(
     ro.disconnect();
     io.disconnect();
     document.removeEventListener("visibilitychange", onVis);
+    if (follow) {
+      host.removeEventListener("pointermove", onPointer);
+      host.removeEventListener("pointerleave", onLeave);
+    }
     scene.traverse((obj) => {
       if (!(obj instanceof THREE.Mesh)) return;
       obj.geometry?.dispose();
