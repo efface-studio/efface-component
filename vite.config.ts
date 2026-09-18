@@ -39,6 +39,9 @@ export default defineConfig({
             { name: 'motion-vendor', test: /node_modules[\\/](motion|motion-dom|motion-utils|framer-motion)[\\/]/, priority: 20 },
             // 아이콘이 100~200B 청크 수십 개로 쪼개져 요청만 늘어난다 — 한 파일로
             { name: 'icons', test: /node_modules[\\/]lucide-react[\\/]/, priority: 25 },
+            // 여러 라우트가 같이 쓰는 앱 모듈(UI·문서 조각·lib·hooks)이 수십 개의 1~3KB 청크로 흩어져 요청 폭포가 생긴다 — 한 파일로.
+            // fx 데모는 카드마다 따로 lazy 로 받으므로 제외
+            { name: 'app', test: /[\\/]src[\\/](?:components[\\/](?!fx[\\/])|docs[\\/]components[\\/]|lib[\\/]|hooks[\\/])/, minShareCount: 2, priority: 10 },
           ],
         },
       },
