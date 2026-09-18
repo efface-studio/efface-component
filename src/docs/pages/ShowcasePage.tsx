@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, Bell, Camera, Heart, MessageCircle, Pause, Play, Search, Settings, User } from 'lucide-react'
 import { DocPage, Note } from '@/docs/components/Doc'
@@ -7,8 +7,8 @@ import { GhostPointer } from '@/docs/components/GhostPointer'
 import { LogoParticleHero } from '@/docs/components/LogoParticleHero'
 import { cn } from '@/lib/cn'
 import {
-  Aurora, BorderBeam, CardDeck, Clock, CometTrail, ConfettiButton, Constellation, DepthScene, Dock, DotWave, ElasticTabs, Equalizer, Fireflies, FlipCard, FluidInk, Glitch, GooeyMenu, Halftone, HexPulse, JellyCard, JellyText, KineticText, Lava, Lens, LiquidButton, LiquidGauge, LiveCode, LogoTilt3D, MatrixRain, Meteors, MorphCursor, MorphText, Neon, NotificationStack, Odometer, Orbit, ParticleMorph3D, ParticleText, PhysicsBalls, PressureText, Metaballs, PrismCard, RippleImage, Silk, RubberBand, Sand, ScrambleText, Shatter, ShimmerText, SplitFlap, SpotCard, SpotlightGrid, Swarm, Tentacle, Terrain, ThemeReveal, TileFlip, Warp, WaveText, WipeText,
-} from '@/components/fx'
+  Aurora, BorderBeam, CardDeck, CirclePacking, Clock, CometTrail, ConfettiButton, Constellation, DepthScene, Dock, DotWave, ElasticTabs, Equalizer, Fireflies, FlipCard, FlowField, FluidInk, FractalTree, Glitch, GooeyMenu, Halftone, Harmonograph, HexPulse, Interference, JellyCard, JellyText, Kaleidoscope, KineticText, Lava, Lens, Life, Lightning, LiquidButton, LiquidGauge, LiveCode, LogoTilt3D, MagneticField, Mandelbrot, MatrixRain, Metaballs, Meteors, MorphCursor, MorphText, Neon, NotificationStack, Odometer, Orbit, ParticleMorph3D, ParticleText, Pendulum, Physarum, PhysicsBalls, Plasma, PressureText, PrismCard, ReactionDiffusion, RippleImage, Rope, RubberBand, SDFScene, Sand, ScrambleText, Shatter, ShimmerText, Silk, SplitFlap, SpotCard, SpotlightGrid, Swarm, Tentacle, Terrain, ThemeReveal, TileFlip, Topography, Tunnel, Voronoi, Warp, WaterRipple, WaveText, WipeText,
+} from './showcase.lazy'
 import { Checkbox, EmailField, OTPInput, PasswordField, SentMail, SubmitButton, TextField, type OTPStatus, type SubmitStatus } from '@/components/form'
 import { LogoScene3D } from '@/components/brand/LogoScene3D'
 import { LogoMark } from '@/components/brand/LogoMark'
@@ -103,7 +103,11 @@ function Card({
   return (
     <div ref={wrap} className={cn('flex flex-col overflow-hidden rounded-xl border border-line bg-surface', className)}>
       <div ref={body} className={cn('relative flex min-h-[240px] flex-1 items-center justify-center overflow-hidden bg-bg', playing && ghost && 'is-ghost', bodyClassName)} style={keepH ? { minHeight: keepH } : undefined}>
-        {near && <AutoplayContext.Provider value={playing}>{children}</AutoplayContext.Provider>}
+        {near && (
+          <AutoplayContext.Provider value={playing}>
+            <Suspense fallback={null}>{children}</Suspense>
+          </AutoplayContext.Provider>
+        )}
         {ghost && near && <GhostPointer active={playing} click={click} />}
       </div>
       <div className="flex items-start gap-3 border-t border-line px-4 py-3.5">
@@ -531,6 +535,106 @@ export function ShowcasePage() {
           <Card title="FluidInk" desc="GPU 유체 시뮬레이션. 끌면 잉크가 소용돌이치며 번지고, 누르면 사방으로 터져요." tag="new" ghost click className="md:col-span-2">
             <div className="h-[380px] w-full">
               <FluidInk />
+            </div>
+          </Card>
+          <Card title="ReactionDiffusion" desc="반응·확산(그레이-스콧). 두 화학물질이 퍼지고 반응하며 산호·지문 같은 튜링 무늬가 스스로 자라나요. 포인터가 지나간 자리에서 시작되고, 누르면 무늬 종류가 바뀌어요." tag="new" ghost click>
+            <div className="h-[320px] w-full">
+              <ReactionDiffusion />
+            </div>
+          </Card>
+          <Card title="Physarum" desc="점균. 수천 마리가 페로몬 자국을 따라 돌기만 해도 혈관 같은 그물이 스스로 짜여요. 포인터는 먹이, 누르면 흩어져요." tag="new" ghost click>
+            <div className="h-[320px] w-full">
+              <Physarum />
+            </div>
+          </Card>
+          <Card title="SDFScene" desc="레이마칭. 삼각형 하나 없이 거리 함수로 3D 를 그려요 — efface 마크 판 두 장과 구들이 액체처럼 녹아 붙고, 정반사·프레넬·안개. 포인터가 카메라를 돌려요." tag="new" ghost>
+            <div className="h-[320px] w-full">
+              <SDFScene />
+            </div>
+          </Card>
+          <Card title="Mandelbrot" desc="만델브로트 집합. 포인터가 가리키는 자리로 끝없이 확대해 들어가요 — 경계가 계속 새 모양을 드러내요. 누르면 빨리, 나가면 다시 멀어져요." tag="new" ghost click>
+            <div className="h-[320px] w-full">
+              <Mandelbrot />
+            </div>
+          </Card>
+          <Card title="WaterRipple" desc="물결. 파동 방정식을 풀어 아래 로고를 굴절시켜요. 스치면 물방울, 누르면 큰 파문, 가만히 두면 빗방울." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <WaterRipple src="/logos/efface.svg" />
+            </div>
+          </Card>
+          <Card title="Lightning" desc="번개. 가지를 치며 포인터 자리로 내려꽂히고 섬광이 화면을 밝힌 뒤 잔광이 남아요. 누르면 바로 떨어져요." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Lightning />
+            </div>
+          </Card>
+          <Card title="FlowField" desc="흐름장. 수천 개 입자가 노이즈 벡터장을 따라 흐르며 실 궤적을 남겨요. 포인터는 소용돌이." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <FlowField />
+            </div>
+          </Card>
+          <Card title="Pendulum" desc="이중 진자. 카오스로 흔들리며 끝점이 색 궤적을 남겨요 — 매번 달라요. 첫 마디를 잡아 들었다 놓아 보세요." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[320px] w-full">
+              <Pendulum />
+            </div>
+          </Card>
+          <Card title="Tunnel" desc="극좌표로 접은 격자가 끝없이 안으로 빨려 들어가요. 포인터가 소실점을, 누르면 가속." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Tunnel />
+            </div>
+          </Card>
+          <Card title="Interference" desc="두 파원의 동심원이 겹쳐 보강·상쇄 무늬를 만들어요. 한 파원은 포인터, 누르면 파원 추가." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Interference />
+            </div>
+          </Card>
+          <Card title="Voronoi" desc="보로노이 세포. 씨앗들이 떠다니며 가장 가까운 씨앗의 영역으로 화면이 갈라져요. 포인터도 씨앗." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Voronoi />
+            </div>
+          </Card>
+          <Card title="Life" desc="생명 게임(콘웨이). 규칙 넷으로 태어나고 죽어요. 포인터로 셀을 그리고, 누르면 글라이더 총." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Life />
+            </div>
+          </Card>
+          <Card title="Topography" desc="등고선. 노이즈 지형을 마칭 스퀘어로 잘라 선을 긋고, 땅이 융기·침강하며 선이 흘러요. 포인터 자리가 봉우리." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Topography />
+            </div>
+          </Card>
+          <Card title="MagneticField" desc="쇠가루가 자석 방향으로 돌아서요. 자석 둘이 떠다니고 포인터가 셋째, 누르면 극이 뒤집혀요." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <MagneticField />
+            </div>
+          </Card>
+          <Card title="Kaleidoscope" desc="만화경. 포인터 획이 열 개의 거울에 비쳐 대칭 문양이 돼요. 가만히 두면 스스로 그려요." tag="new" ghost>
+            <div className="h-[300px] w-full">
+              <Kaleidoscope />
+            </div>
+          </Card>
+          <Card title="Harmonograph" desc="감쇠 진자 넷의 합이 펜을 끌고 한 획으로 문양을 그려요. 포인터가 진동수를, 누르면 새로." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <Harmonograph />
+            </div>
+          </Card>
+          <Card title="FractalTree" desc="가지가 재귀로 자라고 바람(포인터)에 끝가지일수록 크게 휘어요. 누르면 새 나무." tag="new" ghost click bodyClassName="text-fg">
+            <div className="h-[320px] w-full">
+              <FractalTree />
+            </div>
+          </Card>
+          <Card title="Plasma" desc="데모신 플라스마. 사인파 여러 겹이 색을 흘려보내요. 포인터가 중심을, 누르면 팔레트." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <Plasma />
+            </div>
+          </Card>
+          <Card title="CirclePacking" desc="빈 자리에 원이 태어나 이웃에 닿을 때까지 자라요. 포인터가 지나가면 길이 트여요." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[300px] w-full">
+              <CirclePacking />
+            </div>
+          </Card>
+          <Card title="Rope" desc="양 끝이 고정된 밧줄. 잡아 끌면 무겁게 따라오다 놓으면 출렁이며 가라앉아요." tag="new" ghost bodyClassName="text-fg">
+            <div className="h-[280px] w-full">
+              <Rope />
             </div>
           </Card>
           <Card title="Swarm" desc="새떼(보이드). 정렬·결집·분리 세 규칙으로 떼가 살아 움직여요. 포인터는 포식자, 누르면 몰려들어요." tag="new" ghost click bodyClassName="text-fg">

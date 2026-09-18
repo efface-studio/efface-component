@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/cn'
-import { Aurora, ParticleText } from '@/components/fx'
+import { Aurora } from '@/components/fx/Aurora'
+import { ParticleText } from '@/components/fx/ParticleText'
 import { GhostPointer } from '@/docs/components/GhostPointer'
 
 /**
