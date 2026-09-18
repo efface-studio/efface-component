@@ -533,9 +533,6 @@ export function ShowcasePage() {
               <Swarm />
             </div>
           </Card>
-          <Card title="Shatter" desc="로고가 누른 자리에서 유리처럼 산산조각 났다가 조각들이 되돌아와 다시 붙어요." tag="new">
-            <ShatterDemo />
-          </Card>
           <Card title="Tentacle" desc="촉수. 마디들이 사슬처럼 이어져 머리가 포인터를 쫓고 몸통이 뒤따라요(역기구학)." tag="new" ghost bodyClassName="text-fg">
             <div className="h-[300px] w-full">
               <Tentacle />
@@ -706,6 +703,9 @@ export function Login() {
           </Card>
           <Card title="Clock" desc="초침이 미끄러지듯 흐르고, 바늘 그림자가 빛(포인터) 방향에 따라 떨어져요." tag="new" ghost bodyClassName="text-fg">
             <Clock />
+          </Card>
+          <Card title="Shatter" desc="로고가 누른 자리에서 유리처럼 산산조각 났다가 조각들이 되돌아와 다시 붙어요." tag="new">
+            <ShatterDemo />
           </Card>
           <Card title="FluidInk" desc="GPU 유체 시뮬레이션. 끌면 잉크가 소용돌이치며 번지고, 누르면 사방으로 터져요." tag="new" ghost click className="md:col-span-2">
             <div className="h-[380px] w-full">
