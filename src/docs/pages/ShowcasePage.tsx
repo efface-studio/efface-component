@@ -528,6 +528,11 @@ export function ShowcasePage() {
 
       <div className="grid gap-5 md:grid-cols-2">
           {/* ── 소름 ── */}
+          <Card title="FluidInk" desc="GPU 유체 시뮬레이션. 끌면 잉크가 소용돌이치며 번지고, 누르면 사방으로 터져요." tag="new" ghost click className="md:col-span-2">
+            <div className="h-[380px] w-full">
+              <FluidInk />
+            </div>
+          </Card>
           <Card title="Swarm" desc="새떼(보이드). 정렬·결집·분리 세 규칙으로 떼가 살아 움직여요. 포인터는 포식자, 누르면 몰려들어요." tag="new" ghost click bodyClassName="text-fg">
             <div className="h-[300px] w-full">
               <Swarm />
@@ -706,11 +711,6 @@ export function Login() {
           </Card>
           <Card title="Shatter" desc="로고가 누른 자리에서 유리처럼 산산조각 났다가 조각들이 되돌아와 다시 붙어요." tag="new">
             <ShatterDemo />
-          </Card>
-          <Card title="FluidInk" desc="GPU 유체 시뮬레이션. 끌면 잉크가 소용돌이치며 번지고, 누르면 사방으로 터져요." tag="new" ghost click className="md:col-span-2">
-            <div className="h-[380px] w-full">
-              <FluidInk />
-            </div>
           </Card>
           <Card title="ParticleMorph3D" desc="6,000개의 점이 구 → efface 마크 → 토러스 → 은하로 형태를 바꿔요. 포인터를 따라 돌고, 누르면 다음 모양." tag="new" ghost click bodyClassName="text-fg">
             <div className="h-[320px] w-full">
