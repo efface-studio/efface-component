@@ -621,7 +621,7 @@ export function ShowcasePage() {
       <LogoParticleHero className="mb-16" />
 
       <Section title="Video">
-        <Card title="Sign-up 시연" desc="macOS 26 데스크톱에서 독의 앱 → efface 를 열고, 커서가 사람처럼 회원가입 → 인증코드 → 로그인을 해내요. Recipes › Auth 의 실제 화면과 폼 컴포넌트가 그대로 움직여요(값만 스크립트가 넣고, 사용자 포커스는 안 뺏어요). 오른쪽 위 버튼으로 크게 볼 수 있어요." tag="new" className="mb-16">
+        <Card title="Sign-up 시연" desc="macOS 26 데스크톱에서 독의 앱 → efface 를 열고, 커서가 사람처럼 회원가입 → 인증코드 → 로그인을 해내요. Recipes › Auth 의 실제 화면과 폼 컴포넌트가 그대로 움직여요(값만 스크립트가 넣고, 사용자 포커스는 안 뺏어요). 메뉴 막대·상태 아이콘·독·앱 창은 직접 눌러 볼 수 있어요(마우스를 올리면 자동 시연이 멈춰요). 오른쪽 위 버튼으로 크게 볼 수 있어요." tag="new" className="mb-16">
           <div className="h-[460px] w-full md:h-[860px]">
             <AuthMovie />
           </div>
