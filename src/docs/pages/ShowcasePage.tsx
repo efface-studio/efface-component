@@ -675,7 +675,7 @@ export function ShowcasePage() {
               <WaterRipple src="/logos/efface.svg" />
             </div>
           </Card>
-          <Card title="태양계" desc="진짜 우주 — 태양과 여덟 행성, 달, 토성 고리가 실제 자전축·자전 방향·공전 순서로 돌아요. 지구는 낮 지도 위에 밤의 도시 불빛, 흘러가는 구름, 바다 반사, 대기 산란까지. 끌어서 돌리고, 휠·핀치로 다가가고, 행성을 더블클릭하거나 위 칩으로 날아가요. 가만히 두면 행성들을 차례로 찾아가요. 텍스처: NASA · Solar System Scope(CC BY 4.0)." tag="new" dark className="md:col-span-2">
+          <Card title="태양계" desc="진짜 우주 — 태양은 대류 세포와 흑점이 흐르는 절차적 표면이라 아무리 확대해도 뭉개지지 않고, 여덟 행성·달·위성들이 실제 자전축·자전 방향·공전 순서로 돌아요. 지구는 낮 지도 위에 국경과 나라 이름, 밤의 도시 불빛, 흘러가는 구름, 바다 반사, 대기 산란. 토성은 고리 그림자가 행성에, 행성 그림자가 고리에 져요. 끌어서 돌리고, 휠·핀치로 다가가고, 행성을 누르거나 위 칩으로 날아가요. 텍스처: NASA · Solar System Scope(CC BY 4.0) · Natural Earth." tag="new" dark className="md:col-span-2">
             <SolarSystemDemo />
           </Card>
           <Card title="Mandelbrot 우주" desc="어디든 갈 수 있어요 — 끌어서 이동, 휠·핀치·더블클릭으로 확대, 화살표·+/- 키. 위 칩의 행성(해마 골짜기 · 코끼리 골짜기 · 미니 만델브로트 …)으로 비행하고, 섭동 렌더링이라 float 한계를 넘어 10¹³× 까지 들어가요. 가만히 두면 행성들을 차례로 돌아요." tag="new" className="md:col-span-2">
