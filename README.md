@@ -99,3 +99,8 @@ npm run deploy         # build + wrangler deploy → https://component.efface.de
 
 - 커스텀 도메인(component · live-efface · live-v2 · live-hinest)은 `wrangler.jsonc` 의 `routes` 로 배포 시 DNS 까지 연결된다 (efface.dev 존과 같은 계정)
 - 자동 배포: 리포지토리 변수 `CF_DEPLOY=true`, 시크릿 `CLOUDFLARE_API_TOKEN` · `CLOUDFLARE_ACCOUNT_ID` 설정 시 `main` push 마다 `.github/workflows/deploy.yml` 실행
+
+## 자료 출처
+
+- `public/space/*` 행성 텍스처 — NASA(Blue Marble · Black Marble, three.js 예제의 지구 법선·반사 맵) 및 [Solar System Scope](https://www.solarsystemscope.com/textures/) (CC BY 4.0). 화면용으로 1k–2k 로 줄여 담았다.
+- `public/macos/*` 앱 아이콘 — 시연 영상 전용. 각 앱 소유자의 상표.

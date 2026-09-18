@@ -758,7 +758,6 @@
 .mac-mono { font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace; font-feature-settings: normal; }
 /* Tahoe 다크 리퀴드 글래스 — 메뉴·팝오버·알림. 어두운 유리 + 위쪽 하이라이트 + 가장자리 굴절 */
 .liquid-glass-dark {
-  position: relative;
   background: linear-gradient(180deg, rgba(66, 66, 72, 0.74), rgba(40, 40, 46, 0.8));
   -webkit-backdrop-filter: blur(30px) saturate(170%);
   backdrop-filter: blur(30px) saturate(170%);

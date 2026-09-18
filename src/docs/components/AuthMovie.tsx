@@ -125,7 +125,7 @@ const TOUR_TARGET: Record<string, string> = {
 const DOCK_MIN = 32
 const DOCK_MAX = 80
 /* 상태 팝오버 — Tahoe 다크 패널 조각들 */
-const POP = 'liquid-glass-dark w-[300px] rounded-[14px] p-[8px] text-[13px] text-white'
+const POP = 'liquid-glass-dark relative w-[300px] rounded-[14px] p-[8px] text-[13px] text-white'
 const PopSep = () => <div className="mx-2 my-[6px] h-px bg-white/[0.12]" />
 const PopHead = ({ children }: { children: ReactNode }) => <div className="px-2 pt-[2px] pb-[3px] text-[11.5px] font-medium text-white/50">{children}</div>
 const PopRow = ({ icon, on, label, right }: { icon?: ReactNode; on?: boolean; label: string; right?: ReactNode }) => (
@@ -416,7 +416,7 @@ export function AuthMovie({ className }: { className?: string }) {
       {menu === id && (
         <motion.div key={id} className={cn('absolute top-full z-[25] mt-[3px] [text-shadow:none]', side === 'right' ? 'right-0' : 'left-0')} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.08 } }} transition={{ duration: 0.06 }}>
           {id in MENUS ? (
-                <ul className="liquid-glass-dark min-w-[246px] rounded-[11px] p-[5px] text-[13px] font-normal text-white">
+                <ul className="liquid-glass-dark relative min-w-[246px] rounded-[11px] p-[5px] text-[13px] font-normal text-white">
                   {MENUS[id]!.map((item, i) => {
                     if (item === '-') return <li key={i} className="mx-[10px] my-[5px] h-px bg-white/[0.14]" />
                     const [label, key] = item.replace('{app}', appName).split('   ')

@@ -11,7 +11,7 @@ import { LogoParticleHero } from '@/docs/components/LogoParticleHero'
 import { cn } from '@/lib/cn'
 import {
   Aurora, BorderBeam, CardDeck, CirclePacking, Clock, CometTrail, ConfettiButton, Constellation, DepthScene, Dock, DotWave, ElasticTabs, Equalizer, Fireflies, FlipCard, FlowField, FluidInk, FractalTree, Glitch, GooeyMenu, Halftone, Harmonograph, HexPulse, Interference, JellyCard, JellyText, Kaleidoscope, KineticText, Lava, Lens, Life, Lightning, LiquidButton, LiquidGauge, LiveCode, LogoTilt3D, MagneticField, Mandelbrot, MatrixRain, Metaballs, Meteors, MorphCursor, MorphText, Neon, NotificationStack, Odometer, Orbit, ParticleMorph3D, ParticleText, Pendulum, Physarum, PhysicsBalls, Plasma, PressureText, PrismCard, ReactionDiffusion, RippleImage, Rope, RubberBand, SDFScene, Sand, ScrambleText, Shatter, ShimmerText, Silk, SplitFlap, SpotCard, SpotlightGrid, Swarm, Tentacle, Terrain, ThemeReveal, TileFlip, Topography, Tunnel, Voronoi, Warp, WaterRipple, WaveText, WipeText,
-  AuthMovie,
+  AuthMovie, SolarSystem,
 } from './showcase.lazy'
 import { Checkbox, EmailField, OTPInput, PasswordField, SentMail, SubmitButton, TextField, type OTPStatus, type SubmitStatus } from '@/components/form'
 import { LogoScene3D } from '@/components/brand/LogoScene3D'
@@ -32,6 +32,7 @@ function Card({
   ghost,
   click,
   dark,
+  pauseOn = 'hover',
   children,
   className,
   bodyClassName,
@@ -46,6 +47,8 @@ function Card({
   click?: boolean
   /** 항상 다크로 — 검은 바탕이 필요한 데모. 글자 토큰도 같이 뒤집혀 라이트 테마에서 사라지지 않는다 */
   dark?: boolean
+  /** 자동 재생을 멈추는 조건 — hover: 포인터가 들어오면 · interact: 누르거나 휠·키를 써야(마우스만 올려선 계속 돈다) */
+  pauseOn?: 'hover' | 'interact'
   children: ReactNode
   className?: string
   bodyClassName?: string
@@ -96,18 +99,26 @@ function Card({
     const fout = (e: FocusEvent) => {
       if (!el.contains(e.relatedTarget as Node | null)) setFocus(false)
     }
-    el.addEventListener('pointerenter', enter)
+    const interact = pauseOn === 'interact'
+    if (interact) {
+      el.addEventListener('pointerdown', enter)
+      el.addEventListener('wheel', enter, { passive: true })
+      el.addEventListener('keydown', enter)
+    } else el.addEventListener('pointerenter', enter)
     el.addEventListener('pointerleave', leave)
     el.addEventListener('focusin', fin)
     el.addEventListener('focusout', fout)
     return () => {
       window.clearTimeout(t)
+      el.removeEventListener('pointerdown', enter)
+      el.removeEventListener('wheel', enter)
+      el.removeEventListener('keydown', enter)
       el.removeEventListener('pointerenter', enter)
       el.removeEventListener('pointerleave', leave)
       el.removeEventListener('focusin', fin)
       el.removeEventListener('focusout', fout)
     }
-  }, [])
+  }, [pauseOn])
 
   return (
     <div ref={wrap} className={cn('flex flex-col overflow-hidden rounded-xl border border-line bg-surface', className)}>
@@ -604,6 +615,15 @@ function NotifDemo() {
   )
 }
 
+function SolarSystemDemo() {
+  const playing = useContext(AutoplayContext)
+  return (
+    <div className="h-[420px] w-full md:h-[520px]">
+      <SolarSystem auto={playing} />
+    </div>
+  )
+}
+
 function MandelbrotDemo() {
   const playing = useContext(AutoplayContext)
   return (
@@ -621,7 +641,7 @@ export function ShowcasePage() {
       <LogoParticleHero className="mb-16" />
 
       <Section title="Video">
-        <Card title="Sign-up 시연" desc="macOS 26 데스크톱에서 독의 앱 → efface 를 열고, 커서가 사람처럼 회원가입 → 인증코드 → 로그인을 해내요. Recipes › Auth 의 실제 화면과 폼 컴포넌트가 그대로 움직여요(값만 스크립트가 넣고, 사용자 포커스는 안 뺏어요). 메뉴 막대·상태 아이콘·독·앱 창은 직접 눌러 볼 수 있어요(마우스를 올리면 자동 시연이 멈춰요). 오른쪽 위 버튼으로 크게 볼 수 있어요." tag="new" className="mb-16">
+        <Card title="Sign-up 시연" desc="macOS 26 데스크톱에서 독의 앱 → efface 를 열고, 커서가 사람처럼 회원가입 → 인증코드 → 로그인을 해내요. Recipes › Auth 의 실제 화면과 폼 컴포넌트가 그대로 움직여요(값만 스크립트가 넣고, 사용자 포커스는 안 뺏어요). 메뉴 막대·상태 아이콘·독·앱 창은 직접 눌러 볼 수 있어요 — 마우스만 올려선 시연이 계속 돌고, 누르거나 휠·키를 쓰면 멈췄다가 나가면 다시 돌아요. 오른쪽 위 버튼으로 크게 볼 수 있어요." pauseOn="interact" tag="new" className="mb-16">
           <div className="h-[460px] w-full md:h-[860px]">
             <AuthMovie />
           </div>
@@ -650,13 +670,16 @@ export function ShowcasePage() {
               <SDFScene />
             </div>
           </Card>
-          <Card title="Mandelbrot 우주" desc="어디든 갈 수 있어요 — 끌어서 이동, 휠·핀치·더블클릭으로 확대, 화살표·+/- 키. 위 칩의 행성(해마 골짜기 · 코끼리 골짜기 · 미니 만델브로트 …)으로 비행하고, 섭동 렌더링이라 float 한계를 넘어 10¹³× 까지 들어가요. 가만히 두면 행성들을 차례로 돌아요." tag="new" className="md:col-span-2">
-            <MandelbrotDemo />
+          <Card title="태양계" desc="진짜 우주 — 태양과 여덟 행성, 달, 토성 고리가 실제 자전축·자전 방향·공전 순서로 돌아요. 지구는 낮 지도 위에 밤의 도시 불빛, 흘러가는 구름, 바다 반사, 대기 산란까지. 끌어서 돌리고, 휠·핀치로 다가가고, 행성을 더블클릭하거나 위 칩으로 날아가요. 가만히 두면 행성들을 차례로 찾아가요. 텍스처: NASA · Solar System Scope(CC BY 4.0)." tag="new" dark className="md:col-span-2">
+            <SolarSystemDemo />
           </Card>
           <Card title="WaterRipple" desc="물결. 파동 방정식을 풀어 아래 로고를 굴절시켜요. 스치면 물방울, 누르면 큰 파문, 가만히 두면 빗방울." tag="new" ghost click>
             <div className="h-[300px] w-full">
               <WaterRipple src="/logos/efface.svg" />
             </div>
+          </Card>
+          <Card title="Mandelbrot 우주" desc="어디든 갈 수 있어요 — 끌어서 이동, 휠·핀치·더블클릭으로 확대, 화살표·+/- 키. 위 칩의 행성(해마 골짜기 · 코끼리 골짜기 · 미니 만델브로트 …)으로 비행하고, 섭동 렌더링이라 float 한계를 넘어 10¹³× 까지 들어가요. 가만히 두면 행성들을 차례로 돌아요." tag="new" className="md:col-span-2">
+            <MandelbrotDemo />
           </Card>
           <Card title="Lightning" desc="번개. 가지를 치며 포인터 자리로 내려꽂히고 섬광이 화면을 밝힌 뒤 잔광이 남아요. 누르면 바로 떨어져요." tag="new" ghost click>
             <div className="h-[300px] w-full">
