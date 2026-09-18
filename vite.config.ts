@@ -1,13 +1,27 @@
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
+import { DOC_NAV } from './src/docs/nav.ts'
 
 const port = Number(process.env.PORT) || 5190
 
+/** 라우트 목록(src/docs/nav.ts)에서 sitemap.xml 을 만든다. Live 는 서드파티 iframe 이라 noindex — 제외 */
+function sitemap(): Plugin {
+  return {
+    name: 'ef-sitemap',
+    apply: 'build',
+    generateBundle() {
+      const urls = DOC_NAV.filter((g) => g.title !== 'Live').flatMap((g) => g.links.map((l) => l.to))
+      const body = urls.map((u) => `  <url><loc>https://component.efface.dev${u === '/' ? '/' : u}</loc></url>`).join('\n')
+      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n` })
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), sitemap()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

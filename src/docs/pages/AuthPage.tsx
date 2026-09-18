@@ -108,7 +108,7 @@ function LoginScreen() {
     <AuthShell eyebrow="welcome back" headline="복잡함은 지우고, 효과만 남깁니다.">
       <Stagger>
         <Item>
-          <h1 className="text-2xl font-semibold tracking-tight">로그인</h1>
+          <h2 className="text-2xl font-semibold tracking-tight">로그인</h2>
           <p className="mt-1.5 text-[13.5px] text-fg-dim">
             계정이 없다면{' '}
             <LinkUnderline href="#" className="text-fg">
@@ -172,7 +172,7 @@ function SignupScreen() {
     <AuthShell eyebrow="get started" headline="작게 일하고, 깊게 팝니다.">
       <Stagger>
         <Item>
-          <h1 className="text-2xl font-semibold tracking-tight">회원가입</h1>
+          <h2 className="text-2xl font-semibold tracking-tight">회원가입</h2>
           <p className="mt-1.5 text-[13.5px] text-fg-dim">
             이미 계정이 있다면{' '}
             <LinkUnderline href="#" className="text-fg">
@@ -261,7 +261,7 @@ function VerifyScreen() {
           <button type="button" className="mb-6 inline-flex items-center gap-1.5 text-[13px] text-fg-dim hover:text-fg">
             <ArrowLeft size={14} /> 뒤로
           </button>
-          <h1 className="text-2xl font-semibold tracking-tight">인증코드 입력</h1>
+          <h2 className="text-2xl font-semibold tracking-tight">인증코드 입력</h2>
           <p className="mt-1.5 text-[13.5px] leading-relaxed text-fg-dim">
             <span className="font-medium text-fg">you@company.com</span> 으로 보낸 코드를 입력하세요. 데모에서는 <span className="font-mono text-fg">123456</span> 이 정답이에요.
           </p>
@@ -314,7 +314,7 @@ function ForgotScreen() {
             <SentMail />
           </Item>
           <Item className="mt-6 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">메일을 보냈어요</h1>
+            <h2 className="text-2xl font-semibold tracking-tight">메일을 보냈어요</h2>
             <p className="mt-2 text-[13.5px] leading-relaxed text-fg-dim">
               <span className="font-medium text-fg">{email || 'you@company.com'}</span> 으로 재설정 링크를 보냈어요.
               <br />
@@ -344,7 +344,7 @@ function ForgotScreen() {
       ) : (
         <Stagger>
           <Item>
-            <h1 className="text-2xl font-semibold tracking-tight">비밀번호 찾기</h1>
+            <h2 className="text-2xl font-semibold tracking-tight">비밀번호 찾기</h2>
             <p className="mt-1.5 text-[13.5px] leading-relaxed text-fg-dim">가입한 이메일로 재설정 링크를 보내 드려요.</p>
           </Item>
           <form

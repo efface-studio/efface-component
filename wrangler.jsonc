@@ -3,14 +3,16 @@
   "name": "efface-component",
   "main": "worker/index.ts",
   "compatibility_date": "2026-09-01",
-  // 문서 사이트: dist 를 그대로 서빙하고 없는 경로는 index.html 로 (Worker 가 ASSETS 바인딩으로 넘긴다)
+  // 문서 사이트: dist 를 그대로 서빙. SPA 폴백(index.html)은 Worker 가 직접 한다 —
+  // 자산 라우터에 맡기면 /assets/* 미스까지 index.html 로 답해 live-* 프록시의 /assets 가 깨지고, 모르는 경로가 200 이 된다.
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
-    // live-* 호스트를 프록시로 돌리기 위해 Worker 를 먼저 태우되, 해시가 붙은 /assets/* 는 자산 라우터가 바로 서빙한다
-    // (Worker 호출 수 절감 + public/_headers 의 immutable 캐시 적용). 자산이 없으면 Worker 로 넘어와 live-* 의 /assets 도 그대로 프록시된다.
-    "run_worker_first": ["/*", "!/assets/*"]
+    "not_found_handling": "none",
+    // 모든 요청을 Worker 가 먼저 받는다. `["/*", "!/assets/*"]` 로 해시 자산만 라우터에 맡기면 Worker 호출은 줄지만,
+    // 라우터가 /assets/* 미스를 스스로 404 로 끝내(호스트 구분 없음) live-* 프록시의 /assets 가 깨진다 — wrangler dev 로 확인.
+    // 캐시·보안 헤더는 Worker(withDocsHeaders)가 붙인다 (_headers 파일은 Worker 응답에 적용되지 않는다).
+    "run_worker_first": true
   },
   // 커스텀 도메인: efface.dev 존이 같은 계정에 있어 배포 시 DNS 까지 자동 연결된다.
   // live-* 는 실제 서비스를 프록시하며 검사 스크립트를 주입하는 호스트.

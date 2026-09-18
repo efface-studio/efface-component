@@ -2,6 +2,7 @@ import { useRouteError } from 'react-router-dom'
 import { LogoMark } from '@/components/brand/LogoMark'
 import { Button } from '@/components/ui/Button'
 import { isChunkLoadError } from '@/lib/chunkRecovery'
+import { Seo } from '@/docs/components/Seo'
 
 /** 라우트 안에서 터진 에러. 청크 문제면 새로고침을 권하고, 아니면 메시지를 보여준다. */
 export function RouteErrorPage() {
@@ -10,6 +11,7 @@ export function RouteErrorPage() {
   const message = err instanceof Error ? err.message : String(err)
   return (
     <div className="mx-auto flex min-h-[60dvh] max-w-[1280px] flex-col items-start justify-center gap-6 px-5 py-20 md:px-10">
+      <Seo title={stale ? 'update' : 'error'} noindex />
       <LogoMark className="h-10 w-10 text-fg-faint" />
       <p className="label">
         <span className="text-accent">//</span> {stale ? 'update' : 'error'}

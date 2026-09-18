@@ -310,7 +310,7 @@ export function LivePage() {
   )
 
   return (
-    <DocPage eyebrow={`live · ${proj.host}`} title={proj.name} lead={proj.tagline} wide>
+    <DocPage eyebrow={`live · ${proj.host}`} title={proj.name} lead={proj.tagline} wide noindex>
       <div className="-mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-fg-dim">
         <span className="font-mono text-[12px]">{proj.stack}</span>
         <a href={proj.siteUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-fg">

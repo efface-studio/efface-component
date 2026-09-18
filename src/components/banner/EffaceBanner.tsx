@@ -515,7 +515,7 @@ export function EffaceBanner({
                           <div
                             style={{ overflow: "hidden", paddingBottom: "6px" }}
                           >
-                            <h1
+                            <h2
                               style={{
                                 margin: "0",
                                 fontSize: "62px",
@@ -528,7 +528,7 @@ export function EffaceBanner({
                               }}
                             >
                               Website outsourcing, minus the headache.
-                            </h1>
+                            </h2>
                           </div>
                           <div
                             style={{
@@ -565,7 +565,7 @@ export function EffaceBanner({
                           <div
                             style={{ overflow: "hidden", paddingBottom: "6px" }}
                           >
-                            <h1
+                            <h2
                               style={{
                                 margin: "0",
                                 fontSize: "62px",
@@ -588,7 +588,7 @@ export function EffaceBanner({
                                 Keep
                               </span>{" "}
                               the effect.
-                            </h1>
+                            </h2>
                           </div>
                           <div
                             style={{
@@ -626,7 +626,7 @@ export function EffaceBanner({
                           <div
                             style={{ overflow: "hidden", paddingBottom: "6px" }}
                           >
-                            <h1
+                            <h2
                               style={{
                                 margin: "0",
                                 fontSize: "62px",
@@ -640,7 +640,7 @@ export function EffaceBanner({
                               }}
                             >
                               1–3 weeks, from ₩350K.
-                            </h1>
+                            </h2>
                           </div>
                           <div
                             style={{
@@ -1591,7 +1591,7 @@ export function EffaceBanner({
                       }}
                     >
                       <div style={{ overflow: "hidden", paddingBottom: "6px" }}>
-                        <h1
+                        <h2
                           style={{
                             margin: "0",
                             fontSize: "58px",
@@ -1607,7 +1607,7 @@ export function EffaceBanner({
                           <span style={{ color: "var(--ef-accent)" }}>
                             1–3 weeks.
                           </span>
-                        </h1>
+                        </h2>
                       </div>
                       <div
                         style={{
@@ -2029,7 +2029,7 @@ export function EffaceBanner({
                         <div
                           style={{ overflow: "hidden", paddingBottom: "6px" }}
                         >
-                          <h1
+                          <h2
                             style={{
                               margin: "0",
                               fontSize: "56px",
@@ -2044,7 +2044,7 @@ export function EffaceBanner({
                             An engineering team
                             <br />
                             that ships AI too.
-                          </h1>
+                          </h2>
                         </div>
                         <div
                           style={{
@@ -2560,7 +2560,7 @@ export function EffaceBanner({
                         <div
                           style={{ overflow: "hidden", paddingBottom: "6px" }}
                         >
-                          <h1
+                          <h2
                             style={{
                               margin: "0",
                               fontSize: "54px",
@@ -2575,7 +2575,7 @@ export function EffaceBanner({
                             Code that is
                             <br />
                             easy to inherit.
-                          </h1>
+                          </h2>
                         </div>
                         <div
                           style={{
@@ -3077,7 +3077,7 @@ export function EffaceBanner({
                         Now taking Q3 2026 projects
                       </div>
                       <div style={{ overflow: "hidden", paddingBottom: "8px" }}>
-                        <h1
+                        <h2
                           style={{
                             margin: "0",
                             fontSize: "64px",
@@ -3090,7 +3090,7 @@ export function EffaceBanner({
                           }}
                         >
                           Let's start a project.
-                        </h1>
+                        </h2>
                       </div>
                       <div
                         style={{

@@ -66,10 +66,10 @@ function HeroV2() {
             <p className="rise-in flex items-center gap-3 text-xs font-medium tracking-[0.16em] text-fg-dim uppercase md:text-sm">
               <span className="inline-block h-px w-8 bg-accent" aria-hidden /> AI · web · app studio
             </p>
-            <h1 className="mt-6 text-[2.5rem] font-semibold leading-[1.04] tracking-tight sm:text-5xl md:text-6xl">
+            <h2 className="mt-6 text-[2.5rem] font-semibold leading-[1.04] tracking-tight sm:text-5xl md:text-6xl">
               <span className="rise-in rise-d1 block">Erase the complexity.</span>
               <span className="rise-in rise-d2 block">Keep the effect.</span>
-            </h1>
+            </h2>
             <p className="rise-in rise-d3 mt-6 max-w-md text-base leading-relaxed text-fg-dim">A team that builds AI, web and apps. We go deep on the tech and ship products that simply work.</p>
           </div>
         </motion.div>

@@ -4,9 +4,15 @@
  *  - live-*.efface.dev: 실제 서비스를 같은 경로로 프록시하면서 검사 스크립트(inspect.js)를 주입한다.
  *    iframe 에 넣을 수 있게 X-Frame-Options / CSP 는 떼고, 리다이렉트는 우리 호스트로 되돌린다.
  */
+import { DOC_NAV } from '../src/docs/nav'
+import { LIVE_PROJECTS } from '../src/docs/live.data'
+
 export interface Env {
   ASSETS: Fetcher
 }
+
+/** SPA 가 그릴 수 있는 경로 — 그 밖의 HTML 응답은 404 로 내려 soft-404 를 막는다 */
+const KNOWN_ROUTES = new Set<string>([...DOC_NAV.flatMap((g) => g.links.map((l) => l.to)), '/live', ...LIVE_PROJECTS.map((p) => `/live/${p.id}`)])
 
 const UPSTREAMS: Record<string, string> = {
   'live-efface.efface.dev': 'https://efface.dev',
@@ -59,18 +65,29 @@ const SECURITY_HEADERS: Record<string, string> = {
   'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
 }
 
-/** 정적 자산 응답(불변)에 보안 헤더를 얹는다 */
+/** 자산이 있으면 그대로, 없으면 SPA 의 index.html (라우트를 모르면 404 상태로 — withDocsHeaders 가 정한다) */
+async function serveDocs(env: Env, request: Request, url: URL): Promise<Response> {
+  const res = await env.ASSETS.fetch(request)
+  if (res.status !== 404) return res
+  const wantsHtml = (request.headers.get('accept') ?? '').includes('text/html') || !url.pathname.includes('.')
+  if (!wantsHtml) return res
+  return env.ASSETS.fetch(new Request(new URL('/index.html', url.origin), { headers: request.headers }))
+}
+
+/** 정적 자산 응답(불변)에 보안 헤더를 얹는다. 모르는 경로의 SPA 폴백은 404 로 */
 function withDocsHeaders(res: Response, url: URL): Response {
   const h = new Headers(res.headers)
   for (const [k, v] of Object.entries(SECURITY_HEADERS)) h.set(k, v)
   const html = (h.get('content-type') ?? '').includes('text/html')
+  let status = res.status
   if (html) {
     h.set('content-security-policy', DOCS_CSP)
     h.set('x-frame-options', 'DENY')
+    if (status === 200 && !KNOWN_ROUTES.has(url.pathname.toLowerCase())) status = 404
   }
   // 해시 자산이 Worker 를 거쳐 온 경우(폴백)에도 같은 캐시 정책
   if (url.pathname.startsWith('/assets/') && res.ok) h.set('cache-control', 'public, max-age=31536000, immutable')
-  return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h })
+  return new Response(res.body, { status, statusText: status === 404 ? 'Not Found' : res.statusText, headers: h })
 }
 
 let inspectSrc: string | null = null
@@ -99,13 +116,26 @@ function rewriteLocation(loc: string, upstream: string, self: URL): string {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
-    // 평문 HTTP 는 HTTPS 로 (로컬 wrangler dev 는 제외)
-    if (url.protocol === 'http:' && url.hostname.endsWith('efface.dev')) {
+    // 평문 HTTP 는 HTTPS 로 — 방문자 스킴은 Cloudflare 가 cf-visitor 로 알려준다 (로컬 wrangler dev 엔 없어 건너뛴다)
+    if ((request.headers.get('cf-visitor') ?? '').includes('"scheme":"http"')) {
       url.protocol = 'https:'
       return Response.redirect(url.toString(), 301)
     }
     const upstream = UPSTREAMS[url.hostname]
-    if (!upstream) return withDocsHeaders(await env.ASSETS.fetch(request), url)
+    if (!upstream) {
+      // 끝 슬래시는 한 형태로 — 같은 페이지가 두 URL 로 색인되지 않게
+      if (url.pathname.length > 1 && url.pathname.endsWith('/')) {
+        url.pathname = url.pathname.replace(/\/+$/, '')
+        return Response.redirect(url.toString(), 301)
+      }
+      return withDocsHeaders(await serveDocs(env, request, url), url)
+    }
+
+    // 프록시 호스트는 검색에 넣지 않는다 — 원본 사이트의 복사본이다
+    if (url.pathname === '/robots.txt') {
+      return new Response('User-agent: *\nDisallow: /\n', { status: 200, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=86400', ...SECURITY_HEADERS } })
+    }
+    if (url.pathname === '/sitemap.xml') return new Response('not found', { status: 404, headers: { 'cache-control': 'no-store', ...SECURITY_HEADERS } })
 
     // 요청 출처 — 프레임 자신(live-* origin) 또는 문서 호스트만 신뢰한다.
     // 그 밖의 사이트에서 온 상태 변경 요청은 여기서 끊는다(업스트림 CSRF 방어를 우리가 대신 무너뜨리지 않게).
@@ -152,6 +182,7 @@ export default {
     // 프레이밍은 문서 호스트에서만 — 업스트림 XFO/CSP 를 뗀 자리에 우리 정책을 세운다
     out.set('content-security-policy', FRAME_ANCESTORS)
     for (const [k, v] of Object.entries(SECURITY_HEADERS)) out.set(k, v)
+    out.set('x-robots-tag', 'noindex, nofollow, noarchive')
     const loc = res.headers.get('location')
     if (loc) out.set('location', rewriteLocation(loc, upstream, url))
     // iframe 안에서 세션(로그인 · HiNest 미리보기 플래그)이 유지되도록 쿠키 도메인을 뗀다.
@@ -180,6 +211,7 @@ export default {
     const injected = new HTMLRewriter()
       .on('head', {
         element(el) {
+          el.append('<meta name="robots" content="noindex, nofollow">', { html: true })
           el.append(`<script data-ef-ignore>${script}</script>`, { html: true })
         },
       })
