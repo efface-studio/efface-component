@@ -1,5 +1,6 @@
 export * from './banner'
 export * from './brand'
+export * from './form'
 export * from './layout'
 export * from './motion'
 export * from './ui'
