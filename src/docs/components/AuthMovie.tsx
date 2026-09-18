@@ -122,6 +122,7 @@ const TOUR_TARGET: Record<string, string> = {
   'dock-apps': 'img', 'app-efface': 'img',
 }
 
+const STATUS_LABEL: Record<string, string | undefined> = { wifi: 'Wi‑Fi', battery: '배터리', search: 'Spotlight', cc: '제어 센터' }
 const DOCK_MIN = 32
 const DOCK_MAX = 80
 /* 상태 팝오버 — Tahoe 다크 패널 조각들 */
@@ -534,6 +535,7 @@ export function AuthMovie({ className }: { className?: string }) {
                   onClick={() => setMenu((m) => (m === id ? null : id))}
                   onPointerEnter={(e) => e.isTrusted && menu && menu in MENUS && setMenu(id)}
                   aria-expanded={menu === id}
+                  aria-label={id === 'apple' ? 'Apple 메뉴' : undefined}
                   className={cn('flex items-center rounded-[5px] px-[9px] leading-none', id === 'apple' && 'px-[10px]', id === appName && 'font-bold', menu === id && 'bg-white/22 backdrop-blur-sm')}
                 >
                   {id === 'apple' ? <AppleIcon width={16} height={16} /> : label}
@@ -553,7 +555,7 @@ export function AuthMovie({ className }: { className?: string }) {
               ] as [string, ReactNode][]
             ).map(([id, node]) => (
               <span key={id} className="relative flex items-stretch">
-                <button type="button" onClick={() => setMenu((m) => (m === id ? null : id))} aria-expanded={menu === id} className={cn('flex items-center rounded-[5px] px-[7px] leading-none', id === 'clock' && 'pr-[9px]', menu === id && 'bg-white/22 backdrop-blur-sm')}>
+                <button type="button" onClick={() => setMenu((m) => (m === id ? null : id))} aria-expanded={menu === id} aria-label={STATUS_LABEL[id]} className={cn('flex items-center rounded-[5px] px-[7px] leading-none', id === 'clock' && 'pr-[9px]', menu === id && 'bg-white/22 backdrop-blur-sm')}>
                   {node}
                 </button>
                 {dropdown(id, 'right')}
