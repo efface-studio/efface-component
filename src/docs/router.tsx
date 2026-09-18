@@ -1,0 +1,66 @@
+import { createBrowserRouter } from 'react-router-dom'
+import { DocsLayout } from '@/docs/layout/DocsLayout'
+import { RouteErrorPage } from '@/docs/pages/RouteErrorPage'
+// 첫 화면(/) 은 지연 없이 — 청크 왕복 하나를 줄이고 Suspense 빈 화면도 없앤다
+import { OverviewPage } from '@/docs/pages/OverviewPage'
+import {
+  NotFoundPage,
+  ColorsPage,
+  TypographyPage,
+  LayoutPage,
+  BrandPage,
+  MotionTokensPage,
+  ButtonsPage,
+  ChipsPage,
+  CardsPage,
+  ListsPage,
+  MotionRevealPage,
+  ShowcasePage,
+  MotionScrollPage,
+  MotionCursorPage,
+  MotionTextPage,
+  NavigationPage,
+  FooterPage,
+  OverlayPage,
+  BannerPage,
+  RecipesPage,
+  LivePage,
+  SkeletonPage,
+  InputsPage,
+  AuthPage,
+} from '@/docs/pages/lazy'
+
+export const router = createBrowserRouter([
+  {
+    element: <DocsLayout />,
+    errorElement: <RouteErrorPage />,
+    children: [
+      { path: '/', element: <OverviewPage /> },
+      { path: '/foundations/colors', element: <ColorsPage /> },
+      { path: '/foundations/typography', element: <TypographyPage /> },
+      { path: '/foundations/layout', element: <LayoutPage /> },
+      { path: '/foundations/motion', element: <MotionTokensPage /> },
+      { path: '/components/brand', element: <BrandPage /> },
+      { path: '/components/buttons', element: <ButtonsPage /> },
+      { path: '/components/chips', element: <ChipsPage /> },
+      { path: '/components/cards', element: <CardsPage /> },
+      { path: '/components/lists', element: <ListsPage /> },
+      { path: '/components/skeleton', element: <SkeletonPage /> },
+      { path: '/components/inputs', element: <InputsPage /> },
+      { path: '/motion/showcase', element: <ShowcasePage /> },
+      { path: '/motion/reveal', element: <MotionRevealPage /> },
+      { path: '/motion/scroll', element: <MotionScrollPage /> },
+      { path: '/motion/cursor', element: <MotionCursorPage /> },
+      { path: '/motion/text', element: <MotionTextPage /> },
+      { path: '/layout/navigation', element: <NavigationPage /> },
+      { path: '/layout/footer', element: <FooterPage /> },
+      { path: '/layout/overlay', element: <OverlayPage /> },
+      { path: '/banner', element: <BannerPage /> },
+      { path: '/recipes', element: <RecipesPage /> },
+      { path: '/recipes/auth', element: <AuthPage /> },
+      { path: '/live/:project', element: <LivePage /> },
+      { path: '/live', element: <LivePage /> },
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
+])

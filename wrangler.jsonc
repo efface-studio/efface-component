@@ -1,0 +1,25 @@
+{
+  "$schema": "https://unpkg.com/wrangler@4/config-schema.json",
+  "name": "efface-component",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-01",
+  // 문서 사이트: dist 를 그대로 서빙. SPA 폴백(index.html)은 Worker 가 직접 한다 —
+  // 자산 라우터에 맡기면 /assets/* 미스까지 index.html 로 답해 live-* 프록시의 /assets 가 깨지고, 모르는 경로가 200 이 된다.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "none",
+    // 모든 요청을 Worker 가 먼저 받는다. `["/*", "!/assets/*"]` 로 해시 자산만 라우터에 맡기면 Worker 호출은 줄지만,
+    // 라우터가 /assets/* 미스를 스스로 404 로 끝내(호스트 구분 없음) live-* 프록시의 /assets 가 깨진다 — wrangler dev 로 확인.
+    // 캐시·보안 헤더는 Worker(withDocsHeaders)가 붙인다 (_headers 파일은 Worker 응답에 적용되지 않는다).
+    "run_worker_first": true
+  },
+  // 커스텀 도메인: efface.dev 존이 같은 계정에 있어 배포 시 DNS 까지 자동 연결된다.
+  // live-* 는 실제 서비스를 프록시하며 검사 스크립트를 주입하는 호스트.
+  "routes": [
+    { "pattern": "component.efface.dev", "custom_domain": true },
+    { "pattern": "live-efface.efface.dev", "custom_domain": true },
+    { "pattern": "live-v2.efface.dev", "custom_domain": true },
+    { "pattern": "live-hinest.efface.dev", "custom_domain": true }
+  ]
+}

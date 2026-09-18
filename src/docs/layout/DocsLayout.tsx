@@ -1,0 +1,271 @@
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { NavLink, useLocation, useOutlet } from 'react-router-dom'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { Code2, Menu, Moon, Sun, X } from 'lucide-react'
+import { cn } from '@/lib/cn'
+import { DOC_NAV } from '@/docs/nav'
+import { LogoMark } from '@/components/brand/LogoMark'
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
+import { useIsDesktop } from '@/hooks/useMediaQuery'
+import { DocsThemeContext, type DocsTheme } from '@/docs/theme'
+import { NextPageBar } from '@/docs/components/NextPageBar'
+import { EASE_OUT_EXPO } from '@/lib/motion'
+import { withChunkRecovery } from '@/lib/chunkRecovery'
+import { isInspectMessage, loadInspectScript, type InspectDistance, type InspectInfo } from '@/lib/inspectBridge'
+
+type Theme = DocsTheme
+const STORAGE_KEY = 'efface-ds-theme'
+// Dev 모드를 켠 사람만 쓰는 패널 — 첫 로드에서 뺀다
+const InspectPanel = lazy(withChunkRecovery(() => import('@/docs/components/InspectPanel').then((m) => ({ default: m.InspectPanel }))))
+
+function readTheme(): Theme {
+  try {
+    const v = localStorage.getItem(STORAGE_KEY)
+    if (v === 'light' || v === 'dark') return v
+  } catch {
+    /* 저장소 접근 불가 */
+  }
+  return 'dark'
+}
+
+/**
+ * 문서 셸 — 좌측 사이드바 + 본문. 테마는 `<html data-theme>`에 걸어 문서 크롬 전체가
+ * 따라가고, 각 Preview는 자기 범위의 `data-theme`로 따로 논다.
+ */
+export function DocsLayout() {
+  const [theme, setTheme] = useState<Theme>(readTheme)
+  const [open, setOpen] = useState(false)
+  const { pathname } = useLocation()
+  const outlet = useOutlet()
+  const reduce = useReducedMotion()
+  const desktop = useIsDesktop()
+  // 드로어가 열린 채 화면이 넓어지면 드로어는 숨는데 스크롤 잠금만 남는 것을 막는다
+  useBodyScrollLock(open && !desktop)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  // 드로어: 열리면 닫기 버튼으로 포커스, Escape 로 닫고, 닫히면 메뉴 버튼으로 돌아간다
+  useEffect(() => {
+    if (!open) return
+    const menuButton = menuButtonRef.current
+    closeButtonRef.current?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      menuButton?.focus()
+    }
+  }, [open])
+  const currentLabel = useMemo(() => DOC_NAV.flatMap((g) => g.links).find((l) => l.to === pathname)?.label ?? '', [pathname])
+
+  // 페이지 안 Dev 모드 — 문서의 모든 프리뷰를 Figma 처럼 잰다
+  const [inspect, setInspect] = useState(false)
+  const [selected, setSelected] = useState<InspectInfo | null>(null)
+  const [hovered, setHovered] = useState<InspectInfo | null>(null)
+  const [distances, setDistances] = useState<InspectDistance[] | null>(null)
+  useEffect(() => {
+    const onEv = (e: Event) => {
+      const m = (e as CustomEvent).detail
+      if (!isInspectMessage(m)) return
+      if (m.type === 'state') {
+        setInspect(m.on)
+        if (!m.on) {
+          setSelected(null)
+          setHovered(null)
+        }
+      } else if (m.type === 'hover') {
+        setHovered(m.info)
+        setDistances(m.distances)
+      } else if (m.type === 'select') setSelected(m.info)
+    }
+    window.addEventListener('ef-inspect', onEv)
+    return () => window.removeEventListener('ef-inspect', onEv)
+  }, [])
+  const toggleInspect = async () => {
+    await loadInspectScript()
+    window.__efInspect?.toggle()
+  }
+  // 라이브 페이지는 자체 검사 UI 가 있으니 문서 검사는 끈다
+  useEffect(() => {
+    if (pathname.startsWith('/live') && window.__efInspect?.isOn()) window.__efInspect.disable()
+  }, [pathname])
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    try {
+      localStorage.setItem(STORAGE_KEY, theme)
+    } catch {
+      /* 무시 */
+    }
+  }, [theme])
+
+
+  const sidebar = (
+    <nav aria-label="문서" className="flex flex-col gap-7">
+      {DOC_NAV.map((g) => (
+        <div key={g.title}>
+          <p className="mb-2 font-mono text-[10.5px] tracking-[0.2em] text-fg-faint uppercase">{g.title}</p>
+          <ul className="flex flex-col">
+            {g.links.map((l) => (
+              <li key={l.to}>
+                <NavLink
+                  to={l.to}
+                  end={l.to === '/'}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    cn(
+                      'relative -ml-px flex items-center justify-between gap-2 border-l border-line py-1.5 pl-3 text-[13.5px] transition-colors',
+                      isActive ? 'text-fg' : 'text-fg-dim hover:border-line-strong hover:text-fg',
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      {isActive && (
+                        <motion.span
+                          layoutId="docs-nav-active"
+                          aria-hidden
+                          className="absolute top-0 bottom-0 -left-px w-px bg-accent"
+                          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                        />
+                      )}
+                      <span>{l.label}</span>
+                      {l.src && (
+                        <span className="flex gap-0.5" aria-hidden>
+                          {l.src.map((s) => (
+                            <span
+                              key={s}
+                              className="h-1 w-1 rounded-full"
+                              style={{ background: s === 'v1' ? '#2563eb' : s === 'v2' ? '#3b62e5' : 'var(--fg-faint)' }}
+                            />
+                          ))}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  )
+
+  return (
+    <DocsThemeContext.Provider value={{ theme, setTheme }}>
+    <div className="min-h-dvh bg-bg text-fg">
+      {/* 키보드 사용자용 — 헤더·사이드바 ~30개 컨트롤을 건너뛴다 */}
+      <a href="#main" className="skip-link">
+        본문으로 건너뛰기
+      </a>
+      {/* 라우트가 바뀌면 스크린리더에 페이지 이름을 알린다 (문서 제목은 Seo 가 바꾼다) */}
+      <div aria-live="polite" className="sr-only">
+        {currentLabel}
+      </div>
+      <header data-ef-ignore className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
+        {/* 본문과 같은 컨테이너·여백 — 로고는 사이드바 글자와, 컨트롤은 본문 오른쪽 여백과 나란히 */}
+        <div className="mx-auto flex h-14 w-full max-w-[1720px] items-center justify-between px-5 md:px-10">
+          <div className="flex items-center gap-3">
+            <button ref={menuButtonRef} type="button" onClick={() => setOpen(true)} className="-ml-1 flex h-9 w-9 items-center justify-center rounded-md text-fg-dim hover:bg-line/40 hover:text-fg lg:hidden" aria-label="메뉴 열기" aria-expanded={open} aria-controls="docs-drawer">
+              <Menu size={18} />
+            </button>
+            <NavLink to="/" className="group flex items-center gap-2.5">
+              <LogoMark className="h-5 w-5 text-fg transition-transform duration-500 group-hover:rotate-[-8deg]" />
+              <span className="text-[15px] font-semibold lowercase tracking-tight">efface</span>
+              <span className="hidden font-mono text-[10.5px] tracking-[0.18em] text-fg-faint uppercase sm:inline">design system</span>
+            </NavLink>
+          </div>
+          <div className="flex items-center gap-1">
+            <a href="https://github.com/efface-studio/efface-component" target="_blank" rel="noreferrer" className="hidden h-9 items-center px-3 font-mono text-xs text-fg-dim transition-colors hover:text-fg md:inline-flex">
+              github ↗
+            </a>
+            {!pathname.startsWith('/live') && (
+              <button
+                type="button"
+                onClick={toggleInspect}
+                aria-pressed={inspect}
+                className={cn('inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition-colors', inspect ? 'bg-accent text-white' : 'text-fg-dim hover:bg-line/40 hover:text-fg')}
+                title="요소에 마우스를 올리면 크기·여백, 누르면 고정, 다른 요소에 올리면 거리"
+              >
+                <Code2 size={14} /> Dev
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="flex h-9 w-9 items-center justify-center rounded-md text-fg-dim transition-colors hover:bg-line/40 hover:text-fg"
+              aria-label={theme === 'dark' ? '라이트 테마로 전환' : '다크 테마로 전환'}
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="mx-auto flex w-full max-w-[1720px]">
+        <aside className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] w-64 shrink-0 overflow-y-auto border-r border-line py-8 pr-6 pl-5 md:pl-10 lg:block">{sidebar}</aside>
+
+        {open && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <button type="button" className="absolute inset-0 bg-ink/50 backdrop-blur-sm" aria-label="닫기" onClick={() => setOpen(false)} />
+            <div id="docs-drawer" role="dialog" aria-modal="true" aria-label="문서 목차" className="absolute inset-y-0 left-0 w-72 overflow-y-auto border-r border-line bg-bg px-5 py-6">
+              <div className="mb-6 flex items-center justify-between">
+                <span className="font-mono text-[10.5px] tracking-[0.2em] text-fg-faint uppercase">contents</span>
+                <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="flex h-9 w-9 items-center justify-center rounded-md text-fg-dim hover:bg-line/40" aria-label="닫기">
+                  <X size={16} />
+                </button>
+              </div>
+              {sidebar}
+            </div>
+          </div>
+        )}
+
+        <main id="main" tabIndex={-1} className="min-h-[calc(100dvh-3.5rem)] min-w-0 flex-1 px-5 py-10 outline-none md:px-10 md:py-14">
+          {/* 나가는 페이지는 움직이지 않고 제자리에서 흐려지고, 새 페이지만 아래에서 올라온다 —
+              옛 페이지까지 움직이면 위로 튀었다 내려오는 것처럼 읽힌다.
+              스크롤 리셋은 exit 가 끝난 뒤(이미 안 보일 때) — smooth 면 올라가는 게 보이니 즉시.
+              main 의 최소 높이는 페이지 청크를 기다리는 동안 푸터가 첫 화면에 들어와 튀는 걸 막는다. */}
+          <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
+            <motion.div
+              key={pathname}
+              initial={reduce ? false : { opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.18, ease: 'easeOut' } }}
+              transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
+            >
+              {/* NextPageBar 는 페이지가 준비된 뒤에 — 먼저 그리면 그 마진이 래퍼로 접혀 콘텐츠가 96px 아래에서 시작했다 튄다(CLS 0.79) */}
+              <Suspense fallback={<div aria-hidden className="min-h-[50dvh]" />}>
+                {outlet}
+                <NextPageBar />
+              </Suspense>
+            </motion.div>
+          </AnimatePresence>
+          {inspect && (
+            <div data-ef-ignore className="fixed right-4 bottom-4 z-[60] w-[300px] max-h-[70vh] overflow-y-auto rounded-xl border border-line bg-surface/95 p-4 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.4)] backdrop-blur-md">
+              <div className="mb-3 flex items-center justify-between">
+                <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">dev mode</span>
+                <button type="button" onClick={() => window.__efInspect?.disable()} className="-m-1 flex h-8 w-8 items-center justify-center rounded text-fg-dim hover:bg-line/40 hover:text-fg" aria-label="Dev 모드 끄기">
+                  <X size={13} />
+                </button>
+              </div>
+              <Suspense fallback={null}>
+                <InspectPanel selected={selected} hovered={hovered} distances={distances} />
+              </Suspense>
+            </div>
+          )}
+          <footer className="mx-auto mt-24 max-w-[1280px] border-t border-line pt-6 text-xs text-fg-dim">
+            <p>
+              efface design system · efface.dev · v2.efface.dev · mom.efface.dev{' '}
+              <a className="link-underline text-fg-dim" href="https://github.com/efface-studio/efface-component" target="_blank" rel="noreferrer">
+                source
+              </a>
+            </p>
+          </footer>
+        </main>
+      </div>
+    </div>
+    </DocsThemeContext.Provider>
+  )
+}

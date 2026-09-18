@@ -1,0 +1,28 @@
+import { lazy } from 'react'
+import { withChunkRecovery } from '@/lib/chunkRecovery'
+
+/* 문서 페이지는 라우트 단위로 코드 분할한다. 배포 뒤 옛 청크를 요청하면 한 번 새로고침한다. */
+export const NotFoundPage = lazy(withChunkRecovery(() => import('@/docs/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))))
+export const ColorsPage = lazy(withChunkRecovery(() => import('@/docs/pages/ColorsPage').then((m) => ({ default: m.ColorsPage }))))
+export const TypographyPage = lazy(withChunkRecovery(() => import('@/docs/pages/TypographyPage').then((m) => ({ default: m.TypographyPage }))))
+export const LayoutPage = lazy(withChunkRecovery(() => import('@/docs/pages/LayoutPage').then((m) => ({ default: m.LayoutPage }))))
+export const BrandPage = lazy(withChunkRecovery(() => import('@/docs/pages/BrandPage').then((m) => ({ default: m.BrandPage }))))
+export const MotionTokensPage = lazy(withChunkRecovery(() => import('@/docs/pages/MotionTokensPage').then((m) => ({ default: m.MotionTokensPage }))))
+export const ButtonsPage = lazy(withChunkRecovery(() => import('@/docs/pages/ButtonsPage').then((m) => ({ default: m.ButtonsPage }))))
+export const ChipsPage = lazy(withChunkRecovery(() => import('@/docs/pages/ChipsPage').then((m) => ({ default: m.ChipsPage }))))
+export const CardsPage = lazy(withChunkRecovery(() => import('@/docs/pages/CardsPage').then((m) => ({ default: m.CardsPage }))))
+export const ListsPage = lazy(withChunkRecovery(() => import('@/docs/pages/ListsPage').then((m) => ({ default: m.ListsPage }))))
+export const MotionRevealPage = lazy(withChunkRecovery(() => import('@/docs/pages/MotionRevealPage').then((m) => ({ default: m.MotionRevealPage }))))
+export const MotionScrollPage = lazy(withChunkRecovery(() => import('@/docs/pages/MotionScrollPage').then((m) => ({ default: m.MotionScrollPage }))))
+export const MotionCursorPage = lazy(withChunkRecovery(() => import('@/docs/pages/MotionCursorPage').then((m) => ({ default: m.MotionCursorPage }))))
+export const MotionTextPage = lazy(withChunkRecovery(() => import('@/docs/pages/MotionTextPage').then((m) => ({ default: m.MotionTextPage }))))
+export const NavigationPage = lazy(withChunkRecovery(() => import('@/docs/pages/NavigationPage').then((m) => ({ default: m.NavigationPage }))))
+export const FooterPage = lazy(withChunkRecovery(() => import('@/docs/pages/FooterPage').then((m) => ({ default: m.FooterPage }))))
+export const OverlayPage = lazy(withChunkRecovery(() => import('@/docs/pages/OverlayPage').then((m) => ({ default: m.OverlayPage }))))
+export const BannerPage = lazy(withChunkRecovery(() => import('@/docs/pages/BannerPage').then((m) => ({ default: m.BannerPage }))))
+export const RecipesPage = lazy(withChunkRecovery(() => import('@/docs/pages/RecipesPage').then((m) => ({ default: m.RecipesPage }))))
+export const LivePage = lazy(withChunkRecovery(() => import('@/docs/pages/LivePage').then((m) => ({ default: m.LivePage }))))
+export const SkeletonPage = lazy(withChunkRecovery(() => import('@/docs/pages/SkeletonPage').then((m) => ({ default: m.SkeletonPage }))))
+export const InputsPage = lazy(withChunkRecovery(() => import('@/docs/pages/InputsPage').then((m) => ({ default: m.InputsPage }))))
+export const AuthPage = lazy(withChunkRecovery(() => import('@/docs/pages/AuthPage').then((m) => ({ default: m.AuthPage }))))
+export const ShowcasePage = lazy(withChunkRecovery(() => import('@/docs/pages/ShowcasePage').then((m) => ({ default: m.ShowcasePage }))))

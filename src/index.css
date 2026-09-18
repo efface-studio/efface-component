@@ -1,0 +1,853 @@
+@import 'tailwindcss';
+@import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+
+/* ─────────────────────────────────────────────────────────────
+   efface design system — tokens
+
+   두 테마를 한 벌의 시맨틱 토큰으로 다룬다.
+   · light  = efface.dev (v1)   paper / ink,  accent #2563EB
+   · dark   = v2.efface.dev     black canvas, accent #3B62E5 (로고 블루)
+   테마는 `[data-theme]`로 범위를 정하므로 문서 안에서 프리뷰 박스마다
+   다른 테마를 겹쳐 쓸 수 있다. 유틸리티는 `@theme inline`으로 변수를
+   직접 참조해 중첩 스코프에서도 올바른 값을 읽는다.
+   ───────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f5f5f5;
+
+  --fg: #0a0a0a;
+  --fg-2: #171717;
+  --fg-dim: #525252;
+  --fg-faint: #a3a3a3;
+
+  --line: #e5e5e5;
+  --line-soft: #f0f0f0;
+  --line-strong: #d4d4d4;
+  /* 오류 — 라이트는 글자 대비 4.5:1 이상인 진한 빨강 */
+  --danger: #dc2626;
+
+  /* 소셜 로그인 — 각 회사 브랜드 가이드의 라이트 버전 */
+  --social-google-bg: #ffffff;
+  --social-google-fg: #1f1f1f;
+  --social-google-line: #dadce0;
+  --social-apple-bg: #000000;
+  --social-apple-fg: #ffffff;
+  --social-github-bg: #24292f;
+  --social-github-fg: #ffffff;
+
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.08);
+
+  --success: #16a34a;
+  --selection-bg: #0a0a0a;
+  --selection-fg: #ffffff;
+
+  /* 스켈레톤 — 바탕과 지나가는 하이라이트 */
+  --skeleton-base: #ececef;
+  --skeleton-shine: #f8f8fa;
+
+  /* 문서 코드 블록 */
+  --code-bg: #fafafa;
+  --code-fg: #171717;
+  --code-comment: #8a8a93;
+  --code-string: #047857;
+  --code-keyword: #7c3aed;
+  --code-tag: #1d4ed8;
+  --code-attr: #b45309;
+  --code-number: #0e7490;
+  --code-punct: #737373;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a0a0b;
+  --bg-soft: #101013;
+  --surface: #141418;
+  --surface-2: #1b1b21;
+
+  --fg: #f6f6f7;
+  --fg-2: #ededef;
+  --fg-dim: #9b9ba4;
+  --fg-faint: #6a6a73;
+
+  --line: rgba(255, 255, 255, 0.09);
+  --line-soft: rgba(255, 255, 255, 0.05);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --danger: #fb2c36;
+
+  /* 소셜 로그인 — 다크 버전(구글 다크 테마 버튼 · 애플/깃허브는 반전) */
+  --social-google-bg: #131314;
+  --social-google-fg: #e3e3e3;
+  --social-google-line: #8e918f;
+  --social-apple-bg: #ffffff;
+  --social-apple-fg: #000000;
+  --social-github-bg: #f6f8fa;
+  --social-github-fg: #24292f;
+
+  --accent: #3b62e5;
+  --accent-hover: #6183ff;
+  --accent-soft: rgba(59, 98, 229, 0.16);
+
+  --success: #22c55e;
+  --selection-bg: #3b62e5;
+  --selection-fg: #ffffff;
+
+  /* 스켈레톤 */
+  --skeleton-base: #1b1b21;
+  --skeleton-shine: #2a2a32;
+
+  /* 문서 코드 블록 */
+  --code-bg: #0e0e11;
+  --code-fg: #e4e4e9;
+  --code-comment: #6a6a73;
+  --code-string: #86efac;
+  --code-keyword: #c4b5fd;
+  --code-tag: #93c5fd;
+  --code-attr: #fcd34d;
+  --code-number: #67e8f9;
+  --code-punct: #8a8a93;
+}
+
+@theme inline {
+  /* 시맨틱 컬러 — 테마에 따라 바뀐다 */
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-dim: var(--fg-dim);
+  --color-fg-faint: var(--fg-faint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+}
+
+@theme {
+  /* 브랜드 고정 컬러 — 테마와 무관 */
+  --color-brand: #3b62e5;
+  --color-brand-bright: #6183ff;
+  --color-brand-deep: #1a2a72;
+  --color-ink: #0a0a0a;
+  --color-paper: #ffffff;
+
+  /* 서비스 카드 그라데이션의 기준색 (v2 AppCards) */
+  --color-app-blue: #2563eb;
+  --color-app-teal: #14b8b0;
+  --color-app-violet: #7c3aed;
+  --color-app-amber: #f59e0b;
+
+  /* 카카오 */
+  --color-kakao: #fee500;
+  --color-kakao-fg: #191919;
+  --color-danger: var(--danger);
+  /* 소셜 로그인 (테마별 값은 위 [data-theme] 블록) */
+  --color-google: var(--social-google-bg);
+  --color-google-fg: var(--social-google-fg);
+  --color-google-line: var(--social-google-line);
+  --color-apple: var(--social-apple-bg);
+  --color-apple-fg: var(--social-apple-fg);
+  --color-github: var(--social-github-bg);
+  --color-github-fg: var(--social-github-fg);
+  --color-naver: #03c75a;
+  --color-naver-fg: #ffffff;
+
+  --font-sans:
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI',
+    Roboto, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: 'Space Grotesk', 'Pretendard Variable', sans-serif;
+  --font-black: 'Archivo Black', 'Pretendard Variable', sans-serif;
+
+  /* 모션 — 앱 전체의 진입/전환이 공유하는 하나의 곡선 */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-back: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-symmetric: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --duration-fast: 0.4s;
+  --duration-base: 0.6s;
+  --duration-slow: 0.7s;
+
+  --container-page: 1400px;
+  --container-page-v1: 1200px;
+  --container-prose: 1080px;
+}
+
+/* JetBrains Mono — 가변 파일 하나, 작은 모노 라벨에만 쓴다 */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTOlOV.woff2')
+    format('woff2');
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  html,
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'ss01', 'ss02', 'cv01';
+  }
+  * {
+    box-sizing: border-box;
+  }
+  ::selection {
+    background: var(--selection-bg);
+    color: var(--selection-fg);
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ── 타이포 유틸 ─────────────────────────────────────────────── */
+@utility label {
+  /* 섹션 제목 위 모노 eyebrow — `// like this` */
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+/* v1 — 옅은 점 격자 배경 */
+@utility bg-dot {
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.07) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+@utility bg-dot-dark {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* iOS 노치/홈 인디케이터 */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── 모션 유틸 ───────────────────────────────────────────────────
+   above-the-fold 진입은 CSS 애니메이션으로 — 스타일시트 파싱 즉시 재생,
+   hydration을 기다리지 않는다. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise-in {
+  animation: rise-in var(--duration-slow) var(--ease-out-expo) both;
+}
+.rise-d1 {
+  animation-delay: 0.08s;
+}
+.rise-d2 {
+  animation-delay: 0.18s;
+}
+.rise-d3 {
+  animation-delay: 0.28s;
+}
+.rise-d4 {
+  animation-delay: 0.4s;
+}
+.rise-d5 {
+  animation-delay: 0.52s;
+}
+
+/* 스크롤 큐의 느린 상하 운동 */
+@keyframes scroll-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+.scroll-bob {
+  animation: scroll-bob 1.8s ease-in-out infinite;
+}
+
+/* 마퀴 — 내용을 두 번 이어 붙이고 -50%까지 이동 */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+/* 커서 깜빡임 (v2 캡션 캐럿 / v1 blink) */
+@keyframes caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.caret-blink {
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+/* 잡동사니 조각의 느린 부유 (v2 EffaceIntro) */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(-6px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+.animate-bob {
+  animation: bob 5.6s ease-in-out infinite;
+}
+
+/* ── 스켈레톤 ─────────────────────────────────────────────────────
+   shimmer 는 바탕 위로 하이라이트 띠가 1.6초에 한 번 지나간다. 여러 개가 나란히 있어도
+   같은 타이밍으로 흐르도록 background-position 만 움직인다(요소별 delay 없음). */
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.skeleton {
+  background: var(--skeleton-base);
+}
+.skeleton--shimmer {
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-base) 35%, var(--skeleton-shine) 50%, var(--skeleton-base) 65%, var(--skeleton-base) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+.skeleton--pulse {
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton--shimmer,
+  .skeleton--pulse {
+    animation: none;
+    background: var(--skeleton-base);
+  }
+}
+
+/* 텍스트 링크 밑줄 — 왼쪽에서 자라난다 */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.45s var(--ease-out-expo);
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+/* 푸터 링크 — 파란 밑줄이 오른쪽으로 빠지고 왼쪽에서 들어온다 */
+.footer-link {
+  position: relative;
+  display: inline-block;
+  transition: color 0.2s;
+}
+.footer-link:hover {
+  color: var(--fg-2);
+}
+.footer-hl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: #3b82f6;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.22s var(--ease-in-out-symmetric);
+}
+.footer-link:hover .footer-hl {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* v1 TechChip — 회색 아이콘이 호버 시 브랜드색으로. 검정 계열 브랜드는 다크에서 흰색(--brand-dark) */
+.tech-chip__icon {
+  fill: #8a8a93;
+}
+.tech-chip:hover .tech-chip__icon {
+  fill: var(--brand);
+}
+[data-theme='dark'] .tech-chip:hover .tech-chip__icon {
+  fill: var(--brand-dark, var(--brand));
+}
+
+/* v2 Capabilities — 점 하나 달린 도구 칩 (`--dot`은 항목별로 지정) */
+.cap-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  color: var(--fg-dim);
+  transition: color 0.2s;
+}
+.cap-chip::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot, var(--accent));
+  flex: none;
+}
+.cap-chip:hover {
+  color: var(--fg-2);
+}
+
+/* ── v2 App card ─────────────────────────────────────────────────
+   360×560 타일을 하나의 표면으로 조명한다: 기울기를 따라가는 하이라이트,
+   두께를 읽게 하는 상하 엣지, 뒤로 물러난 그림자. --gx/--gy/--spec/--shadow-o는
+   씬 루프가 프레임마다 쓰고, 기본값은 정지 상태(모바일·no-JS)이다. */
+.app-card {
+  position: relative;
+  width: 360px;
+  height: 560px;
+  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 52px 28px 0;
+  box-sizing: border-box;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+}
+.app-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  background:
+    radial-gradient(
+      58% 42% at var(--gx, 50%) var(--gy, 34%),
+      rgba(255, 255, 255, calc(var(--sheen, 0.16) * 2.2 * var(--spec, 0.5))) 0%,
+      rgba(255, 255, 255, 0) 70%
+    ),
+    linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0) 42%,
+      rgba(255, 255, 255, calc(var(--sheen, 0.16) * 0.45)) 50%,
+      rgba(255, 255, 255, 0) 58%
+    );
+  pointer-events: none;
+}
+.app-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1.5px 0 rgba(0, 0, 0, 0.24);
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .app-card {
+    width: min(320px, 86vw);
+    height: auto;
+    min-height: 420px;
+    padding: 40px 24px 32px;
+    margin-inline: auto;
+  }
+}
+
+/* ── Mom-Work 푸터 워드마크 (CSS 스포트라이트) ─────────────────────
+   글자 전체에 옅은 그라데이션, 포인터 주변 창 안에서만 선명. */
+.footer-wordmark {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+.footer-wordmark__scale {
+  --sx: 1;
+  --gx: 0px;
+  --gy: 0px;
+  --gw: 200px;
+  --gh: 100px;
+  position: relative;
+  width: max-content;
+  transform: scaleX(var(--sx));
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+.footer-wordmark__text {
+  display: block;
+  font-size: 21cqw;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  white-space: nowrap;
+  color: #1c2536;
+}
+.footer-wordmark__tint,
+.footer-wordmark__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  color: transparent;
+  background-image: linear-gradient(90deg, #3b82f6 0%, #5b6cf2 35%, #6366f1 60%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.footer-wordmark__tint {
+  opacity: 0.35;
+}
+.footer-wordmark__window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--gw);
+  height: var(--gh);
+  overflow: hidden;
+  transform: translate(var(--gx), var(--gy));
+  will-change: transform;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 0%, #000 25%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 0%, #000 25%, transparent 100%);
+}
+.footer-wordmark__glow {
+  transform: translate(calc(var(--gx) * -1), calc(var(--gy) * -1));
+  will-change: transform;
+}
+
+/* ── efface 홍보 배너 키프레임 (Mom-Work 핸드오프 keyframes.css) ── */
+@keyframes efCut3 { 0% { opacity: 0; } 1% { opacity: 1; } 31% { opacity: 1; } 33.34% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes efCut4 { 0% { opacity: 0; } 1% { opacity: 1; } 23% { opacity: 1; } 25% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes efRise { 0% { transform: translateY(115%); } 3.4% { transform: translateY(0); } 100% { transform: translateY(0); } }
+@keyframes efPop { 0% { opacity: 0; transform: translateY(26px) scale(0.96); filter: blur(10px); } 2.8% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes efCut3A { 0%, 28% { opacity: 1; } 30.34% { opacity: 0; } 95% { opacity: 0; } 97% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes efCut4A { 0%, 20% { opacity: 1; } 22% { opacity: 0; } 96% { opacity: 0; } 98% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes efRiseA { 0%, 28% { transform: translateY(0); } 96% { transform: translateY(115%); } 99.4%, 100% { transform: translateY(0); } }
+@keyframes efRiseH { 0%, 92% { transform: translateY(0); } 96% { transform: translateY(115%); } 99.4%, 100% { transform: translateY(0); } }
+@keyframes efPopA { 0%, 28% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 31% { opacity: 0; transform: translateY(-14px) scale(0.98); filter: blur(6px); } 96.4% { opacity: 0; transform: translateY(26px) scale(0.96); filter: blur(10px); } 99.2%, 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes efPopH { 0%, 92% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 96.4% { opacity: 0; transform: translateY(26px) scale(0.96); filter: blur(10px); } 99.2%, 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes efBar { 0% { transform: scaleX(0); } 4% { transform: scaleX(1); } 100% { transform: scaleX(1); } }
+@keyframes efSheen { 0% { transform: translateX(-45%); opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { transform: translateX(150%); opacity: 0; } }
+@keyframes efGlow { 0%, 100% { opacity: 0.35; transform: scale(0.94); } 50% { opacity: 1; transform: scale(1.06); } }
+@keyframes efMark { 0%, 84% { transform: scale(1) rotate(0deg); opacity: 1; } 90% { transform: scale(1.03) rotate(5deg); opacity: 0; } 91% { transform: scale(0.82) rotate(-10deg); opacity: 0; } 99%, 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes efRoll4 { 0%, 27% { transform: translateY(0); } 33.34%, 60.6% { transform: translateY(-25%); } 66.67%, 94% { transform: translateY(-50%); } 100% { transform: translateY(-75%); } }
+@keyframes efDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.25; transform: scale(0.8); } }
+@keyframes efCaret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes efNudge { 0%, 60%, 100% { transform: translateX(0); } 72% { transform: translateX(7px); } 84% { transform: translateX(0); } }
+@keyframes efScan { 0% { transform: translateY(-100%); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(600%); opacity: 0; } }
+@keyframes efFill { 0% { transform: scaleX(0.04); } 92% { transform: scaleX(1); } 100% { transform: scaleX(1); } }
+@keyframes efFloat { 0%, 100% { transform: translateY(-7px); } 50% { transform: translateY(9px); } }
+@keyframes efTiltS { 0%, 100% { transform: perspective(600px) rotateX(7deg) rotateY(-7deg); } 50% { transform: perspective(600px) rotateX(11deg) rotateY(-22deg); } }
+@keyframes efTiltL { 0%, 100% { transform: perspective(900px) rotateX(13deg) rotateY(-15deg) translateY(2px); } 50% { transform: perspective(900px) rotateX(19deg) rotateY(-27deg) translateY(-9px); } }
+@keyframes efSlideR1 { 0% { transform: translateX(0); opacity: 1; } 0.5% { transform: translateX(110px); opacity: 0.25; } 100% { transform: translateX(0); opacity: 1; } }
+@keyframes efSlideR2 { 0% { transform: translateX(0); opacity: 1; } 0.5% { transform: translateX(110px); opacity: 0.25; } 100% { transform: translateX(0); opacity: 1; } }
+@keyframes efSlideL1 { 0% { transform: translateX(0); opacity: 1; } 0.5% { transform: translateX(-110px); opacity: 0.25; } 100% { transform: translateX(0); opacity: 1; } }
+@keyframes efSlideL2 { 0% { transform: translateX(0); opacity: 1; } 0.5% { transform: translateX(-110px); opacity: 0.25; } 100% { transform: translateX(0); opacity: 1; } }
+
+/* ── reduced motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise-in,
+  .scroll-bob,
+  .animate-marquee,
+  .caret-blink,
+  .animate-bob {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .link-underline,
+  .footer-hl,
+  .cap-chip {
+    transition: none;
+  }
+}
+
+/* ── v2 Footer ───────────────────────────────────────────────────
+   메타 컬럼은 4 → 2 → 1로 접힌다. 정책 컬럼은 넓은 화면에서 위로 당겨 다른 컬럼과 같은 높이에 놓는다. */
+.footer-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, auto));
+  justify-content: space-between;
+  gap: 36px min(108px, 5vw);
+  margin-top: 34px;
+  will-change: transform, opacity;
+}
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-width: 120px;
+  will-change: transform, opacity, filter;
+}
+.footer-col--policy {
+  margin-top: -140px;
+  align-self: start;
+}
+.footer-col__label {
+  font-size: 10.5px;
+  letter-spacing: 0.28em;
+  color: #4a4a52;
+  margin-bottom: 3px;
+}
+.footer-totop {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #8a8a93;
+  background: transparent;
+  border: 1px solid #26262e;
+  border-radius: 8px;
+  padding: 9px 15px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.footer-totop:hover {
+  color: #ededef;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+@media (max-width: 1023px) {
+  .footer-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: start;
+    gap: 32px 40px;
+  }
+  .footer-col--policy {
+    margin-top: 0;
+  }
+}
+@media (max-width: 560px) {
+  .footer-meta {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-totop {
+    transition: none;
+  }
+}
+
+/* 쇼케이스 가짜 커서 — 누를 때 링이 퍼진다 */
+.ghost-pointer { transition: opacity 0.3s; }
+.ghost-pointer__ring {
+  position: absolute; left: 4px; top: 2px; width: 14px; height: 14px; border-radius: 9999px;
+  border: 2px solid var(--accent); opacity: 0; transform: scale(0.4); pointer-events: none;
+}
+.ghost-pointer.is-down .ghost-pointer__ring { animation: ghost-ring 0.45s ease-out; }
+@keyframes ghost-ring { 0% { opacity: 0.9; transform: scale(0.4); } 100% { opacity: 0; transform: scale(2.4); } }
+
+/* 스플릿 플랩 — 위 반쪽이 앞으로 접히며 아래 반쪽이 드러난다 */
+.split-flap__char { display: inline-block; }
+.split-flap__top { transform-origin: 50% 100%; opacity: 0; }
+.split-flap.is-flip .split-flap__top { animation: flap-top 0.12s linear; }
+.split-flap.is-flip .split-flap__char { animation: flap-bottom 0.12s linear; }
+@keyframes flap-top { 0% { opacity: 1; transform: rotateX(0); } 100% { opacity: 1; transform: rotateX(-90deg); } }
+@keyframes flap-bottom { 0% { transform: translateY(0.08em); filter: brightness(0.7); } 100% { transform: translateY(0); filter: brightness(1); } }
+
+/* 스포트라이트 카드 — 포인터 자리(--sx/--sy)에서 테두리와 바탕이 빛난다 */
+.spot-card { --sx: -999px; --sy: -999px; }
+.spot-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(240px circle at var(--sx) var(--sy), color-mix(in oklab, var(--accent) 16%, transparent), transparent 60%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.spot-card::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1px;
+  background: radial-gradient(200px circle at var(--sx) var(--sy), var(--accent), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity 0.3s;
+}
+.group\/spot:hover .spot-card::before, .group\/spot:hover .spot-card::after, .group\/spot.is-ghost .spot-card::before, .group\/spot.is-ghost .spot-card::after { opacity: 1; }
+
+/* 글자 위로 빛이 훑는다 */
+.shimmer-text {
+  background: linear-gradient(110deg, var(--fg) 0%, var(--fg) 40%, var(--accent) 50%, var(--fg) 60%, var(--fg) 100%);
+  background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shimmer-text 2.8s ease-in-out infinite;
+}
+@keyframes shimmer-text { 0% { background-position: 120% 0; } 100% { background-position: -130% 0; } }
+@media (prefers-reduced-motion: reduce) { .shimmer-text { animation: none; color: var(--fg); background: none; } .split-flap.is-flip .split-flap__top, .split-flap.is-flip .split-flap__char { animation: none; } }
+
+/* 리퀴드 글래스 — 뒤가 비쳐 흐려지고, 위 모서리엔 빛, 아래엔 그림자. 가장자리는 굴절처럼 밝은 테두리 */
+/* macOS 시연 — 실제 시스템 서체. Mac 에선 SF Pro(+한글 Apple SD Gothic Neo)로 그려진다. SF 는 라이선스상 번들할 수 없어 시스템 스택으로 부른다.
+   사이트 글꼴의 stylistic set(ss01·ss02·cv01)은 SF 에서 다른 글리프를 켜므로 끈다 */
+.mac-ui {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Apple SD Gothic Neo', 'Helvetica Neue', system-ui, sans-serif;
+  font-feature-settings: normal;
+  letter-spacing: normal;
+  -webkit-font-smoothing: antialiased;
+}
+.mac-mono { font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace; font-feature-settings: normal; }
+/* Tahoe 다크 리퀴드 글래스 — 메뉴·팝오버·알림. 어두운 유리 + 위쪽 하이라이트 + 가장자리 굴절 */
+.liquid-glass-dark {
+  background: linear-gradient(180deg, rgba(66, 66, 72, 0.74), rgba(40, 40, 46, 0.8));
+  -webkit-backdrop-filter: blur(30px) saturate(170%);
+  backdrop-filter: blur(30px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    inset 1px 0 0 rgba(255, 255, 255, 0.09),
+    inset -1px 0 0 rgba(255, 255, 255, 0.09),
+    0 0 0 0.5px rgba(0, 0, 0, 0.6),
+    0 18px 50px -10px rgba(0, 0, 0, 0.7);
+}
+.liquid-glass-dark::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(120% 55% at 50% -10%, rgba(255, 255, 255, 0.16), transparent 60%);
+}
+
+/* 시연 안의 efface 앱 창은 다시 사이트 글꼴 */
+.site-ui { font-family: var(--font-sans); font-feature-settings: 'ss01', 'ss02', 'cv01'; }
+
+.liquid-glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12),
+    inset 1px 0 0 rgba(255, 255, 255, 0.18),
+    inset -1px 0 0 rgba(255, 255, 255, 0.18),
+    0 20px 50px -20px rgba(0, 0, 0, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.liquid-glass::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(120% 60% at 50% -10%, rgba(255, 255, 255, 0.35), transparent 60%);
+}
+.dock-tile { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0, 0, 0, 0.25), 0 6px 16px -6px rgba(0, 0, 0, 0.5); }
+
+/* 라이브 코드 캐럿 */
+.live-caret { display: inline-block; width: 2px; height: 1.1em; margin-left: 1px; vertical-align: -0.2em; background: var(--accent); animation: caret-blink 1s steps(2) infinite; }
+
+/* 글리치 — 채널 어긋남 + 가로 조각 */
+.glitch::before, .glitch::after { content: attr(data-text); position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.glitch::before { color: #ff2d55; transform: translate(-2px, 0); clip-path: inset(0 0 60% 0); animation: glitch-a 2.4s infinite steps(1); mix-blend-mode: screen; }
+.glitch::after { color: #2ea8ff; transform: translate(2px, 0); clip-path: inset(50% 0 0 0); animation: glitch-b 2.4s infinite steps(1); mix-blend-mode: screen; }
+.glitch:hover::before { animation-duration: 0.6s; } .glitch:hover::after { animation-duration: 0.6s; }
+@keyframes glitch-a {
+  0%, 82%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+  84% { clip-path: inset(10% 0 55% 0); transform: translate(-6px, -1px); }
+  87% { clip-path: inset(40% 0 30% 0); transform: translate(5px, 1px); }
+  90% { clip-path: inset(70% 0 5% 0); transform: translate(-3px, 0); }
+  93% { clip-path: inset(20% 0 65% 0); transform: translate(4px, 2px); }
+  96% { clip-path: inset(55% 0 20% 0); transform: translate(-5px, -2px); }
+}
+@keyframes glitch-b {
+  0%, 80%, 100% { clip-path: inset(100% 0 0 0); transform: translate(0); }
+  83% { clip-path: inset(60% 0 10% 0); transform: translate(6px, 1px); }
+  86% { clip-path: inset(15% 0 70% 0); transform: translate(-4px, -1px); }
+  89% { clip-path: inset(45% 0 35% 0); transform: translate(3px, 0); }
+  92% { clip-path: inset(5% 0 80% 0); transform: translate(-6px, 2px); }
+  95% { clip-path: inset(75% 0 8% 0); transform: translate(5px, -2px); }
+}
+@media (prefers-reduced-motion: reduce) { .glitch::before, .glitch::after { display: none; } .live-caret { animation: none; } }
+
+/* 테두리 빛줄기 */
+.border-beam { padding: 1.5px; background: conic-gradient(from var(--beam-angle, 0deg), transparent 0 70%, var(--accent) 85%, #fff 90%, transparent 100%); animation: beam-spin var(--beam-duration, 4s) linear infinite; }
+.border-beam:hover { animation-duration: calc(var(--beam-duration, 4s) / 2); }
+@property --beam-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes beam-spin { to { --beam-angle: 360deg; } }
+
+/* 유성 */
+.meteor { position: absolute; width: 2px; height: 2px; border-radius: 9999px; background: #fff; box-shadow: 0 0 6px 1px rgba(255,255,255,0.6); transform: rotate(215deg); animation: meteor linear infinite; opacity: 0; }
+.meteor::before { content: ''; position: absolute; top: 50%; left: 0; width: 140px; height: 1px; transform: translateY(-50%); background: linear-gradient(90deg, #fff, transparent); }
+@keyframes meteor { 0% { transform: rotate(215deg) translateX(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotate(215deg) translateX(-700px); opacity: 0; } }
+
+/* 와이프 글자 */
+.wipe-text__t { animation: wipe-t 4s cubic-bezier(0.22,1,0.36,1) infinite; }
+.wipe-text__bar { transform-origin: left; animation: wipe-bar 4s cubic-bezier(0.22,1,0.36,1) infinite; }
+@keyframes wipe-bar { 0% { transform: scaleX(0); transform-origin: left; } 30% { transform: scaleX(1); transform-origin: left; } 31% { transform-origin: right; } 55% { transform: scaleX(0); transform-origin: right; } 100% { transform: scaleX(0); } }
+@keyframes wipe-t { 0%, 30% { clip-path: inset(0 100% 0 0); } 55%, 80% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
+
+/* 네온 */
+.neon { color: #fff; text-shadow: 0 0 4px #fff, 0 0 10px var(--neon), 0 0 22px var(--neon), 0 0 44px var(--neon); animation: neon-on 2.2s ease-out both; }
+.neon__ch--flicker { animation: neon-flicker 6s infinite; }
+@keyframes neon-on { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; } 20%, 24%, 55% { opacity: 0.35; text-shadow: none; } }
+@keyframes neon-flicker { 0%, 88%, 100% { opacity: 1; } 89%, 91% { opacity: 0.25; text-shadow: none; } 90% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .border-beam, .meteor, .wipe-text__t, .wipe-text__bar, .neon, .neon__ch--flicker { animation: none; } .wipe-text__t { clip-path: none; } .wipe-text__bar { display: none; } }
+
+/* 쇼케이스 크게 보기 — 고정 높이 래퍼(h-[…px])는 대화상자를 꽉 채우고, 나머지 데모는 원래 크기로 가운데 */
+.showcase-lightbox > div[class*='h-['] { height: 100% !important; width: 100% !important; max-width: none !important; }
+
+/* 본문 건너뛰기 — 포커스될 때만 화면에 (sr-only 유틸은 position 이 fixed 를 덮어 써서 직접 정의) */
+.skip-link { position: absolute; left: -9999px; top: 0; }
+.skip-link:focus { position: fixed; left: 8px; top: 8px; z-index: 70; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); font-size: 14px; }

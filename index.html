@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0b" />
+    <!-- 저장된 테마를 첫 페인트 전에 적용 — 내용을 바꾸면 worker/index.ts 의 THEME_SCRIPT_HASH 도 갱신 (tests 가 검사) -->
+    <script>try{var t=localStorage.getItem('efface-ds-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+    <title>efface design system</title>
+    <meta name="description" content="efface 제품들이 함께 쓰는 색, 글꼴, 간격, 모션을 한곳에 모았어요. 바로 미리 보고, 코드는 복사해서 쓰면 됩니다." />
+    <!-- 링크 미리보기 봇은 JS 를 안 돌리므로 사이트 전역 값은 정적으로. 라우트별 값은 src/docs/components/Seo.tsx 가 덮어쓴다 -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="efface design system" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:title" content="efface design system" />
+    <meta property="og:description" content="efface 제품들이 함께 쓰는 색, 글꼴, 간격, 모션을 한곳에 모았어요. 바로 미리 보고, 코드는 복사해서 쓰면 됩니다." />
+    <meta property="og:url" content="https://component.efface.dev/" />
+    <meta property="og:image" content="https://component.efface.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="efface design system" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="efface design system" />
+    <meta name="twitter:description" content="efface 제품들이 함께 쓰는 색, 글꼴, 간격, 모션을 한곳에 모았어요. 바로 미리 보고, 코드는 복사해서 쓰면 됩니다." />
+    <meta name="twitter:image" content="https://component.efface.dev/og.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- JetBrains Mono 는 모든 페이지 첫 화면(라벨)에 쓰인다 — CSS 파싱을 기다리지 않게 미리 받는다.
+         Space Grotesk · Archivo Black 은 필요한 컴포넌트에서 지연 로드 (src/lib/fonts.ts) -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTOlOV.woff2"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
