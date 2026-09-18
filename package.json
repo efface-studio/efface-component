@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "oxlint src",
+    "lint": "oxlint src worker tests",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "deploy": "npm run build && npx wrangler@4 deploy",
-    "og": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --hide-scrollbars --window-size=1200,630 --screenshot=public/og.png scripts/og/og.html"
+    "og": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --hide-scrollbars --window-size=1200,630 --screenshot=public/og.png scripts/og/og.html",
+    "test": "node --test tests/*.test.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
