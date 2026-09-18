@@ -17,12 +17,25 @@ export function ElasticTabs({ tabs, value, onChange, className }: ElasticTabsPro
   const [inner, setInner] = useState(0)
   const active = value ?? inner
   return (
-    <div className={cn('relative inline-flex rounded-full border border-line bg-surface p-1', className)} role="tablist">
+    <div
+      className={cn('relative inline-flex rounded-full border border-line bg-surface p-1', className)}
+      role="tablist"
+      onKeyDown={(e) => {
+        // 화살표로 탭 이동 — 탭 목록 관례
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+        e.preventDefault()
+        const next = (active + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length
+        setInner(next)
+        onChange?.(next)
+        ;(e.currentTarget.children[next] as HTMLElement | undefined)?.focus()
+      }}
+    >
       {tabs.map((t, i) => (
         <button
           key={t}
           type="button"
           role="tab"
+          tabIndex={active === i ? 0 : -1}
           aria-selected={active === i}
           onClick={() => {
             setInner(i)

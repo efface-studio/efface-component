@@ -32,7 +32,7 @@ export function SubmitButton({ status = 'idle', children, loadingLabel = '확인
       aria-busy={busy || undefined}
       className={cn(
         'relative flex h-12 w-full items-center justify-center overflow-hidden font-medium transition-colors duration-300 disabled:cursor-default',
-        status === 'success' ? 'bg-accent text-white' : status === 'error' ? 'bg-red-500 text-white' : 'bg-fg text-bg hover:bg-fg-2',
+        status === 'success' ? 'bg-accent text-white' : status === 'error' ? 'bg-danger text-white' : 'bg-fg text-bg hover:bg-fg-2',
         className,
       )}
       animate={{ borderRadius: busy || status === 'success' ? 24 : 6, x: status === 'error' && !reduce ? [0, -8, 8, -6, 6, -3, 3, 0] : 0 }}
@@ -44,6 +44,7 @@ export function SubmitButton({ status = 'idle', children, loadingLabel = '확인
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={status}
+          aria-live="polite"
           className="relative flex items-center gap-2"
           initial={{ y: 10, opacity: 0, filter: 'blur(4px)' }}
           animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}

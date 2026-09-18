@@ -28,6 +28,8 @@
   --line: #e5e5e5;
   --line-soft: #f0f0f0;
   --line-strong: #d4d4d4;
+  /* 오류 — 라이트는 글자 대비 4.5:1 이상인 진한 빨강 */
+  --danger: #dc2626;
 
   /* 소셜 로그인 — 각 회사 브랜드 가이드의 라이트 버전 */
   --social-google-bg: #ffffff;
@@ -77,6 +79,7 @@
   --line: rgba(255, 255, 255, 0.09);
   --line-soft: rgba(255, 255, 255, 0.05);
   --line-strong: rgba(255, 255, 255, 0.16);
+  --danger: #fb2c36;
 
   /* 소셜 로그인 — 다크 버전(구글 다크 테마 버튼 · 애플/깃허브는 반전) */
   --social-google-bg: #131314;
@@ -147,6 +150,7 @@
   /* 카카오 */
   --color-kakao: #fee500;
   --color-kakao-fg: #191919;
+  --color-danger: var(--danger);
   /* 소셜 로그인 (테마별 값은 위 [data-theme] 블록) */
   --color-google: var(--social-google-bg);
   --color-google-fg: var(--social-google-fg);
@@ -810,3 +814,10 @@
 @keyframes neon-on { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; } 20%, 24%, 55% { opacity: 0.35; text-shadow: none; } }
 @keyframes neon-flicker { 0%, 88%, 100% { opacity: 1; } 89%, 91% { opacity: 0.25; text-shadow: none; } 90% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .border-beam, .meteor, .wipe-text__t, .wipe-text__bar, .neon, .neon__ch--flicker { animation: none; } .wipe-text__t { clip-path: none; } .wipe-text__bar { display: none; } }
+
+/* 쇼케이스 크게 보기 — 고정 높이 래퍼(h-[…px])는 대화상자를 꽉 채우고, 나머지 데모는 원래 크기로 가운데 */
+.showcase-lightbox > div[class*='h-['] { height: 100% !important; width: 100% !important; max-width: none !important; }
+
+/* 본문 건너뛰기 — 포커스될 때만 화면에 (sr-only 유틸은 position 이 fixed 를 덮어 써서 직접 정의) */
+.skip-link { position: absolute; left: -9999px; top: 0; }
+.skip-link:focus { position: fixed; left: 8px; top: 8px; z-index: 70; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); font-size: 14px; }

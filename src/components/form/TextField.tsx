@@ -64,7 +64,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
           className={cn(
             'group/field relative flex items-center gap-2 overflow-hidden rounded-md border bg-surface px-3 transition-[border-color,box-shadow] duration-200',
             invalid
-              ? 'border-red-500 focus-within:shadow-[0_0_0_3px_rgba(239,68,68,0.18)]'
+              ? 'border-danger focus-within:shadow-[0_0_0_3px_rgba(239,68,68,0.18)]'
               : valid
                 ? 'border-emerald-500/70'
                 : 'border-line hover:border-line-strong focus-within:border-accent focus-within:shadow-[0_0_0_3px_var(--accent-soft)]',
@@ -88,7 +88,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
           {/* 밑줄 — 왼쪽에서 그어진다 */}
           <motion.span
             aria-hidden
-            className={cn('pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left', invalid ? 'bg-red-500' : valid ? 'bg-emerald-500' : 'bg-accent')}
+            className={cn('pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left', invalid ? 'bg-danger' : valid ? 'bg-emerald-500' : 'bg-accent')}
             initial={false}
             animate={{ scaleX: focused || invalid || valid ? 1 : 0 }}
             transition={SPRING}
@@ -106,7 +106,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
             {label && floating && (
               <motion.label
                 htmlFor={inputId}
-                className={cn('pointer-events-none absolute left-0 origin-left whitespace-nowrap', lifted ? (focused ? 'text-accent' : invalid ? 'text-red-500' : 'text-fg-dim') : 'text-fg-faint')}
+                className={cn('pointer-events-none absolute left-0 origin-left whitespace-nowrap', lifted ? (focused ? 'text-accent' : invalid ? 'text-danger' : 'text-fg-dim') : 'text-fg-faint')}
                 initial={false}
                 animate={{ y: lifted ? -(h / 2 + 12) : 0, scale: lifted ? 0.8 : 1, fontSize: 15 }}
                 transition={SPRING}
@@ -136,7 +136,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
                 setFocused(false)
                 onBlur?.(e)
               }}
-              className={cn('h-full w-full min-w-0 bg-transparent text-[15px] text-fg outline-none placeholder:text-fg-faint', inputClassName)}
+              className={cn('h-full w-full min-w-0 bg-transparent text-[15px] text-fg outline-none placeholder:text-fg-dim/70', inputClassName)}
               {...rest}
             />
             {overlay}
@@ -161,7 +161,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
           <motion.p
             key={error ? `err:${error}` : `hint:${hint}`}
             id={descId}
-            className={cn('text-[12.5px] leading-snug', error ? 'text-red-500' : 'text-fg-dim')}
+            className={cn('text-[12.5px] leading-snug', error ? 'text-danger' : 'text-fg-dim')}
             role={error ? 'alert' : undefined}
             initial={{ opacity: 0, y: -4, x: error ? -6 : 0 }}
             animate={{ opacity: 1, y: 0, x: 0 }}

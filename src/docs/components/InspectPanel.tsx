@@ -121,7 +121,7 @@ export function InspectPanel({ selected, hovered, distances, className }: Inspec
   const isSel = !!selected
 
   return (
-    <aside className={cn('flex flex-col gap-5 text-[13px]', className)} aria-live="polite">
+    <aside className={cn('flex flex-col gap-5 text-[13px]', className)}>
       {!info ? (
         <div className="rounded-xl border border-line bg-bg-soft p-4">
           <p className="text-[13px] font-medium">요소를 가리켜 보세요</p>

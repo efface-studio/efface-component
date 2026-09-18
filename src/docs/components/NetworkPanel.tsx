@@ -18,9 +18,9 @@ const isErr = (e: NetEntry) => (e.kind === 'console' && e.level === 'error') || 
 
 function statusTone(e: NetEntry) {
   if (e.pending) return 'text-fg-faint'
-  if (e.error || e.status === 0) return 'text-red-500'
+  if (e.error || e.status === 0) return 'text-danger'
   const s = e.status ?? 0
-  if (s >= 500) return 'text-red-500'
+  if (s >= 500) return 'text-danger'
   if (s >= 400) return 'text-amber-500'
   if (s >= 300) return 'text-sky-500'
   if (s >= 200) return 'text-emerald-500'
@@ -101,10 +101,10 @@ export function NetworkPanel({ entries, frameHost, onClear }: { entries: NetEntr
           >
             {f.label}
             {f.id === 'api' && counts.api > 0 && <span className="ml-1 opacity-60">{counts.api}</span>}
-            {f.id === 'errors' && counts.errors > 0 && <span className={cn('ml-1', filter === 'errors' ? 'opacity-60' : 'text-red-500')}>{counts.errors}</span>}
+            {f.id === 'errors' && counts.errors > 0 && <span className={cn('ml-1', filter === 'errors' ? 'opacity-60' : 'text-danger')}>{counts.errors}</span>}
           </button>
         ))}
-        <button type="button" onClick={onClear} title="비우기" className="ml-auto flex h-7 w-7 items-center justify-center rounded-md text-fg-faint hover:bg-line/40 hover:text-fg">
+        <button type="button" onClick={onClear} title="비우기" aria-label="활동 비우기" className="ml-auto flex h-8 w-8 items-center justify-center rounded-md text-fg-faint hover:bg-line/40 hover:text-fg">
           <Trash2 size={13} />
         </button>
       </div>
@@ -112,6 +112,7 @@ export function NetworkPanel({ entries, frameHost, onClear }: { entries: NetEntr
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="경로 · 상태코드 검색"
+        aria-label="경로 · 상태코드 검색"
         className="mt-2 h-8 w-full rounded-md border border-line bg-bg px-2.5 font-mono text-[11.5px] text-fg outline-none placeholder:text-fg-faint focus:border-accent"
       />
       <div
@@ -151,7 +152,7 @@ function Row({ e, frameHost, open, onToggle }: { e: NetEntry; frameHost: string;
   }
   if (e.kind === 'console') {
     return (
-      <li className={cn('px-2.5 py-1.5', e.level === 'error' ? 'text-red-500' : 'text-amber-500')}>
+      <li className={cn('px-2.5 py-1.5', e.level === 'error' ? 'text-danger' : 'text-amber-500')}>
         <button type="button" onClick={onToggle} className="flex w-full items-start gap-2 text-left">
           <AlertTriangle size={12} className="mt-0.5 shrink-0" />
           <span className={cn('min-w-0 flex-1 break-all', !open && 'line-clamp-2')}>{e.text}</span>

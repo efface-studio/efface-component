@@ -1,10 +1,12 @@
-import { Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
+import { Suspense, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { useReducedMotion } from 'motion/react'
-import { ArrowUpRight, Bell, Camera, Heart, MessageCircle, Pause, Play, Search, Settings, User } from 'lucide-react'
+import { ArrowUpRight, Bell, Camera, Heart, Maximize2, MessageCircle, Pause, Play, Search, Settings, User, X } from 'lucide-react'
 import { DocPage, Note } from '@/docs/components/Doc'
 import { AutoplayContext, useAutoplay } from '@/docs/components/autoplay'
 import { GhostPointer } from '@/docs/components/GhostPointer'
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import { LogoParticleHero } from '@/docs/components/LogoParticleHero'
 import { cn } from '@/lib/cn'
 import {
@@ -28,6 +30,7 @@ function Card({
   tag,
   ghost,
   click,
+  dark,
   children,
   className,
   bodyClassName,
@@ -40,6 +43,8 @@ function Card({
   ghost?: boolean
   /** 가짜 커서가 가끔 누른다 */
   click?: boolean
+  /** 항상 다크로 — 검은 바탕이 필요한 데모. 글자 토큰도 같이 뒤집혀 라이트 테마에서 사라지지 않는다 */
+  dark?: boolean
   children: ReactNode
   className?: string
   bodyClassName?: string
@@ -49,11 +54,12 @@ function Card({
   const [hover, setHover] = useState(false)
   const [focus, setFocus] = useState(false)
   const [manual, setManual] = useState(false)
+  const [expanded, setExpanded] = useState(false)
   // 화면 근처에 있을 때만 데모를 마운트한다 — 수십 개의 canvas 가 동시에 돌지 않게. 높이는 기억해 둬서 흔들리지 않는다
   const [near, setNear] = useState(false)
   const [keepH, setKeepH] = useState<number>()
   const reduce = useReducedMotion()
-  const playing = !hover && !focus && !manual && near && !reduce
+  const playing = !hover && !focus && !manual && near && !reduce && !expanded
 
   useEffect(() => {
     const el = wrap.current
@@ -104,13 +110,19 @@ function Card({
 
   return (
     <div ref={wrap} className={cn('flex flex-col overflow-hidden rounded-xl border border-line bg-surface', className)}>
-      <div ref={body} className={cn('relative flex min-h-[240px] flex-1 items-center justify-center overflow-hidden bg-bg', playing && ghost && 'is-ghost', bodyClassName)} style={keepH ? { minHeight: keepH } : undefined}>
-        {near && (
+      <div
+        ref={body}
+        data-theme={dark ? 'dark' : undefined}
+        className={cn('relative flex min-h-[240px] flex-1 items-center justify-center overflow-hidden bg-bg text-fg', playing && ghost && 'is-ghost', bodyClassName)}
+        style={keepH ? { minHeight: keepH } : undefined}
+      >
+        {/* 크게 보는 동안엔 카드 안 데모를 내린다 — 같은 시뮬레이션을 둘 돌리지 않게 */}
+        {near && !expanded && (
           <AutoplayContext.Provider value={playing}>
             <Suspense fallback={null}>{children}</Suspense>
           </AutoplayContext.Provider>
         )}
-        {ghost && near && <GhostPointer active={playing} click={click} />}
+        {ghost && near && !expanded && <GhostPointer active={playing} click={click} />}
       </div>
       <div className="flex items-start gap-3 border-t border-line px-4 py-3.5">
         <div className="min-w-0 flex-1">
@@ -120,24 +132,88 @@ function Card({
           </div>
           <p className="mt-1 text-[12.5px] leading-relaxed text-fg-dim">{desc}</p>
         </div>
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="-my-0.5 flex shrink-0 items-center gap-0.5">
           <button
             type="button"
             onClick={() => setManual((v) => !v)}
-            className={cn('flex h-7 items-center gap-1 rounded-md px-2 font-mono text-[10.5px] transition-colors', playing ? 'text-fg-faint hover:bg-line/40 hover:text-fg' : manual ? 'bg-fg text-bg' : 'text-fg-dim')}
+            aria-pressed={manual}
+            className={cn('flex h-8 items-center gap-1 rounded-md px-2 font-mono text-[10.5px] transition-colors', playing ? 'text-fg-faint hover:bg-line/40 hover:text-fg' : manual ? 'bg-fg text-bg' : 'text-fg-dim')}
             title={manual ? '자동 재생' : '멈추고 직접 해보기'}
           >
             {playing ? <Play size={11} /> : <Pause size={11} />}
             {playing ? 'auto' : manual ? 'manual' : 'paused'}
           </button>
+          <button type="button" onClick={() => setExpanded(true)} aria-label={`${title} 크게 보기`} title="크게 보기" className="flex h-8 w-8 items-center justify-center rounded-md text-fg-faint hover:bg-line/40 hover:text-fg">
+            <Maximize2 size={14} />
+          </button>
           {to && (
-            <Link to={to} className="flex h-7 w-7 items-center justify-center rounded-md text-fg-faint hover:bg-line/40 hover:text-fg" title="문서로">
+            <Link to={to} aria-label={`${title} 문서로`} className="flex h-8 w-8 items-center justify-center rounded-md text-fg-faint hover:bg-line/40 hover:text-fg" title="문서로">
               <ArrowUpRight size={14} />
             </Link>
           )}
         </div>
       </div>
+      {expanded && (
+        <Lightbox title={title} ghost={ghost} click={click} dark={dark} onClose={() => setExpanded(false)}>
+          {children}
+        </Lightbox>
+      )}
     </div>
+  )
+}
+
+/**
+ * 크게 보기 — 화면을 거의 채우는 대화상자에 같은 데모를 다시 그린다.
+ * 고정 높이 래퍼(h-[…px])는 CSS(.showcase-lightbox)가 꽉 채우고, 나머지는 가운데 원래 크기.
+ * Esc·바깥 클릭으로 닫히고, 닫히면 포커스가 열었던 버튼으로 돌아간다.
+ */
+function Lightbox({ title, ghost, click, dark, onClose, children }: { title: string; ghost?: boolean; click?: boolean; dark?: boolean; onClose: () => void; children: ReactNode }) {
+  const [hover, setHover] = useState(false)
+  const reduce = useReducedMotion()
+  const closeRef = useRef<HTMLButtonElement>(null)
+  useBodyScrollLock(true)
+  useEffect(() => {
+    const prev = document.activeElement as HTMLElement | null
+    closeRef.current?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      prev?.focus()
+    }
+  }, [onClose])
+  const playing = !hover && !reduce
+  return createPortal(
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-3 backdrop-blur-sm md:p-6" onClick={onClose}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        data-theme={dark ? 'dark' : undefined}
+        onClick={(e) => e.stopPropagation()}
+        className="relative flex h-[min(90dvh,1100px)] w-[min(98vw,1700px)] flex-col overflow-hidden rounded-2xl border border-line bg-bg text-fg shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)]"
+      >
+        <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-2">
+          <h3 className="text-[14px] font-semibold tracking-tight">{title}</h3>
+          <button ref={closeRef} type="button" onClick={onClose} aria-label="닫기" className="-mr-1 flex h-9 w-9 items-center justify-center rounded-md text-fg-dim hover:bg-line/40 hover:text-fg">
+            <X size={16} />
+          </button>
+        </div>
+        <div
+          className={cn('showcase-lightbox relative flex min-h-0 flex-1 items-center justify-center overflow-hidden', playing && ghost && 'is-ghost')}
+          onPointerEnter={(e) => e.isTrusted && setHover(true)}
+          onPointerLeave={(e) => e.isTrusted && setHover(false)}
+        >
+          <AutoplayContext.Provider value={playing}>
+            <Suspense fallback={null}>{children}</Suspense>
+          </AutoplayContext.Provider>
+          {ghost && <GhostPointer active={playing} click={click} />}
+        </div>
+      </div>
+    </div>,
+    document.body,
   )
 }
 
@@ -190,7 +266,9 @@ function SplitFlapDemo() {
       <SplitFlap key={replay} text={LINES[i] ?? ''} length={16} className="text-[22px]" />
       <div className="flex gap-1.5">
         {LINES.map((l, j) => (
-          <button key={l} type="button" onClick={() => setI(j)} className={cn('h-1.5 w-6 rounded-full transition-colors', i === j ? 'bg-fg' : 'bg-line hover:bg-line-strong')} aria-label={l} />
+          <button key={l} type="button" onClick={() => setI(j)} aria-label={l} aria-pressed={i === j} className="group/dot flex h-8 items-center px-0.5">
+            <span className={cn('h-1.5 w-6 rounded-full transition-colors', i === j ? 'bg-fg' : 'bg-line group-hover/dot:bg-line-strong')} />
+          </button>
         ))}
       </div>
     </div>
@@ -387,8 +465,8 @@ function SkeletonAuto() {
             </>
           ) : (
             <>
-              <p className="text-[14px] font-medium">Jiwan Seo</p>
-              <p className="text-[12px] text-fg-dim">Design engineer</p>
+              <span className="block text-[14px] font-medium">Jiwan Seo</span>
+              <span className="block text-[12px] text-fg-dim">Design engineer</span>
             </>
           )}
         </div>
@@ -400,7 +478,7 @@ function SkeletonAuto() {
             <Skeleton className="h-3 w-5/6" />
           </>
         ) : (
-          <p className="text-[13px] leading-relaxed text-fg-dim">복잡함은 지우고, 효과만 남깁니다.</p>
+          <span className="block text-[13px] leading-relaxed text-fg-dim">복잡함은 지우고, 효과만 남깁니다.</span>
         )}
       </div>
     </button>
@@ -525,6 +603,15 @@ function NotifDemo() {
   )
 }
 
+function MandelbrotDemo() {
+  const playing = useContext(AutoplayContext)
+  return (
+    <div className="h-[420px] w-full">
+      <Mandelbrot auto={playing} />
+    </div>
+  )
+}
+
 /* ───────────────────────── 페이지 ───────────────────────── */
 
 export function ShowcasePage() {
@@ -554,10 +641,8 @@ export function ShowcasePage() {
               <SDFScene />
             </div>
           </Card>
-          <Card title="Mandelbrot" desc="만델브로트 집합. 포인터가 가리키는 자리로 끝없이 확대해 들어가요 — 경계가 계속 새 모양을 드러내요. 누르면 빨리, 나가면 다시 멀어져요." tag="new" ghost click>
-            <div className="h-[320px] w-full">
-              <Mandelbrot />
-            </div>
+          <Card title="Mandelbrot 우주" desc="어디든 갈 수 있어요 — 끌어서 이동, 휠·핀치·더블클릭으로 확대, 화살표·+/- 키. 위 칩의 행성(해마 골짜기 · 코끼리 골짜기 · 미니 만델브로트 …)으로 비행하고, 섭동 렌더링이라 float 한계를 넘어 10¹³× 까지 들어가요. 가만히 두면 행성들을 차례로 돌아요." tag="new" className="md:col-span-2">
+            <MandelbrotDemo />
           </Card>
           <Card title="WaterRipple" desc="물결. 파동 방정식을 풀어 아래 로고를 굴절시켜요. 스치면 물방울, 누르면 큰 파문, 가만히 두면 빗방울." tag="new" ghost click>
             <div className="h-[300px] w-full">
@@ -655,7 +740,7 @@ export function ShowcasePage() {
             </div>
           </Card>
           <Card title="PressureText" desc="가변 글꼴의 굵기 축을 포인터가 눌러요 — 가까운 글자는 두꺼워지고 멀면 가늘어져요." tag="new" ghost>
-            <PressureText text="Pressure" className="text-6xl tracking-tight" />
+            <PressureText text="Pressure" className="text-5xl tracking-tight md:text-6xl" />
           </Card>
           <Card title="Constellation" desc="별들이 떠다니며 가까운 별끼리 실처럼 이어져요. 포인터는 큰 별, 누르면 밀려나요." tag="new" ghost click bodyClassName="text-fg">
             <div className="h-[300px] w-full">
@@ -758,14 +843,14 @@ export function Login() {
             />
           </Card>
           <Card title="Glitch" desc="채널이 어긋나고 가로 조각이 튀어요. 호버하면 더 심해져요." tag="new" ghost>
-            <Glitch text="EFFACE" className="text-6xl" />
+            <Glitch text="EFFACE" className="text-5xl md:text-6xl" />
           </Card>
-          <Card title="Neon" desc="네온 사인. 켜질 때 깜빡이다 안정되고, 이따금 한 글자가 툭 꺼졌다 켜져요." tag="new" bodyClassName="bg-[#0a0812]">
+          <Card title="Neon" desc="네온 사인. 켜질 때 깜빡이다 안정되고, 이따금 한 글자가 툭 꺼졌다 켜져요." tag="new" dark>
             <Replay every={6000}>
               <Neon text="OPEN 24H" className="text-5xl" />
             </Replay>
           </Card>
-          <Card title="Meteors · BorderBeam" desc="유성우가 떨어지고, 카드 테두리를 빛줄기가 돌아요." tag="new" bodyClassName="bg-[#05060a]">
+          <Card title="Meteors · BorderBeam" desc="유성우가 떨어지고, 카드 테두리를 빛줄기가 돌아요." tag="new" dark>
             <div className="relative flex h-[300px] w-full items-center justify-center">
               <Meteors />
               <BorderBeam>
@@ -810,7 +895,7 @@ export function Login() {
             </JellyCard>
           </Card>
           <Card title="WipeText" desc="액센트 막대가 훑고 지나가면 글자가 남고, 돌아오며 지워요." tag="new">
-            <WipeText text="Less, but better." className="text-5xl" />
+            <WipeText text="Less, but better." className="text-4xl md:text-5xl" />
           </Card>
           <Card title="Clock" desc="초침이 미끄러지듯 흐르고, 바늘 그림자가 빛(포인터) 방향에 따라 떨어져요." tag="new" ghost bodyClassName="text-fg">
             <Clock />
@@ -823,7 +908,7 @@ export function Login() {
               <ParticleMorph3D />
             </div>
           </Card>
-          <Card title="LogoTilt3D" desc="CSS 3D 로 두껍게 쌓은 efface 마크. 두 판이 다른 높이에 떠서 기울고, 빛과 그림자가 따라 움직여요." tag="new" ghost bodyClassName="bg-[#0b0c10]">
+          <Card title="LogoTilt3D" desc="CSS 3D 로 두껍게 쌓은 efface 마크. 두 판이 다른 높이에 떠서 기울고, 빛과 그림자가 따라 움직여요." tag="new" ghost dark>
             <div className="h-[320px] w-full">
               <LogoTilt3D size={200} />
             </div>
@@ -843,7 +928,7 @@ export function Login() {
             </MorphCursor>
           </Card>
           <Card title="MorphText" desc="단어가 다음 단어로 녹아내리듯 바뀌어요 — 획이 액체처럼 이어졌다 갈라져요." tag="new">
-            <MorphText words={['Erase', 'Design', 'Build', 'Ship', 'efface']} className="text-6xl font-bold tracking-tight" />
+            <MorphText words={['Erase', 'Design', 'Build', 'Ship', 'efface']} className="text-5xl font-bold tracking-tight md:text-6xl" />
           </Card>
           <Card title="KineticText" desc="같은 글자 줄이 여러 겹 쌓여 3D 로 물결쳐요. 포인터 쪽으로 기울어요." tag="new" ghost>
             <div className="h-[320px] w-full">
@@ -926,7 +1011,7 @@ export function Login() {
             <ScrambleDemo />
           </Card>
           <Card title="JellyText" desc="가까운 글자가 젤리처럼 밀려 올라가고 커졌다가 스프링으로 돌아와요." tag="new" ghost>
-            <JellyText text="Jelly, wobble, bounce." className="text-4xl font-semibold tracking-tight" />
+            <JellyText text="Jelly, wobble, bounce." className="text-3xl font-semibold tracking-tight md:text-4xl" />
           </Card>
           <Card title="Odometer" desc="숫자가 드럼처럼 굴러요. 오른쪽 자리부터 늦게 따라와 물결처럼." tag="new">
             <OdometerDemo />
@@ -937,7 +1022,7 @@ export function Login() {
             </div>
           </Card>
           <Card title="SpotlightGrid" desc="포인터 자리에서 각 카드의 테두리와 바탕이 빛나요 (Linear 식). 렌더 없이 CSS 변수만 갱신." tag="new" ghost bodyClassName="p-5">
-            <SpotlightGrid className="w-full grid-cols-3">
+            <SpotlightGrid className="w-full grid-cols-2 sm:grid-cols-3">
               {['Design', 'Build', 'Ship', 'Measure', 'Learn', 'Repeat'].map((t, i) => (
                 <SpotCard key={t} className="h-[100px]">
                   <p className="font-mono text-[10px] text-fg-faint">0{i + 1}</p>
@@ -989,7 +1074,7 @@ export function Login() {
               <SentMail />
             </Replay>
           </Card>
-          <Card title="3D 유리 로고" desc="포인터를 따라 입체적으로 기울어요. 투명 배경." to="/components/brand" tag="ours" ghost bodyClassName="bg-[#0b0c10]">
+          <Card title="3D 유리 로고" desc="포인터를 따라 입체적으로 기울어요. 투명 배경." to="/components/brand" tag="ours" ghost dark>
             <div className="h-[280px] w-full">
               <LogoScene3D transparent centered follow scale={0.6} />
             </div>

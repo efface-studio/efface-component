@@ -131,8 +131,8 @@ export function OTPInput({ length = 6, value, onChange, onComplete, status = 'id
       }
     if (status === 'error')
       return {
-        borderColor: 'var(--color-red-500)',
-        color: 'var(--color-red-500)',
+        borderColor: 'var(--color-danger)',
+        color: 'var(--color-danger)',
         backgroundColor: ['var(--surface)', 'rgba(239,68,68,0.16)', 'var(--surface)'],
         transition: { duration: 0.5, delay: i * 0.04 },
       }
@@ -141,6 +141,9 @@ export function OTPInput({ length = 6, value, onChange, onComplete, status = 'id
 
   return (
     <div className={cn('flex flex-col gap-3', className)}>
+      <span className="sr-only" role="status">
+        {status === 'verifying' ? '확인 중' : status === 'success' ? '확인됐어요' : status === 'error' ? (errorMessage ?? '코드가 맞지 않아요') : ''}
+      </span>
       {label && (
         <label htmlFor={id} className="text-[13px] font-medium text-fg">
           {label}
@@ -167,7 +170,7 @@ export function OTPInput({ length = 6, value, onChange, onComplete, status = 'id
             pattern="[0-9]*"
             maxLength={length}
             disabled={disabled || busy}
-            aria-label={label}
+            aria-label={label || '인증코드'}
             className={cn('absolute inset-0 z-10 w-full cursor-text opacity-0', busy && 'pointer-events-none')}
             style={{ caretColor: 'transparent' }}
           />
@@ -181,7 +184,7 @@ export function OTPInput({ length = 6, value, onChange, onComplete, status = 'id
                   key={i}
                   className={cn(
                     'relative flex h-14 flex-1 items-center justify-center rounded-xl border bg-surface text-[24px] font-semibold tracking-tight tabular-nums',
-                    err ? 'border-red-500 text-red-500' : d ? 'border-line-strong text-fg' : 'border-line text-fg',
+                    err ? 'border-danger text-danger' : d ? 'border-line-strong text-fg' : 'border-line text-fg',
                   )}
                   initial={false}
                   animate={cellAnim(i)}
@@ -265,7 +268,7 @@ export function OTPInput({ length = 6, value, onChange, onComplete, status = 'id
       </LayoutGroup>
       <AnimatePresence>
         {status === 'error' && errorMessage && (
-          <motion.p key="err" role="alert" className="text-[12.5px] text-red-500" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <motion.p key="err" role="alert" className="text-[12.5px] text-danger" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             {errorMessage}
           </motion.p>
         )}

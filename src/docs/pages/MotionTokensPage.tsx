@@ -15,7 +15,7 @@ function EasingCurve({ value }: { value: string }) {
   const py = (y: number) => H - y * H
   const d = `M ${px(0)} ${py(0)} C ${px(x1 ?? 0)} ${py(y1 ?? 0)}, ${px(x2 ?? 1)} ${py(y2 ?? 1)}, ${px(1)} ${py(1)}`
   return (
-    <svg viewBox={`-6 -12 ${W + 12} ${H + 24}`} className="h-20 w-32 shrink-0">
+    <svg aria-hidden viewBox={`-6 -12 ${W + 12} ${H + 24}`} className="h-20 w-32 shrink-0">
       <line x1={0} y1={py(0)} x2={W} y2={py(1)} stroke="var(--line-strong)" strokeDasharray="3 3" />
       <path d={d} fill="none" stroke="var(--accent)" strokeWidth={2} />
       <circle cx={px(x1 ?? 0)} cy={py(y1 ?? 0)} r={2.5} fill="var(--fg-faint)" />

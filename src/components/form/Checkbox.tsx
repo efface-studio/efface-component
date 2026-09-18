@@ -36,7 +36,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
           {...rest}
         />
         <motion.span
-          className={cn('absolute inset-0 rounded-[5px] border transition-[border-color,box-shadow] duration-200 peer-focus-visible:shadow-[0_0_0_3px_var(--accent-soft)] group-hover:border-fg-faint', on ? 'border-accent bg-accent' : 'border-line-strong bg-surface')}
+          className={cn('absolute inset-0 rounded-[5px] border transition-[border-color,box-shadow] duration-200 peer-focus-visible:border-accent peer-focus-visible:shadow-[0_0_0_2px_var(--bg),0_0_0_4px_var(--accent)] group-hover:border-fg-faint', on ? 'border-accent bg-accent' : 'border-line-strong bg-surface')}
           animate={on && !reduce ? { scale: [1, 1.25, 1] } : { scale: 1 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         />

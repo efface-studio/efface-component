@@ -118,7 +118,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(fu
         </div>
       )}
       {rules && (
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5" aria-live="polite">
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
           {PASSWORD_RULES.map((r) => {
             const ok = r.test(value)
             return (

@@ -165,7 +165,8 @@ function SignupScreen() {
   const [pw2, setPw2] = useState('')
   const [agree, setAgree] = useState(false)
   const { status, submit } = useFakeSubmit()
-  const mismatch = pw2 && pw !== pw2 ? '비밀번호가 서로 달라요.' : undefined
+  // 치는 도중부터 빨개지지 않게 — 원래 비밀번호 길이만큼 쳤을 때부터 비교
+  const mismatch = pw2 && pw2.length >= pw.length && pw !== pw2 ? '비밀번호가 서로 달라요.' : undefined
   // 이름 · 이메일 · 비밀번호 규칙 전부 · 확인 일치 · 약관 — 다 맞아야 열린다
   const ready = name.trim().length >= 2 && EMAIL_RE.test(email) && PASSWORD_RULES.every((r) => r.test(pw)) && pw2 === pw && agree
   return (

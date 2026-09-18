@@ -33,7 +33,7 @@ export function CodeBlock({ code, lang = 'tsx', className }: CodeBlockProps) {
         <button
           type="button"
           onClick={copy}
-          className="inline-flex h-6 items-center gap-1 rounded px-1.5 font-mono text-[10px] text-fg-dim transition-colors hover:bg-line/40 hover:text-fg"
+          className="-my-0.5 inline-flex h-7 items-center gap-1 rounded px-2 font-mono text-[10px] text-fg-dim transition-colors hover:bg-line/40 hover:text-fg"
           aria-label="코드 복사"
         >
           {copied ? <Check size={11} /> : <Copy size={11} />}

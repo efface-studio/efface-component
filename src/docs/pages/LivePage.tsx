@@ -8,7 +8,7 @@ import { NetworkPanel } from '@/docs/components/NetworkPanel'
 import { LIVE_PROJECTS, VIEWPORTS, type LivePage as LivePageDef, type ViewportId } from '@/docs/live.data'
 import { isInspectMessage, sendToFrame, type InspectDistance, type InspectInfo, type NetEntry } from '@/lib/inspectBridge'
 import { TrafficLights } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
+import { Button, ButtonLink } from '@/components/ui/Button'
 
 export function LivePage() {
   const { project } = useParams<{ project: string }>()
@@ -31,6 +31,7 @@ export function LivePage() {
   const [net, setNet] = useState<NetEntry[]>([])
   const [stageW, setStageW] = useState(0)
   const [reloadKey, setReloadKey] = useState(0)
+  const [frameState, setFrameState] = useState<'loading' | 'ready' | 'failed'>('loading')
   const [seen, setSeen] = useState(proj?.id)
   const frameRef = useRef<HTMLIFrameElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -74,6 +75,7 @@ export function LivePage() {
       const m = e.data
       if (!isInspectMessage(m)) return
       if (m.type === 'ready') {
+        setFrameState('ready')
         setRoute(m.path)
         if (pendingRef.current && m.path.split('?')[0] !== pendingRef.current) {
           const to = pendingRef.current
@@ -123,6 +125,18 @@ export function LivePage() {
   }, [proj])
   const netErrors = useMemo(() => net.filter((e) => (e.kind === 'console' && e.level === 'error') || !!e.error || (typeof e.status === 'number' && e.status >= 400)).length, [net])
 
+  // 프레임 주소가 바뀌면 로딩부터(렌더 중 상태 조정) — ready 메시지가 10초 안에 안 오면 실패로 본다
+  const frameKey = `${page?.path ?? ''}#${reloadKey}`
+  const [seenFrameKey, setSeenFrameKey] = useState(frameKey)
+  if (seenFrameKey !== frameKey) {
+    setSeenFrameKey(frameKey)
+    setFrameState('loading')
+  }
+  useEffect(() => {
+    const t = window.setTimeout(() => setFrameState((v) => (v === 'loading' ? 'failed' : v)), 10000)
+    return () => window.clearTimeout(t)
+  }, [frameKey])
+
   // Mobile/Tablet 은 터치 기기처럼 보이게 한다 — 입력 장치로 셸을 고르는 앱(HiNest)이 모바일 UI 를 내도록
   const touch = viewport === 'mobile' || viewport === 'tablet'
   const src = useMemo(() => {
@@ -164,7 +178,7 @@ export function LivePage() {
   const stageH = fullscreen ? '100vh' : responsive ? 'min(82vh, 980px)' : `${Math.round(vp.height * scale)}px`
 
   const toolbar = (
-    <div data-ef-ignore className={cn('flex flex-wrap items-center gap-2 border-line bg-bg/92 px-2 py-2 backdrop-blur-md', fullscreen ? 'border-b' : 'sticky top-14 z-30 -mx-1 rounded-lg border')}>
+    <div data-ef-ignore className={cn('flex flex-wrap items-center gap-2 border-line bg-bg/92 px-2 py-2 backdrop-blur-md', fullscreen ? 'border-b' : 'z-30 -mx-1 rounded-lg border md:sticky md:top-14')}>
       <div className="flex items-center gap-1 rounded-md border border-line p-0.5">
         {VIEWPORTS.map((v) => (
           <button
@@ -173,7 +187,7 @@ export function LivePage() {
             onClick={() => setViewport(v.id)}
             className={cn('h-7 rounded px-2.5 font-mono text-[11px] transition-colors', viewport === v.id ? 'bg-fg text-bg' : 'text-fg-dim hover:text-fg')}
           >
-            {v.label} {v.width > 0 && <span className="opacity-60">{v.width}</span>}
+            {v.label} {v.width > 0 && <span className="hidden opacity-60 sm:inline">{v.width}</span>}
           </button>
         ))}
       </div>
@@ -233,6 +247,7 @@ export function LivePage() {
           onClick={() => setPanelSide((v) => (v === 'right' ? 'left' : 'right'))}
           className="inline-flex h-8 items-center rounded-md border border-line px-2 font-mono text-[11px] text-fg-dim hover:border-line-strong hover:text-fg"
           title="패널을 반대쪽에 붙이기"
+          aria-label="패널을 반대쪽에 붙이기"
         >
           {panelSide === 'right' ? '◨ → ◧' : '◧ → ◨'}
         </button>
@@ -264,7 +279,17 @@ export function LivePage() {
   )
 
   const dock = (
-    <aside data-ef-ignore className={cn('flex shrink-0 flex-col bg-surface p-4', tab === 'network' ? 'w-[420px] overflow-hidden' : 'w-[320px] overflow-y-auto', panelSide === 'right' ? 'border-l border-line' : 'border-r border-line')}>
+    <aside
+      data-ef-ignore
+      className={cn(
+        'flex shrink-0 flex-col bg-surface p-4',
+        tab === 'network' ? 'w-[420px] overflow-hidden' : 'w-[320px] overflow-y-auto',
+        panelSide === 'right' ? 'border-l border-line' : 'border-r border-line',
+        // 좁은 화면에선 프레임 옆이 아니라 위에 겹친다 — 나란히 두면 프레임 폭이 0 이 된다
+        'max-md:absolute max-md:inset-y-0 max-md:z-10 max-md:max-w-[85vw]',
+        panelSide === 'right' ? 'max-md:right-0' : 'max-md:left-0',
+      )}
+    >
       <div className="mb-3 flex items-center gap-1">
         {(
           [
@@ -378,23 +403,46 @@ export function LivePage() {
             </div>
           )}
           {/* 프레임과 패널을 나란히 — 패널이 프레임을 덮지 않아 오른쪽 요소도 가리킬 수 있다 */}
-          <div className={cn('flex', panelSide === 'left' && 'flex-row-reverse')} style={{ height: stageH }}>
+          <div className={cn('relative flex', panelSide === 'left' && 'flex-row-reverse')} style={{ height: stageH }}>
             <div ref={stageRef} className={cn('relative min-w-0 flex-1', !responsive && zoom === '100' && 'overflow-auto', !responsive && zoom === 'fit' && vp.id === 'mobile' && 'flex justify-center bg-bg-soft')}>
               <iframe
                 key={`${src}-${reloadKey}`}
                 ref={frameRef}
                 src={src}
                 title={`${proj.name} — ${page?.title ?? ''}`}
-                className="block origin-top-left border-0 bg-white"
+                className="block origin-top-left border-0 bg-bg"
                 style={{ width: frameW, height: frameH, transform: scale !== 1 ? `scale(${scale})` : undefined }}
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
               />
+              {/* 프록시 응답이 오기 전엔 빈 흰 판 대신 로딩을, 검사 스크립트가 끝내 안 오면 실패를 보여준다 */}
+              {frameState !== 'ready' && (
+                <div role="status" className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-bg text-[13px] text-fg-dim">
+                  {frameState === 'loading' ? (
+                    <>
+                      <span className="h-5 w-5 animate-spin rounded-full border-2 border-line border-t-accent" aria-hidden />
+                      {proj.host} 불러오는 중…
+                    </>
+                  ) : (
+                    <>
+                      <span>프레임을 불러오지 못했어요.</span>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="secondary" onClick={() => setReloadKey((k) => k + 1)}>
+                          다시 시도
+                        </Button>
+                        <ButtonLink size="sm" variant="ghost" href={src} target="_blank" rel="noreferrer">
+                          새 탭에서 열기
+                        </ButtonLink>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
             {panel && dock}
           </div>
         </div>
       </div>
-      <p className="-mt-2 text-[12px] text-fg-faint">
+      <p className="-mt-2 text-[12px] text-fg-dim">
         맞춤은 현재 화면 폭에 100%로 띄워요. 고정 뷰포트는 폭에 맞춰 축소되고, 배율 버튼으로 100%(가로 스크롤)로 볼 수 있어요. Dev 모드가 켜져 있으면 프레임 안 클릭은 선택으로 쓰여요 — 페이지 이동은 위 목록에서. 실제 서비스를 그대로 프록시한 사본이라 폼 전송은 하지 마세요.
       </p>
     </DocPage>

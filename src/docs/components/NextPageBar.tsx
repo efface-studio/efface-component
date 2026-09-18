@@ -127,7 +127,7 @@ export function NextPageBar() {
               <span className="text-accent">//</span> next · {next.group}
             </span>
             <span className="mt-2 block text-2xl font-semibold tracking-tight md:text-3xl">{next.label}</span>
-            <span className="mt-2 block text-[13px] text-fg-faint">Keep scrolling, or click</span>
+            <span className="mt-2 block text-[13px] text-fg-dim">Keep scrolling, or click</span>
           </span>
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-fg-dim transition-all group-hover:border-fg group-hover:bg-fg group-hover:text-bg">
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />

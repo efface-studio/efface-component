@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Code2, Menu, Moon, Sun, X } from 'lucide-react'
@@ -6,6 +6,7 @@ import { cn } from '@/lib/cn'
 import { DOC_NAV } from '@/docs/nav'
 import { LogoMark } from '@/components/brand/LogoMark'
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
+import { useIsDesktop } from '@/hooks/useMediaQuery'
 import { DocsThemeContext, type DocsTheme } from '@/docs/theme'
 import { NextPageBar } from '@/docs/components/NextPageBar'
 import { EASE_OUT_EXPO } from '@/lib/motion'
@@ -37,7 +38,26 @@ export function DocsLayout() {
   const { pathname } = useLocation()
   const outlet = useOutlet()
   const reduce = useReducedMotion()
-  useBodyScrollLock(open)
+  const desktop = useIsDesktop()
+  // 드로어가 열린 채 화면이 넓어지면 드로어는 숨는데 스크롤 잠금만 남는 것을 막는다
+  useBodyScrollLock(open && !desktop)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  // 드로어: 열리면 닫기 버튼으로 포커스, Escape 로 닫고, 닫히면 메뉴 버튼으로 돌아간다
+  useEffect(() => {
+    if (!open) return
+    const menuButton = menuButtonRef.current
+    closeButtonRef.current?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      menuButton?.focus()
+    }
+  }, [open])
+  const currentLabel = useMemo(() => DOC_NAV.flatMap((g) => g.links).find((l) => l.to === pathname)?.label ?? '', [pathname])
 
   // 페이지 안 Dev 모드 — 문서의 모든 프리뷰를 Figma 처럼 잰다
   const [inspect, setInspect] = useState(false)
@@ -136,11 +156,19 @@ export function DocsLayout() {
   return (
     <DocsThemeContext.Provider value={{ theme, setTheme }}>
     <div className="min-h-dvh bg-bg text-fg">
+      {/* 키보드 사용자용 — 헤더·사이드바 ~30개 컨트롤을 건너뛴다 */}
+      <a href="#main" className="skip-link">
+        본문으로 건너뛰기
+      </a>
+      {/* 라우트가 바뀌면 스크린리더에 페이지 이름을 알린다 (문서 제목은 Seo 가 바꾼다) */}
+      <div aria-live="polite" className="sr-only">
+        {currentLabel}
+      </div>
       <header data-ef-ignore className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
         {/* 본문과 같은 컨테이너·여백 — 로고는 사이드바 글자와, 컨트롤은 본문 오른쪽 여백과 나란히 */}
         <div className="mx-auto flex h-14 w-full max-w-[1720px] items-center justify-between px-5 md:px-10">
           <div className="flex items-center gap-3">
-            <button type="button" onClick={() => setOpen(true)} className="-ml-1 flex h-9 w-9 items-center justify-center rounded-md text-fg-dim hover:bg-line/40 hover:text-fg lg:hidden" aria-label="메뉴 열기">
+            <button ref={menuButtonRef} type="button" onClick={() => setOpen(true)} className="-ml-1 flex h-9 w-9 items-center justify-center rounded-md text-fg-dim hover:bg-line/40 hover:text-fg lg:hidden" aria-label="메뉴 열기" aria-expanded={open} aria-controls="docs-drawer">
               <Menu size={18} />
             </button>
             <NavLink to="/" className="group flex items-center gap-2.5">
@@ -168,7 +196,7 @@ export function DocsLayout() {
               type="button"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="flex h-9 w-9 items-center justify-center rounded-md text-fg-dim transition-colors hover:bg-line/40 hover:text-fg"
-              aria-label="문서 테마 전환"
+              aria-label={theme === 'dark' ? '라이트 테마로 전환' : '다크 테마로 전환'}
             >
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
@@ -182,10 +210,10 @@ export function DocsLayout() {
         {open && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <button type="button" className="absolute inset-0 bg-ink/50 backdrop-blur-sm" aria-label="닫기" onClick={() => setOpen(false)} />
-            <div className="absolute inset-y-0 left-0 w-72 overflow-y-auto border-r border-line bg-bg px-5 py-6">
+            <div id="docs-drawer" role="dialog" aria-modal="true" aria-label="문서 목차" className="absolute inset-y-0 left-0 w-72 overflow-y-auto border-r border-line bg-bg px-5 py-6">
               <div className="mb-6 flex items-center justify-between">
                 <span className="font-mono text-[10.5px] tracking-[0.2em] text-fg-faint uppercase">contents</span>
-                <button type="button" onClick={() => setOpen(false)} className="flex h-8 w-8 items-center justify-center rounded-md text-fg-dim hover:bg-line/40" aria-label="닫기">
+                <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="flex h-9 w-9 items-center justify-center rounded-md text-fg-dim hover:bg-line/40" aria-label="닫기">
                   <X size={16} />
                 </button>
               </div>
@@ -194,7 +222,7 @@ export function DocsLayout() {
           </div>
         )}
 
-        <main className="min-h-[calc(100dvh-3.5rem)] min-w-0 flex-1 px-5 py-10 md:px-10 md:py-14">
+        <main id="main" tabIndex={-1} className="min-h-[calc(100dvh-3.5rem)] min-w-0 flex-1 px-5 py-10 outline-none md:px-10 md:py-14">
           {/* 나가는 페이지는 움직이지 않고 제자리에서 흐려지고, 새 페이지만 아래에서 올라온다 —
               옛 페이지까지 움직이면 위로 튀었다 내려오는 것처럼 읽힌다.
               스크롤 리셋은 exit 가 끝난 뒤(이미 안 보일 때) — smooth 면 올라가는 게 보이니 즉시.
@@ -218,7 +246,7 @@ export function DocsLayout() {
             <div data-ef-ignore className="fixed right-4 bottom-4 z-[60] w-[300px] max-h-[70vh] overflow-y-auto rounded-xl border border-line bg-surface/95 p-4 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.4)] backdrop-blur-md">
               <div className="mb-3 flex items-center justify-between">
                 <span className="font-mono text-[10.5px] tracking-wider text-fg-faint uppercase">dev mode</span>
-                <button type="button" onClick={() => window.__efInspect?.disable()} className="flex h-6 w-6 items-center justify-center rounded text-fg-dim hover:bg-line/40 hover:text-fg" aria-label="Dev 모드 끄기">
+                <button type="button" onClick={() => window.__efInspect?.disable()} className="-m-1 flex h-8 w-8 items-center justify-center rounded text-fg-dim hover:bg-line/40 hover:text-fg" aria-label="Dev 모드 끄기">
                   <X size={13} />
                 </button>
               </div>
@@ -227,7 +255,7 @@ export function DocsLayout() {
               </Suspense>
             </div>
           )}
-          <footer className="mx-auto mt-24 max-w-[1280px] border-t border-line pt-6 text-xs text-fg-faint">
+          <footer className="mx-auto mt-24 max-w-[1280px] border-t border-line pt-6 text-xs text-fg-dim">
             <p>
               efface design system · efface.dev · v2.efface.dev · mom.efface.dev{' '}
               <a className="link-underline text-fg-dim" href="https://github.com/efface-studio/efface-component" target="_blank" rel="noreferrer">
