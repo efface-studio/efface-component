@@ -29,7 +29,7 @@ export function LiquidGauge({ value, size = 180, className }: LiquidGaugeProps) 
     if (!pa || !pb || !lb) return
     let raf = 0
     let t = 0
-    let lvl = reduce ? value : 0
+    let lvl = reduce ? target.current : 0
     let v = 0
     const wave = (phase: number, amp: number, y: number) => {
       let d = `M0 ${y}`
@@ -52,7 +52,7 @@ export function LiquidGauge({ value, size = 180, className }: LiquidGaugeProps) 
     }
     tick()
     return () => cancelAnimationFrame(raf)
-  }, [reduce, value])
+  }, [reduce])
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} className={cn('select-none', className)} role="img" aria-label={`${value}%`}>
       <defs>

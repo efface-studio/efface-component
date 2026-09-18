@@ -20,7 +20,7 @@ export function Clock({ size = 200, className }: ClockProps) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
     const host = canvas.parentElement ?? canvas
-    const dpr = Math.min(2, window.devicePixelRatio || 1)
+    const dpr = Math.min(1.5, window.devicePixelRatio || 1)
     canvas.width = size * dpr
     canvas.height = size * dpr
     let raf = 0

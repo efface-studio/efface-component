@@ -185,8 +185,8 @@ export function FluidInk({ colors = ['#2563eb', '#14b8b0', '#7c3aed', '#f59e0b',
       canvas.style.width = `${r.width}px`
       canvas.style.height = `${r.height}px`
       const aspect = canvas.width / canvas.height
-      const sim = 128
-      const dyeRes = 512
+      const sim = 112
+      const dyeRes = 384
       simW = aspect > 1 ? Math.round(sim * aspect) : sim
       simH = aspect > 1 ? sim : Math.round(sim / aspect)
       dyeW = aspect > 1 ? Math.round(dyeRes * aspect) : dyeRes
@@ -262,7 +262,7 @@ export function FluidInk({ colors = ['#2563eb', '#14b8b0', '#7c3aed', '#f59e0b',
       gl.useProgram(P.pressure.p)
       gl.uniform2f(P.pressure.u('texel'), ...velocity.read.texel)
       gl.uniform1i(P.pressure.u('divergence'), bind(divergence, 0))
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 16; i++) {
         gl.uniform1i(P.pressure.u('pressure'), bind(pressure.read, 1))
         blit(pressure.write)
         pressure.swap()

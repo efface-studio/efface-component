@@ -50,7 +50,7 @@ export function Orbit({ className }: OrbitProps) {
       const r = host.getBoundingClientRect()
       w = Math.max(1, Math.floor(r.width))
       h = Math.max(1, Math.floor(r.height))
-      dpr = Math.min(2, window.devicePixelRatio || 1)
+      dpr = Math.min(1.5, window.devicePixelRatio || 1)
       canvas.width = w * dpr
       canvas.height = h * dpr
       canvas.style.width = `${w}px`

@@ -98,7 +98,7 @@ export function RippleImage({ src, className }: RippleImageProps) {
     let raf = 0
     const resize = () => {
       const r = host.getBoundingClientRect()
-      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      const dpr = Math.min(1.5, window.devicePixelRatio || 1)
       canvas.width = Math.max(1, Math.floor(r.width * dpr))
       canvas.height = Math.max(1, Math.floor(r.height * dpr))
       canvas.style.width = `${r.width}px`

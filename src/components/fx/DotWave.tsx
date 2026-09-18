@@ -54,7 +54,7 @@ export function DotWave({ gap = 22, radius = 140, className }: DotWaveProps) {
       const rect = host.getBoundingClientRect()
       w = Math.max(1, Math.floor(rect.width))
       h = Math.max(1, Math.floor(rect.height))
-      dpr = Math.min(2, window.devicePixelRatio || 1)
+      dpr = Math.min(1.5, window.devicePixelRatio || 1)
       canvas.width = w * dpr
       canvas.height = h * dpr
       canvas.style.width = `${w}px`

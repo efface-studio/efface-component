@@ -7,7 +7,7 @@ import { GhostPointer } from '@/docs/components/GhostPointer'
 import { LogoParticleHero } from '@/docs/components/LogoParticleHero'
 import { cn } from '@/lib/cn'
 import {
-  Aurora, Blob, BorderBeam, CardDeck, Clock, CometTrail, ConfettiButton, Constellation, DepthScene, Dock, DotWave, ElasticTabs, Equalizer, Fireflies, FlipCard, FluidInk, Glitch, GooeyMenu, Halftone, HexPulse, Horizon, JellyCard, JellyText, KineticText, Lava, Lens, LiquidButton, LiquidGauge, LiveCode, LogoTilt3D, MatrixRain, Meteors, MorphCursor, MorphText, Neon, NotificationStack, Odometer, Orbit, ParticleMorph3D, ParticleText, PhysicsBalls, PressureText, PrismCard, Ribbon, RippleImage, RubberBand, Sand, ScrambleText, Shatter, ShimmerText, SplitFlap, SpotCard, SpotlightGrid, Swarm, Tentacle, ThemeReveal, TileFlip, Warp, WaveText, WipeText,
+  Aurora, BorderBeam, CardDeck, Clock, CometTrail, ConfettiButton, Constellation, DepthScene, Dock, DotWave, ElasticTabs, Equalizer, Fireflies, FlipCard, FluidInk, Glitch, GooeyMenu, Halftone, HexPulse, JellyCard, JellyText, KineticText, Lava, Lens, LiquidButton, LiquidGauge, LiveCode, LogoTilt3D, MatrixRain, Meteors, MorphCursor, MorphText, Neon, NotificationStack, Odometer, Orbit, ParticleMorph3D, ParticleText, PhysicsBalls, PressureText, Metaballs, PrismCard, RippleImage, Silk, RubberBand, Sand, ScrambleText, Shatter, ShimmerText, SplitFlap, SpotCard, SpotlightGrid, Swarm, Tentacle, Terrain, ThemeReveal, TileFlip, Warp, WaveText, WipeText,
 } from '@/components/fx'
 import { Checkbox, EmailField, OTPInput, PasswordField, SentMail, SubmitButton, TextField, type OTPStatus, type SubmitStatus } from '@/components/form'
 import { LogoScene3D } from '@/components/brand/LogoScene3D'
@@ -65,7 +65,7 @@ function Card({
           setNear(false)
         }
       },
-      { rootMargin: '360px 0px' },
+      { rootMargin: '200px 0px' },
     )
     io.observe(el)
     return () => io.disconnect()
@@ -523,7 +523,7 @@ function NotifDemo() {
 
 export function ShowcasePage() {
   return (
-    <DocPage eyebrow="motion" title="Showcase" lead="전부 스스로 돌아가요 — 가짜 커서가 떠다니거나 글자가 저절로 쳐져요. 마우스를 올리면 멈추고 직접 해볼 수 있고, 나가면 잠시 뒤 다시 돌아요.">
+    <DocPage eyebrow="showcase" title="Showcase" lead="전부 스스로 돌아가요 — 가짜 커서가 떠다니거나 글자가 저절로 쳐져요. 마우스를 올리면 멈추고 직접 해볼 수 있고, 나가면 잠시 뒤 다시 돌아요.">
       <LogoParticleHero className="mb-16" />
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -571,9 +571,9 @@ export function ShowcasePage() {
               <Fireflies />
             </div>
           </Card>
-          <Card title="Ribbon" desc="비단 띠. 3D 로 꼬이며 흐르고 앞뒤 면의 밝기가 달라요. 포인터가 띠를 들어 올려요." tag="new" ghost>
-            <div className="h-[300px] w-full">
-              <Ribbon />
+          <Card title="Silk" desc="비단 천(클로스 시뮬레이션). 핀에 걸린 천이 바람에 흔들리고, 포인터가 스치면 밀려나며 주름이 잡혀요. 접힌 데는 빛으로 어두워져요." tag="new" ghost>
+            <div className="h-[320px] w-full">
+              <Silk />
             </div>
           </Card>
           <Card title="Lens" desc="돋보기. 포인터 자리를 둥근 렌즈가 확대하고 가장자리가 굴절처럼 휘어요." tag="new" ghost bodyClassName="text-fg">
@@ -581,9 +581,9 @@ export function ShowcasePage() {
               <Lens />
             </div>
           </Card>
-          <Card title="Blob" desc="살아 있는 덩이. 포인터 쪽으로 늘어나고 누르면 움찔해요." tag="new" ghost click>
+          <Card title="Metaballs" desc="진짜 메타볼 — 픽셀마다 장을 더해 문턱값으로 잘라요. 덩이들이 가까워지면 목이 생기며 합쳐지고, 포인터도 덩이예요. 누르면 흩어져요." tag="new" ghost click>
             <div className="h-[300px] w-full">
-              <Blob />
+              <Metaballs />
             </div>
           </Card>
           <Card title="HexPulse" desc="육각 벌집. 포인터 주변이 부풀며 켜지고, 누르면 파문이 벌집을 타고 퍼져요." tag="new" ghost click bodyClassName="text-fg">
@@ -591,9 +591,9 @@ export function ShowcasePage() {
               <HexPulse />
             </div>
           </Card>
-          <Card title="Horizon" desc="신스웨이브 지평선. 원근 격자가 흘러오고 포인터가 지평선을 기울여요." tag="new" ghost>
-            <div className="h-[300px] w-full">
-              <Horizon />
+          <Card title="Terrain" desc="지형 비행. 절차적 산맥 위를 끝없이 날아요 — 높이로 눈·바위·풀, 멀수록 안개. 포인터가 기수와 고도를, 누르면 가속." tag="new" ghost click>
+            <div className="h-[320px] w-full">
+              <Terrain />
             </div>
           </Card>
           <Card title="MatrixRain" desc="디지털 비. 포인터 주변 줄기가 빨라지고 액센트로 밝아져요." tag="new" ghost>

@@ -127,7 +127,7 @@ export function ParticleText({ text = '', src, gap = 5, radius = 90, scale = 0.8
       const rect = host.getBoundingClientRect()
       w = Math.max(1, Math.floor(rect.width))
       h = Math.max(1, Math.floor(rect.height))
-      dpr = Math.min(2, window.devicePixelRatio || 1)
+      dpr = Math.min(1.5, window.devicePixelRatio || 1)
       canvas.width = w * dpr
       canvas.height = h * dpr
       canvas.style.width = `${w}px`
