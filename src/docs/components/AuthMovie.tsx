@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { Bluetooth, Search, User, X } from 'lucide-react'
+import { Airplay, Bluetooth, Keyboard, Link, Lock, Moon, Music2, Play, Radio, Search, Sun, User, Volume2, X } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { EASE_OUT_EXPO } from '@/lib/motion'
 import { useAutoplay } from '@/docs/components/autoplay'
@@ -71,7 +71,7 @@ function AppIcon({ id, size = 56 }: { id: string; size?: number }) {
 
 /** 메뉴 막대 드롭다운 — macOS 기본 항목. `-` 는 구분선 */
 const MENUS: Record<string, string[]> = {
-  apple: ['이 Mac에 관하여', '-', '시스템 설정…', 'App Store…', '-', '최근 사용 항목', '-', '강제 종료…', '-', '잠자기', '재시동…', '시스템 종료…', '-', '화면 잠금', 'jiwan 로그아웃…'],
+  apple: ['이 Mac에 관하여', '-', '시스템 설정…', 'App Store', '-', '최근 사용 항목   ›', '-', '{app} 강제 종료   ⌥⇧⌘⎋', '-', '잠자기', '재시동…', '시스템 종료…', '-', '잠금 화면   ⌃⌘Q', 'Jiwan SEO 로그아웃…   ⇧⌘Q'],
   efface: ['efface에 관하여', '-', '설정…   ⌘,', '-', '서비스', '-', 'efface 가리기   ⌘H', '기타 가리기   ⌥⌘H', '모두 보기', '-', 'efface 종료   ⌘Q'],
   Finder: ['Finder에 관하여', '-', '설정…   ⌘,', '휴지통 비우기…   ⇧⌘⌫', '-', '서비스', '-', 'Finder 가리기   ⌘H', '기타 가리기   ⌥⌘H', '모두 보기'],
   앱: ['앱에 관하여', '-', '설정…   ⌘,', '-', '앱 가리기   ⌘H', '기타 가리기   ⌥⌘H', '-', '앱 종료   ⌘Q'],
@@ -122,6 +122,31 @@ const TOUR_TARGET: Record<string, string> = {
   'dock-apps': 'img', 'app-efface': 'img',
 }
 
+const DOCK_MIN = 32
+const DOCK_MAX = 80
+/* 상태 팝오버 — Tahoe 다크 패널 조각들 */
+const POP = 'liquid-glass-dark w-[300px] rounded-[14px] p-[8px] text-[13px] text-white'
+const PopSep = () => <div className="mx-2 my-[6px] h-px bg-white/[0.12]" />
+const PopHead = ({ children }: { children: ReactNode }) => <div className="px-2 pt-[2px] pb-[3px] text-[11.5px] font-medium text-white/50">{children}</div>
+const PopRow = ({ icon, on, label, right }: { icon?: ReactNode; on?: boolean; label: string; right?: ReactNode }) => (
+  <button type="button" className="flex h-[30px] w-full items-center gap-2.5 rounded-[7px] px-2 text-left hover:bg-white/10">
+    {icon && <span className={cn('flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full', on ? 'bg-[#2f6df6] text-white' : 'bg-white/[0.14] text-white/85')}>{icon}</span>}
+    <span className="flex-1 truncate">{label}</span>
+    {right}
+  </button>
+)
+const Toggle = () => (
+  <span className="relative inline-block h-[20px] w-[34px] rounded-full bg-[#2f6df6]" aria-hidden>
+    <span className="absolute top-[2px] right-[2px] h-4 w-4 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.3)]" />
+  </span>
+)
+const SignalBars = () => (
+  <span className="flex items-end gap-[2px]" aria-hidden>
+    {[4, 6, 8, 10].map((h) => <span key={h} className="w-[3px] rounded-[1px] bg-white" style={{ height: h }} />)}
+  </span>
+)
+const makeCode = () => String(100000 + Math.floor(Math.random() * 900000))
+
 function clock() {
   const d = new Date()
   const date = new Intl.DateTimeFormat('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' }).format(d) // 9월 18일 (금)
@@ -163,8 +188,38 @@ export function AuthMovie({ className }: { className?: string }) {
   // 인증 메일 — 알림 배너가 오고, 누르면 Mail 창에 코드가 보인다
   const [mailCode, setMailCode] = useState('482913')
   const [notice, setNotice] = useState(false)
+  const [mailUnread, setMailUnread] = useState(false)
   const [dockHover, setDockHover] = useState<string | null>(null)
   const [bounce, setBounce] = useState<string | null>(null)
+  // 독 크기 — 구분선을 잡고 위아래로 끌면 바뀐다(진짜 macOS 처럼). 시연이 반복돼도 유지
+  const [dockSize, setDockSize] = useState(54)
+  const [dockDrag, setDockDrag] = useState(false)
+  const dragDock = (e: React.PointerEvent<HTMLElement>) => {
+    if (!e.isTrusted) return
+    e.preventDefault()
+    const el = e.currentTarget
+    el.setPointerCapture(e.pointerId) // 아이콘 위를 지나도 enter/leave 가 안 생겨 확대가 끼어들지 않는다
+    const startY = e.clientY
+    const start = dockSize
+    const max = dockMax
+    let raf = 0
+    const move = (ev: PointerEvent) => {
+      const next = Math.round(Math.min(max, Math.max(DOCK_MIN, start - ((ev.clientY - startY) / scale) * 0.55)))
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => setDockSize(next))
+    }
+    const up = () => {
+      el.removeEventListener('pointermove', move)
+      el.removeEventListener('pointerup', up)
+      el.removeEventListener('pointercancel', up)
+      setDockDrag(false)
+    }
+    setDockDrag(true)
+    setDockHover(null)
+    el.addEventListener('pointermove', move)
+    el.addEventListener('pointerup', up)
+    el.addEventListener('pointercancel', up)
+  }
   const openApp = (id: string) => {
     setMenu(null)
     setBounce(id)
@@ -172,11 +227,13 @@ export function AuthMovie({ className }: { className?: string }) {
     if (id === 'apps') setScene((v) => (v === 'apps' ? 'desktop' : 'apps'))
     else if (id === 'efface') setScene((v) => (v === 'desktop' || v === 'apps' ? 'signup' : v))
     else if (id === 'finder') setWindows((w) => (w.includes('finder') ? w : [...w, 'finder']))
+    else if (id === 'mail') openMail()
     else setWindows((w) => [...w.filter((x) => x !== id), id])
     if (id !== 'apps' && id !== 'efface') setFront('other')
   }
   const openMail = () => {
     setNotice(false)
+    setMailUnread(false)
     setWindows((w) => [...w.filter((x) => x !== 'mail'), 'mail'])
     setFront('other')
   }
@@ -202,6 +259,7 @@ export function AuthMovie({ className }: { className?: string }) {
     setWindows([])
     setFront('efface')
     setNotice(false)
+    setMailUnread(false)
     setDockHover(null)
     setBounce(null)
     cursorRef.current = { x: W * 0.55, y: H * 0.5 }
@@ -302,11 +360,12 @@ export function AuthMovie({ className }: { className?: string }) {
     await sleep(1400)
 
     // 3) 인증코드 — 메일이 도착하고, 알림을 눌러 Mail 에서 코드를 읽은 뒤 돌아와 입력한다
-    const otpCode = String(100000 + Math.floor(Math.random() * 900000))
+    const otpCode = makeCode()
     setMailCode(otpCode)
     setScene('verify')
     await sleep(1300)
     setNotice(true)
+    setMailUnread(true)
     await sleep(1100)
     await moveTo('notice')
     await sleep(350)
@@ -355,66 +414,94 @@ export function AuthMovie({ className }: { className?: string }) {
   const dropdown = (id: string, side: 'left' | 'right') => (
     <AnimatePresence>
       {menu === id && (
-        <motion.div key={id} className={cn('absolute top-full z-[25] mt-[3px] [font-family:-apple-system,BlinkMacSystemFont,\'SF_Pro_Text\',\'Pretendard_Variable\',sans-serif] [text-shadow:none]', side === 'right' ? 'right-0' : 'left-0')} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.08 } }} transition={{ duration: 0.06 }}>
+        <motion.div key={id} className={cn('absolute top-full z-[25] mt-[3px] [text-shadow:none]', side === 'right' ? 'right-0' : 'left-0')} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.08 } }} transition={{ duration: 0.06 }}>
           {id in MENUS ? (
-                <ul className="liquid-glass min-w-[236px] rounded-[10px] p-[5px] text-[13px] font-normal text-white">
-                  {MENUS[id]!.map((item, i) =>
-                    item === '-' ? (
-                      <li key={i} className="mx-2 my-[5px] h-px bg-white/20" />
-                    ) : (
+                <ul className="liquid-glass-dark min-w-[246px] rounded-[11px] p-[5px] text-[13px] font-normal text-white">
+                  {MENUS[id]!.map((item, i) => {
+                    if (item === '-') return <li key={i} className="mx-[10px] my-[5px] h-px bg-white/[0.14]" />
+                    const [label, key] = item.replace('{app}', appName).split('   ')
+                    const sub = key === '›'
+                    return (
                       <li key={i}>
-                        <button type="button" onClick={() => setMenu(null)} className="flex h-[22px] w-full items-center justify-between rounded-[5px] pl-[22px] pr-2.5 text-left leading-none hover:bg-[#2f6df6] hover:text-white">
-                          <span>{item.split('   ')[0]}</span>
-                          <span className="ml-8 text-[12px] text-white/50 hover:text-white/80">{item.split('   ')[1] ?? ''}</span>
+                        <button type="button" onClick={() => setMenu(null)} className="group/mi flex h-[22px] w-full items-center justify-between rounded-[5px] pl-[18px] pr-[9px] text-left leading-none hover:bg-[#2f6df6] hover:text-white">
+                          <span>{label}</span>
+                          {key && <span className={cn('ml-6 text-white/55 group-hover/mi:text-white/85', sub ? 'text-[15px]' : 'text-[12.5px] tracking-[0.06em]')}>{key}</span>}
                         </button>
                       </li>
-                    ),
-                  )}
+                    )
+                  })}
                 </ul>
               ) : id === 'wifi' ? (
-                <div className="liquid-glass w-[280px] rounded-2xl p-3 text-[13px] text-white">
-                  <div className="flex items-center justify-between px-1 font-semibold">
-                    Wi‑Fi <span className="h-5 w-9 rounded-full bg-[#2f6df6] p-0.5"><span className="ml-4 block h-4 w-4 rounded-full bg-white" /></span>
+                <div className={POP}>
+                  <div className="flex items-center justify-between px-2 py-1 text-[13px] font-semibold">
+                    Wi‑Fi <Toggle />
                   </div>
-                  <div className="mt-2 rounded-lg bg-white/10 px-2.5 py-2 text-[12.5px]">
-                    <div className="text-white/60">알려진 네트워크</div>
-                    <div className="mt-1 flex items-center justify-between font-medium">efface-studio <WifiIcon size={14} /></div>
-                  </div>
-                  <div className="mt-2 px-1 text-[12px] text-white/60">기타 네트워크 ▸</div>
+                  <PopSep />
+                  <PopHead>개인용 핫스팟</PopHead>
+                  <PopRow icon={<Link size={12} />} label="iPhone" right={<span className="flex items-center gap-1.5 text-[11px] text-white/70"><SignalBars /> 5G <BatteryIcon level={0.8} /></span>} />
+                  <PopSep />
+                  <PopHead>알고 있는 네트워크</PopHead>
+                  <PopRow icon={<WifiIcon size={13} />} on label="hivits95" right={<Lock size={11} className="text-white/60" />} />
+                  <PopRow icon={<WifiIcon size={13} />} label="iptime5G" />
+                  <PopSep />
+                  <PopRow label="다른 네트워크" right={<span className="text-[15px] text-white/55">›</span>} />
+                  <PopSep />
+                  <PopRow label="Wi‑Fi 설정…" />
                 </div>
               ) : id === 'battery' ? (
-                <div className="liquid-glass w-[240px] rounded-2xl p-3 text-[13px] text-white">
-                  <div className="flex items-center justify-between px-1 font-semibold">배터리 <span>100%</span></div>
-                  <div className="mt-1 px-1 text-[12px] text-white/60">전원 어댑터: 완전히 충전됨</div>
-                  <div className="mt-2 border-t border-white/15 pt-2 text-[12.5px]">
-                    <div className="text-white/60">많은 에너지를 사용하는 앱</div>
-                    <div className="mt-1 font-medium">Google Chrome</div>
+                <div className={POP}>
+                  <div className="flex items-center justify-between px-2 py-1 text-[13px] font-semibold">
+                    배터리 <span className="font-normal text-white/70">100%</span>
                   </div>
+                  <div className="px-2 pb-1 text-[12px] text-white/55">전원: 전원 어댑터 · 완전히 충전됨</div>
+                  <PopSep />
+                  <PopHead>많은 에너지를 사용하는 앱</PopHead>
+                  <PopRow icon={<img src="/macos/google-chrome.png" alt="" width={16} height={16} />} label="Google Chrome" />
+                  <PopSep />
+                  <PopRow label="배터리 설정…" />
                 </div>
               ) : id === 'cc' ? (
-                <div className="liquid-glass w-[320px] rounded-2xl p-3 text-[12.5px] text-white">
+                <div className={cn(POP, 'w-[330px] p-[10px]')}>
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="rounded-xl bg-white/10 p-2.5">
-                      {[['Wi‑Fi', <WifiIcon key="w" size={13} />], ['Bluetooth', <Bluetooth key="b" size={14} />], ['AirDrop', <span key="a">◎</span>]].map(([n, ic]) => (
-                        <div key={n as string} className="flex items-center gap-2 py-1"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2f6df6]">{ic as ReactNode}</span>{n as string}</div>
+                    <div className="rounded-[14px] bg-white/[0.08] p-2">
+                      {[['Wi‑Fi', <WifiIcon key="w" size={13} />, 'hivits95'], ['Bluetooth', <Bluetooth key="b" size={13} />, '켬'], ['AirDrop', <Radio key="a" size={13} />, '연락처만']].map(([n, ic, sub]) => (
+                        <div key={n as string} className="flex items-center gap-2.5 px-1 py-[5px]">
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#2f6df6]">{ic as ReactNode}</span>
+                          <span className="flex flex-col leading-tight"><span className="text-[12.5px] font-medium">{n as string}</span><span className="text-[10.5px] text-white/50">{sub as string}</span></span>
+                        </div>
                       ))}
                     </div>
                     <div className="flex flex-col gap-2">
-                      <div className="flex-1 rounded-xl bg-white/10 p-2.5">집중 모드</div>
-                      <div className="flex-1 rounded-xl bg-white/10 p-2.5">화면 미러링</div>
+                      <div className="flex flex-1 items-center gap-2.5 rounded-[14px] bg-white/[0.08] px-3"><Moon size={14} /><span className="text-[12.5px] font-medium">집중 모드</span></div>
+                      <div className="grid flex-1 grid-cols-2 gap-2">
+                        <div className="flex flex-col items-center justify-center gap-1 rounded-[14px] bg-white/[0.08] text-[10.5px]"><Airplay size={15} />화면 미러링</div>
+                        <div className="flex flex-col items-center justify-center gap-1 rounded-[14px] bg-white/[0.08] text-[10.5px]"><Keyboard size={15} />키보드 밝기</div>
+                      </div>
                     </div>
                   </div>
-                  {[['디스플레이', 70], ['사운드', 45]].map(([n, v]) => (
-                    <div key={n as string} className="mt-2 rounded-xl bg-white/10 p-2.5">
-                      <div className="mb-1.5">{n as string}</div>
-                      <div className="h-5 overflow-hidden rounded-full bg-white/20"><div className="h-full rounded-full bg-white/90" style={{ width: `${v}%` }} /></div>
+                  {[['디스플레이', 72, <Sun key="s" size={13} />], ['사운드', 48, <Volume2 key="v" size={13} />]].map(([n, v, ic]) => (
+                    <div key={n as string} className="mt-2 rounded-[14px] bg-white/[0.08] px-3 pt-2 pb-2.5">
+                      <div className="mb-1.5 text-[12px] font-medium">{n as string}</div>
+                      <div className="relative h-[22px] overflow-hidden rounded-full bg-white/15">
+                        <div className="h-full rounded-full bg-white/90" style={{ width: `${v as number}%` }} />
+                        <span className="absolute inset-y-0 left-2 flex items-center text-[#2c2c2f]">{ic as ReactNode}</span>
+                      </div>
                     </div>
                   ))}
+                  <div className="mt-2 flex items-center gap-3 rounded-[14px] bg-white/[0.08] p-2.5">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15"><Music2 size={15} /></span>
+                    <span className="flex-1 text-[12px] text-white/60">재생 중인 항목 없음</span>
+                    <Play size={13} className="text-white/70" />
+                  </div>
                 </div>
               ) : id === 'search' ? null : (
-                <div className="liquid-glass w-[300px] rounded-2xl p-3 text-[13px] text-white">
-                  <div className="px-1 text-[20px] font-semibold">{now.split('  ')[0]}</div>
-                  <div className="mt-2 rounded-xl bg-white/10 p-3 text-center text-[12.5px] text-white/60">알림 없음</div>
+                <div className={cn(POP, 'w-[320px] p-[10px]')}>
+                  <div className="rounded-[14px] bg-white/[0.08] p-3">
+                    <div className="text-[11px] font-semibold text-[#ff453a]">{new Intl.DateTimeFormat('ko-KR', { weekday: 'long' }).format(new Date())}</div>
+                    <div className="text-[28px] leading-none font-semibold">{new Date().getDate()}</div>
+                    <div className="mt-2 text-[12px] text-white/55">오늘 이벤트 없음</div>
+                  </div>
+                  <div className="mt-2 rounded-[14px] bg-white/[0.08] p-3 text-center text-[12.5px] text-white/50">알림 없음</div>
                 </div>
               )}
         </motion.div>
@@ -424,18 +511,21 @@ export function AuthMovie({ className }: { className?: string }) {
   const windowOpen = scene !== 'desktop' && scene !== 'apps'
   const appName = windowOpen ? 'efface' : scene === 'apps' ? '앱' : 'Finder'
   const menus = windowOpen ? ['파일', '편집', '보기', '윈도우', '도움말'] : ['파일', '편집', '보기', '이동', '윈도우', '도움말']
-  const dockItems: (readonly [string, string])[] = [...DOCK, ...(windows.includes('mail') ? [['mail', 'Mail'] as const] : []), ['efface', 'efface'] as const]
+  const mailRunning = windows.includes('mail') || mailUnread
+  const dockItems: (readonly [string, string])[] = [...DOCK, ...(mailRunning ? [['mail', 'Mail'] as const] : []), ['efface', 'efface'] as const]
+  // 독 최대 크기 — macOS 처럼 화면 폭에 들어가는 만큼만 커진다
+  const dockMax = Math.min(DOCK_MAX, Math.floor((W - 80) / (dockItems.length * 1.11 + 0.6)))
 
   return (
-    <div ref={host} className={cn('relative flex h-full w-full items-center justify-center overflow-hidden bg-[#050813]', className)}>
-      <div ref={stage} className="relative shrink-0 origin-center overflow-hidden" style={{ width: W, height: H, transform: `scale(${scale})` }} data-theme="dark">
+    <div ref={host} className={cn('relative flex h-full w-full items-center justify-center overflow-clip bg-[#050813]', className)}>
+      <div ref={stage} className="mac-ui relative shrink-0 origin-center overflow-clip" style={{ width: W, height: H, transform: `scale(${scale})` }} data-theme="dark">
         {/* 배경 화면 — Tahoe 기본 배경 느낌(파랑·청록 유리 결) */}
         <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_75%_20%,#2f6df6_0%,#1d3ea8_35%,#0b1d5e_65%,#050b2a_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_20%_80%,rgba(65,220,255,0.35)_0%,transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(40%_40%_at_60%_75%,rgba(255,255,255,0.10)_0%,transparent_60%)]" />
 
         {/* 메뉴 막대 — Tahoe: 투명, 글자만(24px · 13px SF). 열린 항목만 하이라이트. 상태 아이콘은 팝오버 */}
-        <div className="absolute inset-x-0 top-0 z-20 flex h-6 items-stretch justify-between px-2.5 text-[13px] font-normal text-white [font-family:-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Pretendard_Variable',sans-serif] [text-shadow:0_0.5px_1.5px_rgba(0,0,0,0.45)]">
+        <div className="absolute inset-x-0 top-0 z-20 flex h-6 items-stretch justify-between px-2.5 text-[13px] font-normal text-white [text-shadow:0_0.5px_1.5px_rgba(0,0,0,0.45)]">
           <span className="flex items-stretch">
             {([['apple', ''], [appName, appName], ...menus.map((m) => [m, m])] as [string, string][]).map(([id, label]) => (
               <span key={id} className="relative flex items-stretch">
@@ -477,7 +567,7 @@ export function AuthMovie({ className }: { className?: string }) {
         {/* Spotlight — 화면 가운데 위 */}
         <AnimatePresence>
           {menu === 'search' && (
-            <motion.div key="spot" className="liquid-glass absolute left-1/2 top-[190px] z-[25] flex h-[52px] w-[640px] -translate-x-1/2 items-center gap-3 rounded-[16px] px-4 text-white" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.1 } }} transition={{ duration: 0.12 }}>
+            <motion.div key="spot" className="liquid-glass-dark absolute left-1/2 top-[190px] z-[25] flex h-[52px] w-[640px] -translate-x-1/2 items-center gap-3 rounded-[16px] px-4 text-white" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.1 } }} transition={{ duration: 0.12 }}>
               <Search size={22} className="text-white/85" />
               <span className="text-[22px] text-white/45">Spotlight 검색</span>
             </motion.div>
@@ -492,7 +582,7 @@ export function AuthMovie({ className }: { className?: string }) {
               type="button"
               data-tour="notice"
               onClick={openMail}
-              className="liquid-glass absolute right-4 top-9 z-[24] flex w-[356px] items-start gap-3 rounded-[18px] p-3 pr-4 text-left text-white [font-family:-apple-system,BlinkMacSystemFont,'SF_Pro_Text','Pretendard_Variable',sans-serif]"
+              className="liquid-glass-dark absolute right-4 top-9 z-[24] flex w-[356px] items-start gap-3 rounded-[18px] p-3 pr-4 text-left text-white"
               initial={{ opacity: 0, x: 80 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 60, transition: { duration: 0.18 } }}
@@ -565,11 +655,11 @@ export function AuthMovie({ className }: { className?: string }) {
                 </button>
                 <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
                 <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                <span className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1.5 font-mono text-[11.5px] text-fg-dim">
+                <span className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1.5 text-[13px] font-semibold text-fg/80">
                   <LogoMark className="h-3.5 w-3.5 text-fg" /> efface — {scene === 'signup' ? '회원가입' : scene === 'verify' ? '인증코드' : scene === 'login' ? '로그인' : '환영해요'}
                 </span>
               </div>
-              <div className="relative min-h-0 flex-1 overflow-hidden">
+              <div className="site-ui relative min-h-0 flex-1 overflow-hidden">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={scene} className="absolute inset-0" initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -28, transition: { duration: 0.2 } }} transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}>
                     {scene === 'signup' && (
@@ -722,7 +812,7 @@ export function AuthMovie({ className }: { className?: string }) {
             <motion.div
               key={id}
               className="absolute flex w-[520px] flex-col overflow-hidden rounded-[16px] border border-white/15 bg-[#1c1d22] text-white shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9)]"
-              style={id === 'mail' ? { left: 36, top: 64, width: 560, height: 420, zIndex: 11 + i } : { left: 120 + i * 48, top: 90 + i * 40, height: 360, zIndex: 11 + i }}
+              style={id === 'mail' ? { left: 28, top: 58, width: 700, height: 470, zIndex: 11 + i } : { left: 120 + i * 48, top: 90 + i * 40, height: 360, zIndex: 11 + i }}
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 12, transition: { duration: 0.2 } }}
@@ -742,35 +832,72 @@ export function AuthMovie({ className }: { className?: string }) {
               </div>
               {id === 'mail' ? (
                 <div className="flex min-h-0 flex-1">
-                  <aside className="w-[150px] shrink-0 border-r border-white/10 p-3 text-[12px] text-white/70">
-                    <div className="mb-1 px-2 text-[11px] font-semibold uppercase tracking-wide text-white/40">즐겨찾기</div>
-                    {[['받은 편지함', '1'], ['VIP', ''], ['플래그', ''], ['보낸 편지함', ''], ['임시 보관함', '']].map(([n, c], j) => (
-                      <div key={n} className={cn('flex items-center justify-between rounded-md px-2 py-1', j === 0 && 'bg-white/15 text-white')}>
+                  <aside className="w-[128px] shrink-0 border-r border-white/10 bg-white/[0.03] px-2 py-2.5 text-[12px] text-white/75">
+                    <div className="mb-1 px-2 text-[11px] font-semibold text-white/40">즐겨찾기</div>
+                    {[['받은 편지함', mailUnread ? '1' : ''], ['VIP', ''], ['플래그', ''], ['보낸 편지함', ''], ['임시 보관함', '']].map(([n, c], j) => (
+                      <div key={n} className={cn('flex items-center justify-between rounded-md px-2 py-[3px]', j === 0 && 'bg-white/15 text-white')}>
                         {n}
                         {c && <span className="text-[11px] text-white/50">{c}</span>}
                       </div>
                     ))}
                   </aside>
-                  <div className="flex min-w-0 flex-1 flex-col">
-                    <div className="border-b border-white/10 px-5 py-3">
+                  <div className="w-[196px] shrink-0 border-r border-white/10 text-[12px]">
+                    <div className="flex h-9 items-center border-b border-white/10 px-3 font-semibold text-white/85">받은 편지함</div>
+                    <motion.div className="m-1.5 rounded-lg bg-[#2f6df6] px-3 py-2 text-white" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: EASE_OUT_EXPO, delay: 0.1 }}>
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-1.5 font-semibold">{mailUnread && <span className="h-2 w-2 rounded-full bg-white" />}efface</span>
+                        <span className="text-[11px] text-white/80">{now.split('  ')[1]}</span>
+                      </div>
+                      <div className="mt-0.5 truncate font-medium">[efface] 인증코드 {mailCode}</div>
+                      <div className="truncate text-[11.5px] text-white/80">회원가입을 마치려면 아래 코드를 10분 안에…</div>
+                    </motion.div>
+                  </div>
+                  <motion.div className="flex min-w-0 flex-1 flex-col" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4, ease: EASE_OUT_EXPO, delay: 0.2 }}>
+                    <div className="border-b border-white/10 px-4 py-3">
                       <div className="flex items-center gap-2.5">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#2f6df6] text-[12px] font-bold">e</span>
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(160deg,#20232c,#0b0c10)] ring-1 ring-white/15">
+                          <LogoMark className="h-4 w-4 text-white" />
+                        </span>
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-baseline justify-between"><span className="text-[13px] font-semibold">efface</span><span className="text-[11px] text-white/50">지금</span></div>
-                          <div className="truncate text-[12px] text-white/55">받는 사람: contact@efface.dev</div>
+                          <div className="flex items-baseline justify-between">
+                            <span className="text-[13px] font-semibold">efface</span>
+                            <span className="text-[11px] text-white/50">{now.split('  ')[1]}</span>
+                          </div>
+                          <div className="truncate text-[11.5px] text-white/55">받는 사람: contact@efface.dev</div>
                         </div>
                       </div>
-                      <div className="mt-2.5 text-[13.5px] font-semibold">[efface] 인증코드 {mailCode}</div>
+                      <div className="mt-2 text-[13px] font-semibold">[efface] 인증코드 {mailCode}</div>
                     </div>
-                    <div className="flex-1 px-5 py-4 text-[13px] leading-relaxed text-white/85">
-                      <p>안녕하세요, efface 님.</p>
-                      <p className="mt-1">회원가입을 마치려면 아래 코드를 10분 안에 입력해 주세요.</p>
-                      <div data-tour="mail-code" className="mt-4 flex w-fit items-center gap-3 rounded-xl bg-white/10 px-5 py-3 font-mono text-[26px] font-semibold tracking-[0.22em] text-white">
-                        {mailCode}
-                      </div>
-                      <p className="mt-4 text-[12px] text-white/50">직접 요청하지 않았다면 이 메일은 무시해도 괜찮아요.</p>
+                    {/* HTML 메일 — 브랜드 카드. 코드는 셀마다 스프링으로 올라오고 빛이 한 번 지나간다 */}
+                    <div className="site-ui flex-1 overflow-hidden bg-[#f4f4f5] p-4 text-[#17181c]">
+                      <motion.div className="mx-auto max-w-[300px] overflow-hidden rounded-xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06),0_10px_28px_-14px_rgba(0,0,0,0.3)]" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: EASE_OUT_EXPO, delay: 0.3 }}>
+                        <div className="flex items-center gap-2 bg-[#0b0c10] px-4 py-2.5 text-white">
+                          <LogoMark className="h-4 w-4" />
+                          <span className="text-[13px] font-semibold tracking-tight">efface</span>
+                        </div>
+                        <div className="px-4 pt-4 pb-3">
+                          <div className="text-[15px] font-semibold tracking-tight">인증코드</div>
+                          <p className="mt-1 text-[12px] leading-relaxed text-[#5b5e66]">안녕하세요, efface 님. 회원가입을 마치려면 아래 코드를 10분 안에 입력해 주세요.</p>
+                          <div data-tour="mail-code" className="relative mt-3 flex gap-1.5 overflow-hidden rounded-lg">
+                            {mailCode.split('').map((d, j) => (
+                              <motion.span
+                                key={j}
+                                className="mac-mono flex h-11 flex-1 items-center justify-center rounded-lg border border-[#e4e4e7] bg-[#fafafa] text-[22px] font-semibold tabular-nums"
+                                initial={{ opacity: 0, y: 12, filter: 'blur(4px)' }}
+                                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                transition={{ type: 'spring', stiffness: 420, damping: 28, delay: 0.5 + j * 0.06 }}
+                              >
+                                {d}
+                              </motion.span>
+                            ))}
+                            <motion.span aria-hidden className="pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/80 to-transparent" initial={{ x: '-120%' }} animate={{ x: '420%' }} transition={{ duration: 0.9, ease: 'easeInOut', delay: 1 }} />
+                          </div>
+                          <p className="mt-3 text-[11px] leading-relaxed text-[#8a8d96]">이 코드는 10분 뒤 만료돼요. 직접 요청하지 않았다면 이 메일은 무시해도 괜찮아요.</p>
+                        </div>
+                        <div className="border-t border-[#ececef] px-4 py-2.5 text-[10.5px] text-[#a1a4ad]">© efface · contact@efface.dev</div>
+                      </motion.div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               ) : (
                 <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
@@ -785,17 +912,36 @@ export function AuthMovie({ className }: { className?: string }) {
 
         {/* 독 — Tahoe 리퀴드 글래스. 진짜 포인터를 올리면 커지고, 누르면 튀며 열린다 */}
         <div className="absolute inset-x-0 bottom-2.5 z-20 flex justify-center">
-          <div className="liquid-glass flex items-end gap-1.5 rounded-[26px] px-3 py-2" onPointerLeave={(e) => e.isTrusted && setDockHover(null)}>
+          <div className="liquid-glass flex items-end px-[9px] pt-[8px] pb-[12px]" style={{ gap: Math.round(dockSize * 0.11), borderRadius: Math.round(dockSize * 0.34) }} onPointerLeave={(e) => e.isTrusted && setDockHover(null)}>
             {dockItems.map(([id, label], i) => (
-              <div key={id} className="flex items-end">
-                {i === DOCK.length && <span className="mx-1.5 mb-3 h-12 w-px self-center bg-white/25" />}
+              <div key={id} className="relative flex items-end">
+                <AnimatePresence>
+                  {dockHover === id && (
+                    <motion.span
+                      key="tip"
+                      style={{ bottom: `calc(100% + ${Math.round(dockSize * 0.18 + 22)}px)` }}
+                      className="pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 liquid-glass-dark whitespace-nowrap rounded-[9px] px-[11px] py-[5px] text-[13px] font-medium text-white after:absolute after:top-full after:left-1/2 after:-mt-px after:h-[9px] after:w-[9px] after:-translate-x-1/2 after:-translate-y-1/2 after:rotate-45 after:rounded-[1.5px] after:border-r after:border-b after:border-white/[0.1] after:bg-[#2f2f35]"
+                      initial={{ opacity: 0, y: 3 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, transition: { duration: 0.08 } }}
+                      transition={{ duration: 0.12 }}
+                    >
+                      {label}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                {i === DOCK.length && (
+                  <span className="flex w-[16px] cursor-ns-resize touch-none items-end justify-center self-stretch" style={{ marginInline: Math.round(dockSize * 0.04) }} onPointerDown={dragDock} title="드래그해서 Dock 크기 조절">
+                    <span className="w-px bg-white/25" style={{ height: dockSize }} />
+                  </span>
+                )}
                 <motion.button
                   type="button"
                   data-tour={`dock-${id}`}
                   title={label}
                   aria-label={label}
                   onClick={() => openApp(id)}
-                  onPointerEnter={(e) => e.isTrusted && setDockHover(id)}
+                  onPointerEnter={(e) => e.isTrusted && !dockDrag && setDockHover(id)}
                   className="relative flex flex-col items-center outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                   style={{ zIndex: dockHover === id ? 2 : 1 }}
                   animate={
@@ -809,11 +955,13 @@ export function AuthMovie({ className }: { className?: string }) {
                   }
                   transition={bounce === id ? { duration: 0.7, ease: 'easeOut' } : { type: 'spring', stiffness: 380, damping: 22 }}
                 >
-                  <AppIcon id={id} size={54} />
-                  {(id === 'finder' || (id === 'apps' && scene === 'apps') || (id === 'efface' && windowOpen) || windows.includes(id)) && <span className="absolute -bottom-1.5 h-1 w-1 rounded-full bg-white/85" />}
-                  {dockHover === id && (
-                    <span className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-white/15 bg-black/60 px-2 py-0.5 text-[11px] text-white backdrop-blur-md">{label}</span>
+                  <AppIcon id={id} size={dockSize} />
+                  {id === 'mail' && mailUnread && (
+                    <motion.span key="badge" className="absolute -top-1 -right-1.5 flex h-[19px] min-w-[19px] items-center justify-center rounded-full bg-[#ff3b30] px-1 text-[11px] font-semibold text-white shadow-[0_0_0_1.5px_rgba(0,0,0,0.35)]" initial={{ scale: 0.4 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 22 }}>
+                      1
+                    </motion.span>
                   )}
+                  {(id === 'finder' || (id === 'apps' && scene === 'apps') || (id === 'efface' && windowOpen) || windows.includes(id)) && <span className="absolute -bottom-[8px] h-[4px] w-[4px] rounded-full bg-white/85" />}
                 </motion.button>
               </div>
             ))}
