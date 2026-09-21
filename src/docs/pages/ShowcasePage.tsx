@@ -16,7 +16,7 @@ import {
 import { Checkbox, EmailField, OTPInput, PasswordField, SentMail, SubmitButton, TextField, type OTPStatus, type SubmitStatus } from '@/components/form'
 import { LogoScene3D } from '@/components/brand/LogoScene3D'
 import { LogoMark } from '@/components/brand/LogoMark'
-import { SPLASH_VARIANTS, type SplashVariant } from '@/components/brand/splash.constants'
+import { SPLASH_VARIANTS } from '@/components/brand/splash.constants'
 import { Button } from '@/components/ui'
 import { LetterReveal, MagneticButton, Marquee } from '@/components/motion'
 import { Skeleton } from '@/components/ui/Skeleton'
@@ -616,34 +616,16 @@ function NotifDemo() {
   )
 }
 
-/** 스플래시 — 여섯 방식이 차례로 돌고, 칩으로 골라 볼 수 있다 */
+/** 스플래시 — 여섯 방식이 나란히 각자 반복된다. 머무는 시간을 조금씩 다르게 해 서로 어긋나며 돈다 */
 function SplashDemo() {
-  const [v, setV] = useState<SplashVariant>('assemble')
-  const [pick, setPick] = useState(false)
-  const next = () => {
-    const i = SPLASH_VARIANTS.findIndex((x) => x.id === v)
-    setV(SPLASH_VARIANTS[(i + 1) % SPLASH_VARIANTS.length]!.id)
-  }
   return (
-    <div className="relative h-[360px] w-full">
-      <SplashLogo key={`${v}-${pick}`} variant={v} size={190} onDone={next} />
-      <div data-ef-ignore className="absolute inset-x-0 top-0 flex gap-1.5 overflow-x-auto p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {SPLASH_VARIANTS.map((x) => (
-          <button
-            key={x.id}
-            type="button"
-            title={x.desc}
-            onClick={() => {
-              setV(x.id)
-              setPick((p) => !p)
-            }}
-            aria-pressed={v === x.id}
-            className={cn('shrink-0 rounded-full border px-2.5 py-1 font-mono text-[10.5px] backdrop-blur-sm transition-colors', v === x.id ? 'border-accent bg-accent text-white' : 'border-white/15 bg-black/40 text-white/75 hover:border-white/40 hover:text-white')}
-          >
-            {x.name}
-          </button>
-        ))}
-      </div>
+    <div className="grid w-full grid-cols-3 gap-px bg-line md:grid-cols-6">
+      {SPLASH_VARIANTS.map((x, i) => (
+        <figure key={x.id} className="relative m-0 h-[230px] md:h-[300px]">
+          <SplashLogo variant={x.id} size={76} loop hold={1200 + i * 180} />
+          <figcaption className="pointer-events-none absolute inset-x-0 bottom-2.5 text-center font-mono text-[10.5px] tracking-wider text-white/50">{x.name}</figcaption>
+        </figure>
+      ))}
     </div>
   )
 }
@@ -683,7 +665,7 @@ export function ShowcasePage() {
 
       <div className="grid gap-5 md:grid-cols-2">
           {/* ── 소름 ── */}
-          <Card title="Splash" desc="앱을 켤 때 — efface 마크가 만들어지는 여섯 가지 방식. 조각이 사방에서 날아와 맞물리고(조립), 방울이 끈적하게 합쳐져 굳고(액체), 먼지가 소용돌이치며 응축되고(입자), 선이 그려지며 색이 차오르고(드로잉), 종이처럼 펼쳐져 내려앉고(접기), 블루 안에서 빠져나와 흰 판 속으로 들어가요(포털). 차례로 돌고, 칩으로 골라 볼 수 있어요. 시연 영상에서 efface 를 열 때는 매번 다른 방식이 나와요." tag="new" dark>
+          <Card title="Splash" desc="앱을 켤 때 — efface 마크가 만들어지는 여섯 가지 방식이 나란히 각자 반복돼요. 조각이 사방에서 날아와 맞물리고(조립), 방울이 끈적하게 합쳐져 굳고(액체), 먼지가 소용돌이치며 응축되고(입자), 선이 그려지며 색이 차오르고(드로잉), 종이처럼 펼쳐져 내려앉고(접기), 블루 안에서 빠져나와 흰 판 속으로 들어가요(포털). 시연 영상에서 efface 를 열 때는 매번 다른 방식이 나와요." tag="new" dark className="md:col-span-2">
             <SplashDemo />
           </Card>
           <Card title="FluidInk" desc="GPU 유체 시뮬레이션. 끌면 잉크가 소용돌이치며 번지고, 누르면 사방으로 터져요." tag="new" ghost click className="md:col-span-2">

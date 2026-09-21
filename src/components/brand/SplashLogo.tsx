@@ -279,8 +279,10 @@ function Particles({ size, run }: { size: number; run: number }) {
     const canvas = ref.current
     if (!canvas) return
     const dpr = Math.min(2, window.devicePixelRatio || 1)
-    canvas.width = size * dpr
-    canvas.height = size * dpr
+    const W = size * 2 // 마크의 두 배 — 소용돌이가 잘리지 않게. 마크는 가운데(size/2 오프셋)
+    const o = size / 2
+    canvas.width = W * dpr
+    canvas.height = W * dpr
     const ctx = canvas.getContext('2d')
     if (!ctx) return
     ctx.scale(dpr, dpr)
@@ -303,7 +305,7 @@ function Particles({ size, run }: { size: number; run: number }) {
         k++
         const a = Math.random() * Math.PI * 2
         const rad = size * (0.6 + Math.random() * 0.5)
-        ps.push({ sx: size / 2 + Math.cos(a) * rad, sy: size / 2 + Math.sin(a) * rad, tx: (sq.x + u) * px, ty: (sq.y + v) * px, delay: Math.random() * 0.45, swirl: (Math.random() - 0.5) * size * 0.5, color: sq.fill, r: 0.9 + Math.random() * 0.9 })
+        ps.push({ sx: o + size / 2 + Math.cos(a) * rad, sy: o + size / 2 + Math.sin(a) * rad, tx: o + (sq.x + u) * px, ty: o + (sq.y + v) * px, delay: Math.random() * 0.45, swirl: (Math.random() - 0.5) * size * 0.5, color: sq.fill, r: 0.9 + Math.random() * 0.9 })
       }
     }
     const ease = (x: number) => 1 - Math.pow(1 - x, 3)
@@ -311,8 +313,11 @@ function Particles({ size, run }: { size: number; run: number }) {
     let raf = 0
     const draw = (now: number) => {
       const t = (now - t0) / 1000
-      ctx.fillStyle = 'rgba(11,12,16,0.32)'
-      ctx.fillRect(0, 0, size, size)
+      // 잔상 — 지난 프레임을 조금씩 지운다(배경은 칠하지 않아 뒤의 광휘가 비친다)
+      ctx.globalCompositeOperation = 'destination-out'
+      ctx.fillStyle = 'rgba(0,0,0,0.32)'
+      ctx.fillRect(0, 0, W, W)
+      ctx.globalCompositeOperation = 'source-over'
       for (const p of ps) {
         const k = Math.min(1, Math.max(0, (t - p.delay) / 1.05))
         const e = ease(k)
@@ -331,12 +336,12 @@ function Particles({ size, run }: { size: number; run: number }) {
       ctx.globalAlpha = 1
       // 응축 순간의 섬광
       if (t > 1.45 && t < 1.85) {
-        const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size * 0.7)
+        const g = ctx.createRadialGradient(W / 2, W / 2, 0, W / 2, W / 2, size * 0.7)
         const a = 1 - (t - 1.45) / 0.4
         g.addColorStop(0, `rgba(255,255,255,${0.55 * a})`)
         g.addColorStop(1, 'rgba(255,255,255,0)')
         ctx.fillStyle = g
-        ctx.fillRect(0, 0, size, size)
+        ctx.fillRect(0, 0, W, W)
       }
       if (t < 2.3) raf = requestAnimationFrame(draw)
     }
@@ -345,7 +350,7 @@ function Particles({ size, run }: { size: number; run: number }) {
   }, [size, run])
   return (
     <>
-      <motion.canvas ref={ref} className="absolute inset-0 h-full w-full" initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ delay: 1.7, duration: 0.5 }} aria-hidden />
+      <motion.canvas ref={ref} className="pointer-events-none absolute" style={{ left: '-50%', top: '-50%', width: '200%', height: '200%' }} initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ delay: 1.7, duration: 0.5 }} aria-hidden />
       <motion.div className="absolute inset-0" initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.45, duration: 0.35, ease: EASE_OUT_EXPO }}>
         <Mark />
       </motion.div>
