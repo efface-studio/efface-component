@@ -622,7 +622,7 @@ function SplashDemo() {
     <div className="grid w-full grid-cols-3 gap-px bg-line md:grid-cols-6">
       {SPLASH_VARIANTS.map((x, i) => (
         <figure key={x.id} className="relative m-0 h-[230px] md:h-[300px]">
-          <SplashLogo variant={x.id} size={76} loop hold={1200 + i * 180} />
+          <SplashLogo variant={x.id} size={92} loop hold={1200 + i * 180} />
           <figcaption className="pointer-events-none absolute inset-x-0 bottom-2.5 text-center font-mono text-[10.5px] tracking-wider text-white/50">{x.name}</figcaption>
         </figure>
       ))}

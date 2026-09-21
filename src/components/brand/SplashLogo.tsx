@@ -78,7 +78,7 @@ export function SplashLogo({ variant = 'assemble', size = 176, loop = false, hol
         <motion.div
           key={run}
           className="relative flex flex-col items-center"
-          style={{ gap: size * 0.16, transformOrigin: portal ? `${white}% ${(white * size) / (size * (wordmark ? 1.62 : 1))}%` : 'center' }}
+          style={{ gap: size * 0.1, transformOrigin: portal ? `${white}% ${white / (wordmark ? 1.32 : 1)}%` : 'center' }}
           initial={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
           animate={out ? exit : { scale: 1, opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: portal ? 0.6 : 0.45, ease: portal ? [0.7, 0, 0.84, 0] : EASE_OUT_EXPO }}
@@ -87,7 +87,7 @@ export function SplashLogo({ variant = 'assemble', size = 176, loop = false, hol
           <motion.span
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 rounded-full"
-            style={{ width: size * 2.6, height: size * 2.6, marginLeft: -size * 1.3, marginTop: -size * 1.3 - (wordmark ? size * 0.3 : 0), background: `radial-gradient(circle, ${ACCENT}55 0%, ${ACCENT}22 30%, transparent 62%)` }}
+            style={{ width: size * 2.6, height: size * 2.6, marginLeft: -size * 1.3, marginTop: -size * 1.3 - (wordmark ? size * 0.16 : 0), background: `radial-gradient(circle, ${ACCENT}55 0%, ${ACCENT}22 30%, transparent 62%)` }}
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: [0, 0.9, 0.45], scale: [0.6, 1.05, 1] }}
             transition={{ delay: reduce ? 0 : t - 0.12, duration: 1.1, ease: 'easeOut' }}
@@ -115,8 +115,8 @@ export function SplashLogo({ variant = 'assemble', size = 176, loop = false, hol
             )}
           </motion.div>
           {wordmark && (
-            <div className="relative flex flex-col items-center" style={{ gap: size * 0.05 }}>
-              <div className="flex font-semibold lowercase tracking-tight" style={{ fontSize: size * 0.34, lineHeight: 1 }} aria-hidden>
+            <div className="relative flex flex-col items-center">
+              <div className="flex font-semibold lowercase tracking-tight" style={{ fontSize: size * 0.22, lineHeight: 1 }} aria-hidden>
                 {variant === 'draw' && !reduce
                   ? letters.map((ch, i) => (
                       <motion.span key={i} className="inline-block" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: t + 0.1 + i * 0.075, duration: 0.01 }}>
@@ -132,9 +132,6 @@ export function SplashLogo({ variant = 'assemble', size = 176, loop = false, hol
                   <motion.span aria-hidden className="ml-[0.06em] inline-block w-[0.07em] bg-white" initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 1, 0, 1, 0, 1, 0] }} transition={{ delay: t + 0.05, duration: 1.6, times: [0, 0.02, 0.35, 0.45, 0.6, 0.7, 0.85, 1] }} />
                 )}
               </div>
-              <motion.span className="font-mono uppercase text-white/45" style={{ fontSize: Math.max(9, size * 0.062), letterSpacing: '0.32em' }} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduce ? 0.3 : t + 0.6, duration: 0.6, ease: EASE_OUT_EXPO }} aria-hidden>
-                design system
-              </motion.span>
             </div>
           )}
         </motion.div>
