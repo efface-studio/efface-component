@@ -14,6 +14,7 @@ import { cn } from '@/lib/cn'
 import {
   Aurora, BorderBeam, CardDeck, CirclePacking, Clock, CometTrail, ConfettiButton, Constellation, DepthScene, Dock, DotWave, ElasticTabs, Equalizer, Fireflies, FlipCard, FlowField, FluidInk, FractalTree, Glitch, GooeyMenu, Halftone, Harmonograph, HexPulse, Interference, JellyCard, JellyText, Kaleidoscope, KineticText, Lava, Lens, Life, Lightning, LiquidButton, LiquidGauge, LiveCode, LogoTilt3D, MagneticField, Mandelbrot, MatrixRain, Metaballs, Meteors, MorphCursor, MorphText, Neon, NotificationStack, Odometer, Orbit, ParticleMorph3D, ParticleText, Pendulum, Physarum, PhysicsBalls, Plasma, PressureText, PrismCard, ReactionDiffusion, RippleImage, Rope, RubberBand, SDFScene, Sand, ScrambleText, Shatter, ShimmerText, Silk, SplitFlap, SpotCard, SpotlightGrid, Swarm, Tentacle, Terrain, ThemeReveal, TileFlip, Topography, Tunnel, Voronoi, Warp, WaterRipple, WaveText, WipeText,
   AuthMovie, SolarSystem, SplashLogo,
+  BlackHole, Ocean, LiquidChrome, Ferrofluid, NoiseOrb, Galaxy, Hologram, DNAHelix, Cloth, Fireworks, CrystalGrowth, GodRays, SmokeText, MagnetLetters, InkWater, Plinko, RainGlass, Bubbles, SnowGlobe, Domino, MobileTabBars,
 } from './showcase.lazy'
 import { Checkbox, EmailField, OTPInput, PasswordField, SentMail, SubmitButton, TextField, type OTPStatus, type SubmitStatus } from '@/components/form'
 import { LogoScene3D } from '@/components/brand/LogoScene3D'
@@ -700,6 +701,109 @@ export function ShowcasePage() {
       </Section>
 
       <div className="grid gap-5 md:grid-cols-2">
+          <Card title="MobileTabBars" desc="모바일 탭 바 다섯 가지 — 리퀴드 글래스 알약(하이라이트가 미끄러지고 활성 탭만 이름이 펼쳐져요), 독(활성 아이콘이 솟아오르며 이웃이 따라 커져요), FAB(가운데 둥근 홈의 액션 버튼이 ×로 돌며 미니 액션을 펼쳐요), 구이(물방울 인디케이터가 늘어났다 끊기며 옮겨가요), 모프(밑줄이 원으로 부풀어 아이콘 뒤에 앉고 배지가 지워져요). 폰마다 탭을 번갈아 누르며 돌고, 마우스를 올리면 그 폰은 멈춰 직접 눌러볼 수 있어요." tag="new" dark className="md:col-span-2">
+            <MobileTabBars />
+          </Card>
+          <Card title="BlackHole" desc="블랙홀 — 사건의 지평선 주위로 빛이 휘어(중력 렌즈) 별밭이 일그러지고, 강착 원반은 다가오는 쪽이 도플러로 더 밝아요. 지평선 너머의 원반이 위로 휘어 올라와 호로 보이고 바로 밖에 광자 고리가 맺혀요. 포인터가 시선을 옮겨요." tag="new" dark ghost>
+            <div className="h-[360px] w-full">
+              <BlackHole />
+            </div>
+          </Card>
+          <Card title="Ocean" desc="바다 — 여섯 겹 게르스트너 파도의 높이·기울기로 법선을 만들어 프레넬 반사(하늘 ↔ 깊은 물), 태양 정반사와 수면에 길게 늘어지는 반짝임, 마루의 거품, 대기 원근까지. 포인터가 해를 옮겨요." tag="new" dark ghost className="md:col-span-2">
+            <div className="h-[380px] w-full">
+              <Ocean />
+            </div>
+          </Card>
+          <Card title="LiquidChrome" desc="액체 크롬 — 녹아 붙는 덩어리를 레이마칭하고, 표면은 절차적 스튜디오(소프트박스·액센트 빛)를 그대로 비춰요. 크롬은 자기 색이 없어 반사만으로 형태가 읽혀요. 포인터가 카메라를 돌려요." tag="new" dark ghost>
+            <div className="h-[340px] w-full">
+              <LiquidChrome />
+            </div>
+          </Card>
+          <Card title="Ferrofluid" desc="자성 유체 — 검고 매끈한 웅덩이가 포인터(자석)에 끌려 노이즈 셀마다 가시를 세워요. 누르면 자력이 세져 더 뾰족해져요. 두 광원의 정반사만으로 검은 유체의 질감을 만들어요." tag="new" dark ghost click>
+            <div className="h-[340px] w-full">
+              <Ferrofluid />
+            </div>
+          </Card>
+          <Card title="NoiseOrb" desc="노이즈 구 — 프랙탈 노이즈로 표면이 부풀고 꺼지는 구. 골에서는 안쪽 빛이 새어 액센트 → 흰빛으로 달아오르고 마루는 어둡고 매끈해요. 포인터가 돌리고, 누르면 더 거칠어져요." tag="new" dark ghost click>
+            <div className="h-[340px] w-full">
+              <NoiseOrb />
+            </div>
+          </Card>
+          <Card title="Galaxy" desc="나선 은하 — 5천 개 별을 로그 나선 팔·팽대부·얇은 원반에 뿌리고 3D 로 투영해요. 안쪽이 빠른 차등 회전, 팔은 푸른 신생 별과 붉은 먼지, 중심은 노란 늙은 별. 포인터가 기울여요." tag="new" dark ghost>
+            <div className="h-[360px] w-full">
+              <Galaxy />
+            </div>
+          </Card>
+          <Card title="Hologram" desc="홀로그램 — efface 마크 점구름이 발광판의 빛기둥 위에 떠요. 주사선·깜빡임·색수차·가끔 한 줄이 밀리는 글리치가 진짜 홀로그램처럼. 포인터가 돌려요." tag="new" dark ghost>
+            <div className="h-[360px] w-full">
+              <Hologram />
+            </div>
+          </Card>
+          <Card title="DNAHelix" desc="DNA 이중나선 — 두 가닥이 감기며 돌고 사이를 염기쌍(A–T · G–C)이 이어요. 뒤로 돌아간 가닥은 작고 흐리게. 포인터 높이가 회전 속도, 좌우가 기울기." tag="new" dark ghost>
+            <div className="h-[360px] w-full">
+              <DNAHelix />
+            </div>
+          </Card>
+          <Card title="Cloth" desc="천 — 위를 핀으로 고정한 베를레 천이 중력과 바람에 흔들려요. efface 마크가 무늬로 짜여 있고, 포인터를 빠르게 지나면 바람이 불고, 누르면 그 자리가 찢어져요." tag="new" dark ghost click>
+            <div className="h-[360px] w-full">
+              <Cloth />
+            </div>
+          </Card>
+          <Card title="Fireworks" desc="불꽃놀이 — 로켓이 올라가 터지면 모란(구)·버드나무(긴 꼬리)·고리·크래클(2차 잔불꽃)로 퍼져요. 중력·공기 저항·잔상. 누르면 그 자리에서 터져요." tag="new" dark ghost click>
+            <div className="h-[380px] w-full">
+              <Fireworks />
+            </div>
+          </Card>
+          <Card title="CrystalGrowth" desc="결정 성장 — 확산 제한 응집(DLA). 떠도는 입자가 씨앗에 닿아 가지를 뻗고, 눈꽃·서리 프랙탈이 자라요. 포인터 쪽으로 기울어 자라고, 누르면 새 씨앗." tag="new" dark ghost click>
+            <div className="h-[340px] w-full">
+              <CrystalGrowth />
+            </div>
+          </Card>
+          <Card title="GodRays" desc="빛줄기 — 해에서 각 픽셀로 오는 길 위의 가림막(흔들리는 잎)을 적분해 방사형으로 새어 나오는 빛을 그려요. 가장자리로 번지고 먼지가 반짝여요. 포인터가 해를 옮겨요." tag="new" dark ghost>
+            <div className="h-[340px] w-full">
+              <GodRays />
+            </div>
+          </Card>
+          <Card title="SmokeText" desc="연기 글자 — 글자를 이루던 입자가 컬 노이즈 바람에 연기처럼 말려 올라가 흩어졌다가, 스프링으로 제자리에 돌아와 다시 글자가 돼요. 누르면 바로 바뀌어요." tag="new" dark ghost click>
+            <div className="h-[300px] w-full">
+              <SmokeText />
+            </div>
+          </Card>
+          <Card title="MagnetLetters" desc="자석 글자 — 글자 하나하나가 물리 몸체예요. 포인터가 오면 밀려나며 돌고, 멀어지면 스프링으로 돌아와 문장이 다시 읽혀요. 누르면 반대로 끌려 뭉치고, 서로 부딪히면 튕겨요." tag="new" ghost click>
+            <div className="h-[300px] w-full">
+              <MagnetLetters />
+            </div>
+          </Card>
+          <Card title="InkWater" desc="물속 잉크 — 떨어진 방울이 번지며 가장자리가 노이즈로 일렁이고 촉수처럼 갈라져요. 옅어지며 가라앉고 여러 색이 겹치면 섞여요. 누르면 방울, 가만히 두면 가끔 떨어져요." tag="new" ghost click>
+            <div className="h-[340px] w-full">
+              <InkWater />
+            </div>
+          </Card>
+          <Card title="Plinko" desc="플링코 — 못 판을 따라 공이 튕기며 떨어져 칸에 쌓여요. 못은 맞을 때 빛나고, 쌓인 만큼 막대가 자라 가운데가 높은 종 모양이 저절로 생겨요. 누르면 그 자리에서 떨어뜨려요." tag="new" ghost click>
+            <div className="h-[380px] w-full">
+              <Plinko />
+            </div>
+          </Card>
+          <Card title="RainGlass" desc="비 내리는 유리창 — 흐린 도시 불빛 앞 유리에 빗방울이 맺혀요. 큰 방울은 흘러내리며 길을 남기고(그 자리는 선명해져요) 작은 방울을 삼켜 커져요. 방울 안엔 뒤 풍경이 거꾸로 굴절돼 비쳐요. 누르면 물이 튀어요." tag="new" dark ghost click>
+            <div className="h-[380px] w-full">
+              <RainGlass />
+            </div>
+          </Card>
+          <Card title="Bubbles" desc="비눗방울 — 얇은 막의 간섭색(무지개 띠)이 표면을 따라 돌고 위쪽엔 창 반사가 맺혀요. 흔들리며 떠오르고, 포인터가 닿으면 터져 조각으로 흩어져요." tag="new" dark ghost>
+            <div className="h-[340px] w-full">
+              <Bubbles />
+            </div>
+          </Card>
+          <Card title="SnowGlobe" desc="스노우글로브 — 유리구 안에서 눈이 천천히 가라앉아 쌓여요. 포인터를 빠르게 움직이거나 누르면 흔들려 눈이 소용돌이치며 다시 떠올라요. 굴절 림·하이라이트·받침, 안엔 efface 마크." tag="new" dark ghost click>
+            <div className="h-[380px] w-full">
+              <SnowGlobe />
+            </div>
+          </Card>
+          <Card title="Domino" desc="도미노 — 나선으로 늘어선 도미노가 파도처럼 차례로 넘어지고(CSS 3D), 다 넘어지면 하나씩 다시 서요. 누르면 그 자리부터 다시 시작." tag="new" dark click>
+            <div className="h-[340px] w-full">
+              <Domino />
+            </div>
+          </Card>
           {/* ── 소름 ── */}
           <Card title="Splash" desc="앱을 켤 때 — efface 마크가 만들어지는 여섯 가지 방식이 나란히 각자 반복돼요. 조각이 사방에서 날아와 맞물리고(조립), 방울이 끈적하게 합쳐져 굳고(액체), 먼지가 소용돌이치며 응축되고(입자), 선이 그려지며 색이 차오르고(드로잉), 종이처럼 펼쳐져 내려앉고(접기), 블루 안에서 빠져나와 흰 판 속으로 들어가요(포털). 시연 영상에서 efface 를 열 때는 매번 다른 방식이 나와요." tag="new" dark className="md:col-span-2">
             <SplashDemo />
