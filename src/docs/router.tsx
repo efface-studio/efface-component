@@ -16,6 +16,7 @@ import {
   ListsPage,
   MotionRevealPage,
   ShowcasePage,
+  UsagePage,
   MotionScrollPage,
   MotionCursorPage,
   MotionTextPage,
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorPage />,
     children: [
       { path: '/', element: <OverviewPage /> },
+      { path: '/usage', element: <UsagePage /> },
       { path: '/foundations/colors', element: <ColorsPage /> },
       { path: '/foundations/typography', element: <TypographyPage /> },
       { path: '/foundations/layout', element: <LayoutPage /> },
