@@ -6,6 +6,8 @@ import { EASE_OUT_EXPO } from '@/lib/motion'
 import { useAutoplay } from '@/docs/components/autoplay'
 import { AuthShell, Divider, Item, Stagger } from '@/docs/components/auth/AuthShell'
 import { LogoMark } from '@/components/brand/LogoMark'
+import { SplashLogo } from '@/components/brand/SplashLogo'
+import { SPLASH_VARIANTS, splashDuration, type SplashVariant } from '@/components/brand/splash.constants'
 import { TextField } from '@/components/form/TextField'
 import { EmailField } from '@/components/form/EmailField'
 import { PasswordField } from '@/components/form/PasswordField'
@@ -20,7 +22,7 @@ import { LinkUnderline } from '@/components/ui/LinkUnderline'
 const W = 1280
 const H = 860
 
-type Scene = 'desktop' | 'apps' | 'signup' | 'verify' | 'login' | 'welcome'
+type Scene = 'desktop' | 'apps' | 'splash' | 'signup' | 'verify' | 'login' | 'welcome'
 type Field = 'name' | 'email' | 'pw' | 'pw2' | 'lemail' | 'lpw' | null
 
 /** 사용자 Mac 의 독 순서 그대로 (아이콘은 .app 번들에서 추출한 public/macos/*.png) */
@@ -146,6 +148,7 @@ const SignalBars = () => (
     {[4, 6, 8, 10].map((h) => <span key={h} className="w-[3px] rounded-[1px] bg-white" style={{ height: h }} />)}
   </span>
 )
+const randomSplash = () => SPLASH_VARIANTS[Math.floor(Math.random() * SPLASH_VARIANTS.length)]!.id
 const makeCode = () => String(100000 + Math.floor(Math.random() * 900000))
 
 function clock() {
@@ -190,6 +193,13 @@ export function AuthMovie({ className }: { className?: string }) {
   const [mailCode, setMailCode] = useState('482913')
   const [notice, setNotice] = useState(false)
   const [mailUnread, setMailUnread] = useState(false)
+  // 앱 스플래시 — 열 때마다 다른 방식
+  const [splash, setSplash] = useState<SplashVariant>('assemble')
+  const pickSplash = () => {
+    const v = randomSplash()
+    setSplash(v)
+    return v
+  }
   const [dockHover, setDockHover] = useState<string | null>(null)
   const [bounce, setBounce] = useState<string | null>(null)
   // 독 크기 — 구분선을 잡고 위아래로 끌면 바뀐다(진짜 macOS 처럼). 시연이 반복돼도 유지
@@ -226,7 +236,10 @@ export function AuthMovie({ className }: { className?: string }) {
     setBounce(id)
     window.setTimeout(() => setBounce((b) => (b === id ? null : b)), 700)
     if (id === 'apps') setScene((v) => (v === 'apps' ? 'desktop' : 'apps'))
-    else if (id === 'efface') setScene((v) => (v === 'desktop' || v === 'apps' ? 'signup' : v))
+    else if (id === 'efface') {
+      pickSplash()
+      setScene((v) => (v === 'desktop' || v === 'apps' ? 'splash' : v))
+    }
     else if (id === 'finder') setWindows((w) => (w.includes('finder') ? w : [...w, 'finder']))
     else if (id === 'mail') openMail()
     else setWindows((w) => [...w.filter((x) => x !== id), id])
@@ -322,6 +335,9 @@ export function AuthMovie({ className }: { className?: string }) {
     await sleep(1100)
     await moveTo('app-efface')
     await click()
+    const sv = pickSplash()
+    setScene('splash') // 앱 스플래시 — 마크가 만들어지고 워드마크가 뜬 뒤 회원가입으로
+    await sleep(splashDuration(sv, 900) + 120)
     setScene('signup')
     await sleep(1300)
 
@@ -658,12 +674,13 @@ export function AuthMovie({ className }: { className?: string }) {
                 <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
                 <span className="h-3 w-3 rounded-full bg-[#28c840]" />
                 <span className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1.5 text-[13px] font-semibold text-fg/80">
-                  <LogoMark className="h-3.5 w-3.5 text-fg" /> efface — {scene === 'signup' ? '회원가입' : scene === 'verify' ? '인증코드' : scene === 'login' ? '로그인' : '환영해요'}
+                  <LogoMark className="h-3.5 w-3.5 text-fg" /> efface{scene === 'splash' ? '' : ` — ${scene === 'signup' ? '회원가입' : scene === 'verify' ? '인증코드' : scene === 'login' ? '로그인' : '환영해요'}`}
                 </span>
               </div>
               <div className="site-ui relative min-h-0 flex-1 overflow-hidden">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={scene} className="absolute inset-0" initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -28, transition: { duration: 0.2 } }} transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}>
+                    {scene === 'splash' && <SplashLogo variant={splash} size={150} hold={900} onDone={() => setScene((s) => (s === 'splash' ? 'signup' : s))} />}
                     {scene === 'signup' && (
                       <AuthShell eyebrow="get started" headline="작게 일하고, 깊게 팝니다.">
                         <Stagger>
