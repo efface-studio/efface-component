@@ -1,8 +1,8 @@
 /**
- * component.efface.dev Worker — 엔트리. Workers 런타임은 엔트리 모듈에서 handler 외의 named export 를 거부하므로
+ * ds.efface.dev Worker — 엔트리. Workers 런타임은 엔트리 모듈에서 handler 외의 named export 를 거부하므로
  * 로직은 ./lib.ts 에 있고 여기선 fetch 핸들러만 내보낸다.
  */
-import { DOCS_ORIGINS, FRAME_ANCESTORS, SECURITY_HEADERS, STRIP_HEADERS, UPSTREAMS, inspectScript, rewriteLocation, rewriteSetCookie, serveDocs, withDocsHeaders, type Env } from './lib.ts'
+import { DOCS_HOST, DOCS_ORIGINS, FRAME_ANCESTORS, LEGACY_DOCS_HOSTS, SECURITY_HEADERS, STRIP_HEADERS, UPSTREAMS, inspectScript, rewriteLocation, rewriteSetCookie, serveDocs, withDocsHeaders, type Env } from './lib.ts'
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -10,6 +10,11 @@ export default {
     // 평문 HTTP 는 HTTPS 로 — 방문자 스킴은 Cloudflare 가 cf-visitor 로 알려준다 (로컬 wrangler dev 엔 없어 건너뛴다)
     if ((request.headers.get('cf-visitor') ?? '').includes('"scheme":"http"')) {
       url.protocol = 'https:'
+      return Response.redirect(url.toString(), 301)
+    }
+    // 옛 문서 주소는 새 주소로 — 경로·쿼리 그대로
+    if (LEGACY_DOCS_HOSTS.has(url.hostname)) {
+      url.hostname = DOCS_HOST
       return Response.redirect(url.toString(), 301)
     }
     const upstream = UPSTREAMS[url.hostname]
@@ -77,7 +82,7 @@ export default {
     const loc = res.headers.get('location')
     if (loc) out.set('location', rewriteLocation(loc, upstream, url))
     // iframe 안에서 세션(로그인 · HiNest 미리보기 플래그)이 유지되도록 쿠키 도메인을 뗀다.
-    // component.efface.dev 와 live-*.efface.dev 는 같은 사이트(efface.dev)라 SameSite=Lax 로도 프레임 안에서 전송된다 —
+    // ds.efface.dev 와 live-*.efface.dev 는 같은 사이트(efface.dev)라 SameSite=Lax 로도 프레임 안에서 전송된다 —
     // 업스트림이 준 SameSite 는 그대로 두고 Secure 만 보장한다.
     const cookies = res.headers.getSetCookie?.() ?? []
     if (cookies.length) {

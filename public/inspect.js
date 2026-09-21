@@ -9,7 +9,7 @@
   const IN_FRAME = window.parent && window.parent !== window
   /* 우리를 임베드할 수 있는 문서 호스트 — worker/index.ts 의 DOCS_ORIGINS 와 같아야 한다.
      메시지는 이 출처의 부모 창에서 온 것만 듣고, 이 출처로만 보낸다(그 밖은 브라우저가 조용히 버린다). */
-  const PARENT_ORIGINS = ['https://component.efface.dev', 'http://localhost:5190', 'http://127.0.0.1:5190']
+  const PARENT_ORIGINS = ['https://ds.efface.dev', 'http://localhost:5190', 'http://127.0.0.1:5190']
 
   /* ── 터치 기기 에뮬레이션 ──────────────────────────────────────
      앱들이 폭이 아니라 입력 장치(hover/pointer)로 모바일 셸을 고르는 경우가 있다(HiNest 등).

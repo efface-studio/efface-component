@@ -13,7 +13,7 @@ function sitemap(): Plugin {
     apply: 'build',
     generateBundle() {
       const urls = DOC_NAV.filter((g) => g.title !== 'Live').flatMap((g) => g.links.map((l) => l.to))
-      const body = urls.map((u) => `  <url><loc>https://component.efface.dev${u === '/' ? '/' : u}</loc></url>`).join('\n')
+      const body = urls.map((u) => `  <url><loc>https://ds.efface.dev${u === '/' ? '/' : u}</loc></url>`).join('\n')
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n` })
     },
   }

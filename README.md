@@ -89,12 +89,12 @@ public/inspect.js         # Figma 식 요소 검사 오버레이
 두 테마를 한 벌의 시맨틱 토큰으로 다룬다. `[data-theme="light" | "dark"]` 로 범위를 정하므로
 문서 안에서 프리뷰마다 다른 테마를 중첩할 수 있다. 유틸리티는 `bg-bg` · `text-fg` · `border-line` · `text-accent` 처럼 토큰 이름을 그대로 쓴다.
 
-## 배포 (Cloudflare Workers · component.efface.dev)
+## 배포 (Cloudflare Workers · ds.efface.dev)
 
 `dist` 를 Workers Static Assets 로 서빙하고, `worker/index.ts` 가 live-* 호스트만 프록시한다 (`wrangler.jsonc`).
 
 ```bash
-npm run deploy         # build + wrangler deploy → https://component.efface.dev
+npm run deploy         # build + wrangler deploy → https://ds.efface.dev
 ```
 
 - 커스텀 도메인(component · live-efface · live-v2 · live-hinest)은 `wrangler.jsonc` 의 `routes` 로 배포 시 DNS 까지 연결된다 (efface.dev 존과 같은 계정)

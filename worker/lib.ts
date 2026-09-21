@@ -1,5 +1,5 @@
 /**
- * component.efface.dev Worker — 순수 로직 (엔트리 worker/index.ts 는 default handler 만 내보낸다:
+ * ds.efface.dev Worker — 순수 로직 (엔트리 worker/index.ts 는 default handler 만 내보낸다:
  * Workers 런타임은 엔트리의 다른 named export 를 거부한다)
  *  - 기본 호스트: dist 정적 자산(문서 사이트) 서빙
  *  - live-*.efface.dev: 실제 서비스를 같은 경로로 프록시하면서 검사 스크립트(inspect.js)를 주입한다.
@@ -38,8 +38,11 @@ export const STRIP_HEADERS = [
   'x-powered-by',
 ]
 
+/** 문서 호스트. 옛 주소(component.efface.dev)는 ds 로 301 */
+export const DOCS_HOST = 'ds.efface.dev'
+export const LEGACY_DOCS_HOSTS = new Set(['component.efface.dev'])
 /** live-* 프레임을 임베드할 수 있는 문서 호스트 — inspect.js 의 PARENT_ORIGINS 와 같아야 한다 */
-export const DOCS_ORIGINS = new Set(['https://component.efface.dev', 'http://localhost:5190', 'http://127.0.0.1:5190'])
+export const DOCS_ORIGINS = new Set([`https://${DOCS_HOST}`, 'http://localhost:5190', 'http://127.0.0.1:5190'])
 export const FRAME_ANCESTORS = `frame-ancestors 'self' ${[...DOCS_ORIGINS].join(' ')}`
 
 /** 문서 호스트 CSP — 인라인 스크립트는 index.html 의 테마 부트스트랩 하나뿐(해시). 바꾸면 해시도 갱신할 것 */
