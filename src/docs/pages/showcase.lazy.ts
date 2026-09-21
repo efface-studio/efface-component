@@ -41,6 +41,7 @@ export const LogoTilt3D = lazy(withChunkRecovery(() => import('@/components/fx/L
 export const MagneticField = lazy(withChunkRecovery(() => import('@/components/fx/MagneticField').then((m) => ({ default: m.MagneticField }))))
 export const Mandelbrot = lazy(withChunkRecovery(() => import('@/components/fx/Mandelbrot').then((m) => ({ default: m.Mandelbrot }))))
 export const SolarSystem = lazy(withChunkRecovery(() => import('@/components/fx/SolarSystem').then((m) => ({ default: m.SolarSystem }))))
+export const SplashLogo = lazy(withChunkRecovery(() => import('@/components/brand/SplashLogo').then((m) => ({ default: m.SplashLogo }))))
 export const MatrixRain = lazy(withChunkRecovery(() => import('@/components/fx/MatrixRain').then((m) => ({ default: m.MatrixRain }))))
 export const Metaballs = lazy(withChunkRecovery(() => import('@/components/fx/Metaballs').then((m) => ({ default: m.Metaballs }))))
 export const Meteors = lazy(withChunkRecovery(() => import('@/components/fx/Meteors').then((m) => ({ default: m.Meteors }))))
