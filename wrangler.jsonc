@@ -17,7 +17,8 @@
   // 커스텀 도메인: efface.dev 존이 같은 계정에 있어 배포 시 DNS 까지 자동 연결된다.
   // live-* 는 실제 서비스를 프록시하며 검사 스크립트를 주입하는 호스트.
   "routes": [
-    { "pattern": "component.efface.dev", "custom_domain": true },
+    { "pattern": "ds.efface.dev", "custom_domain": true },
+    { "pattern": "component.efface.dev", "custom_domain": true }, // 옛 주소 — Worker 가 ds 로 301
     { "pattern": "live-efface.efface.dev", "custom_domain": true },
     { "pattern": "live-v2.efface.dev", "custom_domain": true },
     { "pattern": "live-hinest.efface.dev", "custom_domain": true }

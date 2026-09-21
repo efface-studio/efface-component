@@ -39,24 +39,24 @@ test('Location 재작성 — 업스트림 origin 만 우리 호스트로', () =>
 
 test('문서 호스트 — 아는 경로 200 · 모르는 경로 404 · 보안 헤더', async () => {
   assert.ok(KNOWN_ROUTES.has('/foundations/colors'))
-  const ok = await run('https://component.efface.dev/foundations/colors')
+  const ok = await run('https://ds.efface.dev/foundations/colors')
   assert.equal(ok.status, 200)
   assert.match(ok.headers.get('content-security-policy') ?? '', /frame-ancestors 'none'/)
   assert.equal(ok.headers.get('x-frame-options'), 'DENY')
   assert.equal(ok.headers.get('x-content-type-options'), 'nosniff')
-  const nf = await run('https://component.efface.dev/nope')
+  const nf = await run('https://ds.efface.dev/nope')
   assert.equal(nf.status, 404)
   assert.match(nf.headers.get('content-type') ?? '', /text\/html/)
 })
 
 test('문서 호스트 — 끝 슬래시 301, 평문 HTTP 301, 자산 immutable', async () => {
-  const slash = await run('https://component.efface.dev/foundations/colors/')
+  const slash = await run('https://ds.efface.dev/foundations/colors/')
   assert.equal(slash.status, 301)
-  assert.equal(slash.headers.get('location'), 'https://component.efface.dev/foundations/colors')
-  const http = await run('https://component.efface.dev/x', { headers: { 'cf-visitor': '{"scheme":"http"}' } })
+  assert.equal(slash.headers.get('location'), 'https://ds.efface.dev/foundations/colors')
+  const http = await run('https://ds.efface.dev/x', { headers: { 'cf-visitor': '{"scheme":"http"}' } })
   assert.equal(http.status, 301)
-  assert.equal(http.headers.get('location'), 'https://component.efface.dev/x')
-  const asset = await run('https://component.efface.dev/assets/real-abc.js')
+  assert.equal(http.headers.get('location'), 'https://ds.efface.dev/x')
+  const asset = await run('https://ds.efface.dev/assets/real-abc.js')
   assert.equal(asset.headers.get('cache-control'), 'public, max-age=31536000, immutable')
 })
 
@@ -70,9 +70,15 @@ test('프록시 호스트 — robots 차단 · sitemap 404 · 다른 출처의 P
 })
 
 test('해시 없는 정적 파일은 하루 캐시, HTML 은 그대로', () => {
-  const img = withDocsHeaders(new Response('x', { headers: { 'content-type': 'image/webp' } }), new URL('https://component.efface.dev/space/earth-day.webp'))
+  const img = withDocsHeaders(new Response('x', { headers: { 'content-type': 'image/webp' } }), new URL('https://ds.efface.dev/space/earth-day.webp'))
   assert.equal(img.headers.get('cache-control'), 'public, max-age=86400, stale-while-revalidate=604800')
-  const html = withDocsHeaders(new Response('<html>', { headers: { 'content-type': 'text/html' } }), new URL('https://component.efface.dev/'))
+  const html = withDocsHeaders(new Response('<html>', { headers: { 'content-type': 'text/html' } }), new URL('https://ds.efface.dev/'))
   assert.equal(html.headers.get('cache-control'), null)
   assert.match(html.headers.get('content-security-policy') ?? '', /static\.cloudflareinsights\.com/)
+})
+
+test('옛 주소 component.efface.dev 는 경로·쿼리를 유지한 채 ds.efface.dev 로 301', async () => {
+  const res = await run('https://component.efface.dev/foundations/colors?x=1')
+  assert.equal(res.status, 301)
+  assert.equal(res.headers.get('location'), 'https://ds.efface.dev/foundations/colors?x=1')
 })
