@@ -2,11 +2,13 @@ import { Suspense, useContext, useEffect, useRef, useState, type ReactNode } fro
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { useReducedMotion } from 'motion/react'
-import { ArrowUpRight, Bell, Camera, Heart, Maximize2, MessageCircle, Pause, Play, Search, Settings, User, X } from 'lucide-react'
+import { ArrowUpRight, Bell, Camera, Code2, Heart, Maximize2, MessageCircle, Pause, Play, Search, Settings, User, X } from 'lucide-react'
 import { DocPage, Note, Section } from '@/docs/components/Doc'
 import { AutoplayContext, useAutoplay } from '@/docs/components/autoplay'
 import { GhostPointer } from '@/docs/components/GhostPointer'
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
+import { SourcePanel } from '@/docs/components/SourcePanel'
+import { defaultUsage, hasSource, type SourceInfo } from '@/docs/components/source.registry'
 import { LogoParticleHero } from '@/docs/components/LogoParticleHero'
 import { cn } from '@/lib/cn'
 import {
@@ -21,6 +23,28 @@ import { Button } from '@/components/ui'
 import { LetterReveal, MagneticButton, Marquee } from '@/components/motion'
 import { Skeleton } from '@/components/ui/Skeleton'
 
+/* 제목이 fx 파일명과 다른 카드 — 어떤 파일·예시를 보여줄지. 나머지는 src/components/fx/<제목>.tsx 를 자동으로 찾는다 */
+const CODE_MAP: Record<string, SourceInfo> = {
+  'Sign-up 시연': { name: 'AuthMovie', file: 'src/docs/components/AuthMovie.tsx', usage: `import { AuthMovie } from '@/docs/components/AuthMovie'\n\n// 1280×860 무대를 컨테이너에 맞춰 통째로 축소한다\n<div className="h-[860px] w-full">\n  <AuthMovie />\n</div>` },
+  Splash: { name: 'SplashLogo', file: 'src/components/brand/SplashLogo.tsx', usage: `import { SplashLogo } from '@/components/brand/SplashLogo'\n\n// variant: assemble · liquid · particles · draw · fold · portal\n<div className="fixed inset-0">\n  <SplashLogo variant="assemble" size={176} onDone={() => navigate('/home')} />\n</div>` },
+  태양계: { name: 'SolarSystem', file: 'src/components/fx/SolarSystem.tsx', usage: `import { SolarSystem } from '@/components/fx/SolarSystem'\n\n// 텍스처는 public/space/* (README 자료 출처)\n<div className="h-[520px] w-full">\n  <SolarSystem auto />\n</div>` },
+  'Mandelbrot 우주': { name: 'Mandelbrot', file: 'src/components/fx/Mandelbrot.tsx' },
+  'Meteors · BorderBeam': { name: 'Meteors', file: 'src/components/fx/Meteors.tsx' },
+  'GooeyMenu · Lava': { name: 'GooeyMenu', file: 'src/components/fx/Gooey.tsx', usage: `import { GooeyMenu, Lava } from '@/components/fx/Gooey'\n\n<GooeyMenu items={[{ label: '홈' }, { label: '검색' }, { label: '설정' }]} />\n<div className="h-[240px]"><Lava /></div>` },
+  'ShimmerText · Aurora': { name: 'ShimmerText', file: 'src/components/fx/ShimmerText.tsx' },
+  'OTP 검증': { name: 'OTPInput', file: 'src/components/form/OTPInput.tsx', usage: `import { OTPInput, type OTPStatus } from '@/components/form'\n\nconst [code, setCode] = useState('')\nconst [status, setStatus] = useState<OTPStatus>('idle')\n\n<OTPInput value={code} onChange={setCode} status={status} label="인증코드" onComplete={verify} />` },
+  SubmitButton: { name: 'SubmitButton', file: 'src/components/form/SubmitButton.tsx', usage: `import { SubmitButton, type SubmitStatus } from '@/components/form'\n\nconst [status, setStatus] = useState<SubmitStatus>('idle')\n\n<SubmitButton status={status} loadingLabel="계정 만드는 중" successLabel="가입 완료">계정 만들기</SubmitButton>` },
+  PasswordField: { name: 'PasswordField', file: 'src/components/form/PasswordField.tsx', usage: `import { PasswordField } from '@/components/form'\n\n<PasswordField label="비밀번호" floating value={pw} onChange={setPw} strength rules />` },
+  EmailField: { name: 'EmailField', file: 'src/components/form/EmailField.tsx', usage: `import { EmailField } from '@/components/form'\n\n// @ 뒤에 g → gmail.com 처럼 도메인이 흐리게 뜨고 Tab 으로 받는다\n<EmailField label="이메일" floating value={email} onChange={setEmail} />` },
+  'TextField · Checkbox': { name: 'TextField', file: 'src/components/form/TextField.tsx', usage: `import { Checkbox, TextField } from '@/components/form'\n\n<TextField label="이름" floating value={name} onChange={(e) => setName(e.target.value)} valid={name.length >= 2} />\n<Checkbox label="이용약관에 동의해요" checked={agree} onChange={(e) => setAgree(e.target.checked)} />` },
+  SentMail: { name: 'SentMail', file: 'src/components/form/SentMail.tsx', usage: `import { SentMail } from '@/components/form'\n\n<SentMail email="contact@efface.dev" />` },
+  '3D 유리 로고': { name: 'LogoScene3D', file: 'src/components/brand/LogoScene3D.tsx' },
+  LetterReveal: { name: 'LetterReveal', file: 'src/components/motion/LetterReveal.tsx', usage: `import { LetterReveal } from '@/components/motion'\n\n<LetterReveal text="작게 일하고, 깊게 팝니다." />` },
+  MagneticButton: { name: 'MagneticButton', file: 'src/components/motion/MagneticButton.tsx', usage: `import { MagneticButton } from '@/components/motion'\n\n<MagneticButton>시작하기</MagneticButton>` },
+  Marquee: { name: 'Marquee', file: 'src/components/motion/Marquee.tsx', usage: `import { Marquee } from '@/components/motion'\n\n<Marquee>효과만 남깁니다 · efface ·</Marquee>` },
+  Skeleton: { name: 'Skeleton', file: 'src/components/ui/Skeleton.tsx', usage: `import { Skeleton } from '@/components/ui/Skeleton'\n\n<Skeleton className="h-4 w-40" />` },
+}
+
 /* ───────────────────────── 카드 틀 ─────────────────────────
    자동 재생: 카드에 진짜 포인터가 들어오거나 안의 무언가에 포커스가 가면 멈추고,
    나가면 잠시 뒤 다시 돈다. ghost 면 가짜 커서가 떠다니며 포인터 이벤트를 보낸다. */
@@ -34,6 +58,7 @@ function Card({
   click,
   dark,
   pauseOn = 'hover',
+  code,
   children,
   className,
   bodyClassName,
@@ -50,6 +75,8 @@ function Card({
   dark?: boolean
   /** 자동 재생을 멈추는 조건 — hover: 포인터가 들어오면 · interact: 누르거나 휠·키를 써야(마우스만 올려선 계속 돈다) */
   pauseOn?: 'hover' | 'interact'
+  /** 코드 패널에 보여줄 파일·예시. 없으면 제목으로 fx 파일을 찾는다 */
+  code?: SourceInfo
   children: ReactNode
   className?: string
   bodyClassName?: string
@@ -60,6 +87,9 @@ function Card({
   const [focus, setFocus] = useState(false)
   const [manual, setManual] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const [showCode, setShowCode] = useState(false)
+  const fxFile = `src/components/fx/${title}.tsx`
+  const info: SourceInfo | null = code ?? CODE_MAP[title] ?? (hasSource(fxFile) ? { name: title, file: fxFile, usage: defaultUsage(title, `@/components/fx/${title}`) } : null)
   // 화면 근처에 있을 때만 데모를 마운트한다 — 수십 개의 canvas 가 동시에 돌지 않게. 높이는 기억해 둬서 흔들리지 않는다
   const [near, setNear] = useState(false)
   const [keepH, setKeepH] = useState<number>()
@@ -156,6 +186,11 @@ function Card({
             {playing ? <Play size={11} /> : <Pause size={11} />}
             {playing ? 'auto' : manual ? 'manual' : 'paused'}
           </button>
+          {info && (
+            <button type="button" onClick={() => setShowCode((v) => !v)} aria-pressed={showCode} aria-label={`${title} 코드`} title="코드 보기" className={cn('flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-line/40 hover:text-fg', showCode ? 'text-fg' : 'text-fg-faint')}>
+              <Code2 size={14} />
+            </button>
+          )}
           <button type="button" onClick={() => setExpanded(true)} aria-label={`${title} 크게 보기`} title="크게 보기" className="flex h-8 w-8 items-center justify-center rounded-md text-fg-faint hover:bg-line/40 hover:text-fg">
             <Maximize2 size={14} />
           </button>
@@ -166,6 +201,7 @@ function Card({
           )}
         </div>
       </div>
+      {showCode && info && <SourcePanel {...info} />}
       {expanded && (
         <Lightbox title={title} ghost={ghost} click={click} dark={dark} onClose={() => setExpanded(false)}>
           {children}
